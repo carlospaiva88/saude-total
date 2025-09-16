@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.slick-slide > div {
+  margin: 0 10px; /* cria espaço entre slides */
+}
+
+.slick-list {
+  margin: 0 -10px; /* compensa a margem para o container pai */
+}
