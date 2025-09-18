@@ -10,6 +10,8 @@ import FinalCTA from "./components/FinalCTA/FinalCTA";
 import Footer from "./components/Footer/Footer";
 import HealthTips from "./components/HealthTips/HealthTips";
 
+import CalculadorasInterativas from './components/CalculadorasInterativas';
+
 // Lazy loading das páginas
 const BlogHome = lazy(() => import("./pages/BlogHome"));
 const Categoria = lazy(() => import("./pages/Categoria"));
@@ -32,6 +34,7 @@ function App() {
                   <Navbar />
                   <Hero />
                   <HealthTips />
+                  <CalculadorasInterativas />
                   <Testimonials />
                   <FinalCTA />
                   <Footer />

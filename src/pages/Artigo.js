@@ -1,9 +1,13 @@
 import { useParams, Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import styled from "styled-components";
 import articlesData from "../data/articles";
 import Breadcrumbs from "../components/BreadCrumbs";
+import Comentarios from '../components/Comentarios';
+import ShareButtons from "../components/ShareButtons";
+import AudioReader from "../components/AudioReader";
 
 export default function Artigo() {
   const { slug } = useParams();
@@ -25,19 +29,33 @@ export default function Artigo() {
 
   return (
     <>
+      {/* Helmet para SEO e Open Graph */}
+      <Helmet>
+        <title>{article.title} - Saúde em Movimento</title>
+        <meta name="description" content={article.description || article.excerpt || ''} />
+        <meta property="og:title" content={article.title} />
+        <meta property="og:description" content={article.description || article.excerpt || ''} />
+        <meta property="og:image" content={article.image} />
+        <meta property="og:url" content={window.location.href} />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={article.title} />
+        <meta name="twitter:description" content={article.description || article.excerpt || ''} />
+        <meta name="twitter:image" content={article.image} />
+      </Helmet>
+
       <Navbar />
       <Breadcrumbs />
 
       <Container>
         <Title>{article.title}</Title>
+        
         <MetaInfo>
           Publicado em {article.date} • {article.readingTime}
         </MetaInfo>
-
         <HeroImage src={article.image} alt={article.title} />
-
+        <AudioReader texto={article.content.replace(/<[^>]+>/g, "")} />
         <Content dangerouslySetInnerHTML={{ __html: article.content }} />
-
         {article.product && (
           <ProductSection>
             <h2>Produto Recomendado</h2>
@@ -52,15 +70,16 @@ export default function Artigo() {
           </ProductSection>
         )}
 
+        <ShareButtons /> {/* Opcional: inclua se já criou o componente de compartilhamento */}
+
+        <Comentarios slug={slug} />
+
         <BackLink to={`/blog/${article.category}`}>← Voltar para {article.categoryName}</BackLink>
       </Container>
       <Footer />
     </>
   );
 };
-
-// Mantém todos os styled components iguais
-
 
 // Styled Components
 const Container = styled.div`
@@ -74,7 +93,6 @@ const Breadcrumb = styled.div`
   font-size: 0.9rem;
   color: #40514e;
   margin-bottom: 0.5rem;
-
   a {
     color: #43aa8b;
     text-decoration: none;
@@ -110,28 +128,24 @@ const HeroImage = styled.img`
   }
 `;
 
-
 const Content = styled.div`
   font-size: 1.05rem;
   color: #40514e;
-
   h2 {
     font-size: 1.6rem;
     margin: 1.5rem 0 1rem;
     color: #2a6f61;
   }
-
   h3 {
     font-size: 1.2rem;
     margin: 1rem 0;
     color: #43aa8b;
   }
-
   p {
     margin-bottom: 1rem;
   }
-
-  ul, ol {
+  ul,
+  ol {
     margin: 1rem 0 1.5rem 1.5rem;
   }
 `;
@@ -208,7 +222,6 @@ const BackLink = styled(Link)`
   font-weight: 600;
   color: #43aa8b;
   text-decoration: none;
-
   &:hover {
     color: #2a6f61;
   }

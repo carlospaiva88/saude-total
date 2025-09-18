@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import styled from "styled-components";
+import Breadcrumbs from "../components/BreadCrumbs";
 
 // Definição de subcategorias por categoria
 const subCategories = {
@@ -150,6 +151,7 @@ export default function BlogCategory() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs />
       <Container>
         <Title>Explorando Saúde {categoria}</Title>
         <Subtitle>Escolha um tema para aprofundar seu conhecimento</Subtitle>
