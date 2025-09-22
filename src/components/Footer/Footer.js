@@ -8,25 +8,17 @@ export default function Footer() {
     <FooterContainer>
       <FooterTop>
         <div>
-          <h4>Saúde em Movimento</h4>
+          <h4>Saúde com Movimento</h4>
           <p>
             Conteúdo sobre saúde física, mental e emocional. 
             Dicas diárias e recomendações para transformar sua vida.
           </p>
         </div>
-        <div>
-          <h4>Links Rápidos</h4>
-          <ul>
-            <li><a href="#dicas">Dicas de Saúde</a></li>
-            <li><a href="#produtos">Produtos Recomendados</a></li>
-            <li><a href="#contato">Contato</a></li>
-          </ul>
-        </div>
+  
         <div>
           <h4>Redes Sociais</h4>
           <SocialLinks>
-            <a href="#"><FaInstagram /></a>
-            <a href="#"><FaYoutube /></a>
+            <a href="http://instagram.com/saudecommovimentobr"><FaInstagram /></a>
           </SocialLinks>
         </div>
       </FooterTop>
