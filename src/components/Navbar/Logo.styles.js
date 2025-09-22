@@ -1,4 +1,3 @@
-// Logo.styles.js
 import styled, { keyframes, css } from "styled-components";
 
 const wave = keyframes`
@@ -13,13 +12,17 @@ const gradientMove = keyframes`
 
 export const LogoStyled = styled.a`
   position: relative;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
-  color: #fff;
+  color: #264653;
   text-decoration: none;
   padding-bottom: 0.5rem;
 
-  /* Estilos diferentes para cada variante */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
   ${({ variant }) =>
     variant === "ondas" &&
     css`
@@ -30,11 +33,12 @@ export const LogoStyled = styled.a`
         bottom: -2px;
         width: 100%;
         height: 6px;
-        background-image: url('data:image/svg+xml;utf8,<svg width="120" height="6" viewBox="0 0 120 6" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke="%2343aa8b" stroke-width="2" d="M0 3c15 6 30-6 45 0s30 6 45 0 30-6 45 0"/></svg>');
+        background-image: url("data:image/svg+xml;utf8,<svg width='120' height='6' viewBox='0 0 120 6' xmlns='http://www.w3.org/2000/svg'><path fill='none' stroke='%2343aa8b' stroke-width='2' d='M0 3c15 6 30-6 45 0s30 6 45 0 30-6 45 0'/></svg>");
         background-repeat: repeat-x;
         background-size: 60px 6px;
         animation: ${wave} 6s linear infinite;
         opacity: 0.5;
+        pointer-events: none;
       }
     `}
 
@@ -52,6 +56,7 @@ export const LogoStyled = styled.a`
         background-size: 200% 100%;
         animation: ${gradientMove} 3s linear infinite;
         border-radius: 2px;
+        pointer-events: none;
       }
     `}
 
@@ -67,6 +72,7 @@ export const LogoStyled = styled.a`
         height: 4px;
         background: #43aa8b;
         border-radius: 2px;
+        pointer-events: none;
       }
     `}
 `;

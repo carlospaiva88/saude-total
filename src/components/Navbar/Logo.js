@@ -5,7 +5,7 @@ import { LogoStyled } from "./Logo.styles";
 export default function Logo({ variant = "ondas" }) {
   return (
     <LogoStyled href="/" variant={variant}>
-      Saúde em Movimento
+      Saúde com Movimento
     </LogoStyled>
   );
 }

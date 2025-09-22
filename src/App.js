@@ -35,7 +35,6 @@ function App() {
                   <Hero />
                   <HealthTips />
                   <CalculadorasInterativas />
-                  <Testimonials />
                   <FinalCTA />
                   <Footer />
                 </>
