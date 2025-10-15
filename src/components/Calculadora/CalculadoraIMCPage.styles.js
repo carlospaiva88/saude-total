@@ -48,6 +48,11 @@ export const CalculatorCard = styled.div`
   flex: 1 1 340px;
   max-width: 430px;
   margin: 0 auto;
+
+  @media (max-width: 600px) {
+    max-width: 100%;
+    padding: 1.5rem 1rem;
+  }
 `;
 
 export const InfoCard = styled.div`
@@ -81,6 +86,72 @@ export const InfoCard = styled.div`
   }
 `;
 
+export const ResultBox = styled.div`
+  margin: 2.7rem auto 0;
+  background: linear-gradient(90deg, #def2e9, #f6fefb);
+  border-radius: 14px;
+  padding: 1.2rem 1.8rem;
+  text-align: center;
+  color: #2a6f61;
+  font-weight: 600;
+  font-size: 1.15rem;
+  max-width: 520px;
+  box-shadow: 0 2px 12px rgba(42, 157, 143, 0.08);
+  animation: ${fadeInUp} 0.5s;
+
+  @media (max-width: 600px) {
+    padding: 1rem 1rem;
+    max-width: 98vw;
+    font-size: 1rem;
+  }
+`;
+
+export const CTAButton = styled.a`
+  display: inline-block;
+  margin: 1.5rem auto 0;
+  padding: 1rem 2.3rem;
+  background: linear-gradient(90deg, #43aa8b, #90be6d);
+  border-radius: 44px;
+  color: white;
+  font-weight: 700;
+  font-size: 1.08rem;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(67,170,139,0.18);
+  transition: background 0.3s, transform 0.25s;
+  
+  &:hover {
+    background: #2a6f61;
+    transform: scale(1.07);
+  }
+
+  @media (max-width: 600px) {
+    padding: 0.85rem 2rem;
+    font-size: 1rem;
+  }
+`;
+
+export const Recommendations = styled.div`
+  margin: 2.2rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 2px dashed #b2f7ef;
+  h4 {
+    color: #2a9d8f;
+    font-size: 1.1rem;
+    margin-bottom: 0.7rem;
+  }
+  ul {
+    list-style: disc;
+    margin-left: 1.5rem;
+  }
+  li {
+    margin-bottom: 0.5rem;
+  }
+  a {
+    color: #2a9d8f;
+    text-decoration: underline;
+  }
+`;
+
 export const InfoBlock = styled.div`
   margin-bottom: 2rem;
 
@@ -107,64 +178,5 @@ export const InfoBlock = styled.div`
 
   ul li {
     margin-bottom: 0.4rem;
-  }
-`;
-
-export const ResultBox = styled.div`
-  margin: 2.7rem auto 0;
-  background: linear-gradient(90deg, #def2e9, #f6fefb);
-  border-radius: 14px;
-  padding: 1.2rem 1.8rem;
-  text-align: center;
-  color: #2a6f61;
-  font-weight: 600;
-  font-size: 1.15rem;
-  max-width: 520px;
-  box-shadow: 0 2px 12px rgba(42, 157, 143, 0.08);
-  animation: ${fadeInUp} 0.5s;
-`;
-
-export const CTAButton = styled.a`
-  display: inline-block;
-  margin: 1.5rem auto 0;
-  padding: 1rem 2.3rem;
-  background: linear-gradient(90deg, #43aa8b, #90be6d);
-  border-radius: 44px;
-  color: white;
-  font-weight: 700;
-  font-size: 1.08rem;
-  text-decoration: none;
-  box-shadow: 0 8px 20px rgba(67,170,139,0.18);
-  transition: background 0.3s, transform 0.25s;
-
-  &:hover {
-    background: #2a6f61;
-    transform: scale(1.07);
-  }
-`;
-
-export const Recommendations = styled.div`
-  margin: 2.2rem 0 0;
-  padding-top: 1.2rem;
-  border-top: 2px dashed #b2f7ef;
-
-  h4 {
-    color: #2a9d8f;
-    font-size: 1.1rem;
-    margin-bottom: 0.7rem;
-  }
-
-  ul {
-    list-style: disc;
-    margin-left: 1.5rem;
-  }
-
-  li {
-    margin-bottom: 0.5rem;
-  }
-
-  a {
-    color: #2a9d8f;
-    text-decoration: underline;
   }
 `;

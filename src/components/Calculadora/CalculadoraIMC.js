@@ -1,33 +1,31 @@
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
+
 const fadeInUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  } to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px);}
+  to { opacity: 1; transform: translateY(0);}
 `;
 
-const CalculatorContainer = styled.div`
-  // estilo mantido caso use isolado, se for usado dentro do wrapper principal pode remover
+
+export const CalculatorContainer = styled.div`
+  width: 100%;
 `;
 
-const Form = styled.form`
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1.3rem;
+  width: 100%;
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   font-weight: 600;
   font-size: 1rem;
   color: #336b5a;
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   width: 100%;
   padding: 0.7rem 1rem;
   border-radius: 12px;
@@ -35,18 +33,25 @@ const Input = styled.input`
   font-size: 1rem;
   font-family: inherit;
   transition: border-color 0.3s ease;
+
   &:focus {
     outline: none;
     border-color: #2a6f61;
   }
+
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
+
+  @media (max-width: 600px) {
+    font-size: 0.95rem;
+    padding: 0.6rem 0.9rem;
+  }
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   margin-top: 1.5rem;
   padding: 0.8rem;
   background-color: #43aa8b;
@@ -57,16 +62,23 @@ const Button = styled.button`
   border-radius: 24px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+
   &:hover {
     background-color: #2a6f61;
   }
+
   &:disabled {
     background-color: #a2c3b0;
     cursor: not-allowed;
   }
+
+  @media (max-width: 600px) {
+    font-size: 1rem;
+    padding: 0.7rem;
+  }
 `;
 
-const ResultBox = styled.div`
+export const ResultBox = styled.div`
   margin-top: 2rem;
   padding: 1.5rem 2rem;
   background-color: #def2e9;
@@ -76,18 +88,31 @@ const ResultBox = styled.div`
   font-weight: 700;
   font-size: 1.3rem;
   animation: ${fadeInUp} 0.4s ease forwards;
+
+  @media (max-width: 600px) {
+    font-size: 1.1rem;
+    padding: 1.2rem;
+  }
 `;
 
-const ImcValue = styled.span`
+export const ImcValue = styled.span`
   font-size: 2.4rem;
   display: block;
   margin-bottom: 0.5rem;
+
+  @media (max-width: 600px) {
+    font-size: 2rem;
+  }
 `;
 
-const ImcInterpretation = styled.p`
+export const ImcInterpretation = styled.p`
   margin-top: 0;
   font-size: 1.15rem;
   font-weight: 600;
+
+  @media (max-width: 600px) {
+    font-size: 1rem;
+  }
 `;
 
 export default function CalculadoraIMC({ onCalcular }) {

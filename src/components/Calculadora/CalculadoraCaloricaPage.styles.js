@@ -47,7 +47,13 @@ export const CalculatorCard = styled.div`
   flex: 1 1 340px;
   max-width: 430px;
   margin: 0 auto;
+
+  @media (max-width: 600px) {
+    padding: 1.2rem 0.7rem;
+    max-width: 100%;
+  }
 `;
+
 
 export const InfoCard = styled.div`
   background: #f8fcfb;
@@ -78,7 +84,7 @@ export const ResultBox = styled.div`
   margin: 2.7rem auto 0;
   background: linear-gradient(90deg, #def2e9, #f6fefb);
   border-radius: 14px;
-  padding: 1.2rem 1.8rem;
+  padding: 1.2rem 1.1rem;
   text-align: center;
   color: #2a6f61;
   font-weight: 600;
@@ -86,6 +92,12 @@ export const ResultBox = styled.div`
   max-width: 520px;
   box-shadow: 0 2px 12px rgba(42, 157, 143, 0.08);
   animation: ${fadeInUp} 0.5s;
+
+  @media (max-width: 600px) {
+    padding: 1rem 0.5rem;
+    max-width: 98vw;
+    font-size: 1rem;
+  }
 `;
 
 export const CTAButton = styled.a`
@@ -111,4 +123,34 @@ export const Recommendations = styled.div`
   ul { list-style: disc; margin-left: 1.5rem;}
   li { margin-bottom: 0.5rem;}
   a { color: #2a9d8f; text-decoration: underline; }
+`;
+
+
+export const InfoBlock = styled.div`
+  margin-bottom: 2rem;
+
+  h3 {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 0.6rem;
+    color: #2a6f61;
+  }
+
+  p, ul {
+    font-weight: 500;
+    font-size: 1rem;
+    color: #506068;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+  }
+
+  ul {
+    margin-top: 0.3rem;
+    padding-left: 1.2rem;
+  }
+
+  ul li {
+    margin-bottom: 0.4rem;
+  }
 `;
