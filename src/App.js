@@ -5,12 +5,15 @@ import { lazy, Suspense } from "react";
 // Componentes comuns
 import Navbar from "./components/Navbar/Navbar";
 import Hero from "./components/Hero/Hero";
-import Testimonials from "./components/Testimonials/Testimonials";
 import FinalCTA from "./components/FinalCTA/FinalCTA";
 import Footer from "./components/Footer/Footer";
 import HealthTips from "./components/HealthTips/HealthTips";
 
-import CalculadorasInterativas from './components/CalculadorasInterativas';
+import CalculadorasInterativas from './components/Calculadora/CalculadorasInterativas';
+import CalculadoraCaloricaPage from "./components/Calculadora/CalculadoraCaloricaPage";
+import CalculadoraIMCPage from "./components/Calculadora/CalculadoraIMCPage";
+
+
 
 // Lazy loading das páginas
 const BlogHome = lazy(() => import("./pages/BlogHome"));
@@ -52,6 +55,8 @@ function App() {
               path="/blog/:categoria/:subcategoria/:slug"
               element={<Artigo />}
             />
+            <Route path="/calculadora-imc" element={<CalculadoraIMCPage />} />
+            <Route path="/calculadora-calorica" element={<CalculadoraCaloricaPage />} />
 
             {/* Redirecionamentos antigos */}
             <Route path="/dicas-saude" element={<Navigate to="/blog" replace />} />

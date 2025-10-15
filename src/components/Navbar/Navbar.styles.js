@@ -161,7 +161,7 @@ export const SearchContainer = styled.div`
 
 export const SearchInput = styled.input`
   width: 100%;
-  max-width: 240px; /* largura máxima fixa */
+  max-width: 245px; /* largura máxima fixa */
   padding: 0.5rem 2.8rem 0.5rem 1rem;
   border-radius: 20px;
   border: 1px solid #43aa8b;
@@ -176,7 +176,7 @@ export const SearchInput = styled.input`
   }
 
   @media (max-width: 768px) {
-    max-width: 180px;
+    max-width: 100px;
   }
 `;
 

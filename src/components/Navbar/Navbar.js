@@ -28,6 +28,7 @@ export default function Navbar() {
   const [results, setResults] = useState([]);
   const [showSearchMobile, setShowSearchMobile] = useState(false);
   const searchRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const normalizeText = (text) => {
     if (!text) return "";
@@ -98,6 +99,14 @@ export default function Navbar() {
     };
   }, [showSearchMobile, results]);
 
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth <= 768);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   function handleResultClick(result) {
     if (result.type === "article") {
       navigate(result.slug);
@@ -139,7 +148,7 @@ export default function Navbar() {
         {(showSearchMobile || window.innerWidth > 768) && (
           <SearchInput
             type="text"
-            placeholder="Pesquisar artigos ou produtos..."
+            placeholder={isMobile ? "Buscar Algo.." : "Pesquisar artigos ou produtos..."}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Buscar artigos ou produtos"
