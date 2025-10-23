@@ -47,8 +47,6 @@ export default function Subcategoria() {
   );
 };
 
-// Mantém todos os styled components iguais
-
 
 // Styled Components
 const Container = styled.div`

@@ -34,10 +34,13 @@ export default function HealthTips() {
           <TipText>Descubra técnicas para melhorar seu bem-estar mental.</TipText>
         </TipCard>
           <TipCard onClick={() => navigate("/blog/espiritual")}>
-          <TipIcon aria-hidden="true">self_improvement</TipIcon>
-          <TipTitle>Saúde Espiritual</TipTitle>
-          <TipText>Descubra técnicas de Espiritualidade.</TipText>
-        </TipCard>
+            <TipIcon aria-hidden="true">self_improvement</TipIcon>
+            <TipTitle>Saúde Espiritual</TipTitle>
+            <TipText>
+              Práticas para fortalecer sua fé, energia interior e propósito de vida.
+            </TipText>
+          </TipCard>
+
       </TipsGrid>
     </TipsSection>
   );

@@ -5,7 +5,7 @@ const article = {
   date: "03/09/2025",
   readingTime: "5 min",
   category: "emocional",
-  subcategory: "autocontrole",
+  subcategory: "auto-controle-emocional",
   content: `
     <p>O autocontrole emocional é a habilidade de reconhecer, compreender e gerenciar suas emoções em diferentes situações do dia a dia. Mais do que evitar explosões, é sobre escolher como reagir diante de desafios, pressões e até frustrações.</p>
 

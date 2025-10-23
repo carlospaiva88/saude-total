@@ -9,31 +9,31 @@ import Breadcrumbs from "../components/BreadCrumbs";
 const subCategories = {
 emocional: [
   {
-    id: "respiracao",
+    id: "tecnica-respiracao",
     name: "Respiração",
     description: "Aprenda técnicas práticas para controlar a ansiedade, reduzir o estresse e conquistar tranquilidade no seu dia a dia.",
     image: "https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg",
   },
   {
-    id: "meditacao",
+    id: "introducao-meditacao",
     name: "Meditação",
     description: "Descubra como a prática regular de meditação pode equilibrar suas emoções, melhorar o foco e transformar sua saúde mental.",
     image: "https://images.pexels.com/photos/3820324/pexels-photo-3820324.jpeg",
   },
   {
-    id: "autocontrole",
+    id: "auto-controle-emocional",
     name: "Autocontrole",
     description: "Fortaleça sua inteligência emocional, aprenda a gerenciar impulsos e tome decisões mais conscientes em momentos desafiantes.",
     image: "https://images.pexels.com/photos/3822624/pexels-photo-3822624.jpeg",
   },
   {
-    id: "relacionamentos",
+    id: "lidando-com-relacionamentos-emocionais",
     name: "Relacionamentos Emocionais",
     description: "Como lidar com emoções em relacionamentos, melhorar a comunicação e criar vínculos mais saudáveis e duradouros.",
     image: "https://images.pexels.com/photos/3801665/pexels-photo-3801665.jpeg",
   },
   {
-    id: "bemestar",
+    id: "estrategias-para-bem-estar-emocional",
     name: "Bem-Estar Emocional",
     description: "Estratégias para aumentar a satisfação pessoal, lidar com frustrações e aproveitar melhor a vida com leveza.",
     image: "https://images.pexels.com/photos/4098343/pexels-photo-4098343.jpeg",
@@ -72,75 +72,92 @@ fisica: [
   image: "https://images.pexels.com/photos/4498317/pexels-photo-4498317.jpeg",
 },
 {
-  id: "exercicios-em-casa",
-  name: "Exercícios em Casa",
-  description: "Dicas de treinos fáceis e seguros para você se movimentar sem equipamentos, mesmo em espaços pequenos.",
-  image: "https://images.pexels.com/photos/3758963/pexels-photo-3758963.jpeg",
+  id: "punho",
+  name: "Fortalecimento do Punho",
+  description: "Técnicas e exercícios para fortalecer o punho, prevenindo lesões e melhorando a força para atividades físicas.",
+  image: "https://images.pexels.com/photos/416778/pexels-photo-416778.jpeg",
 },
 {
-  id: "alimentacao-saudavel",
-  name: "Alimentação Saudável",
-  description: "Guia prático para escolhas mais equilibradas, receitas e dicas adaptadas a diferentes rotinas e gostos.",
-  image: "https://images.pexels.com/photos/4558717/pexels-photo-4558717.jpeg",
-}
+  id: "articulacoes",
+  name: "Fortalecimento das Articulações",
+  description: "Dicas e práticas para fortalecer as articulações, garantindo mais mobilidade e resistência no dia a dia.",
+  image: "https://images.pexels.com/photos/416838/pexels-photo-416838.jpeg",
+  }
 ],
 
 mental: [
   {
-    id: "ansiedade",
+    id: "entendendo-ansiedade",
     name: "Ansiedade",
     description: "Aprenda a lidar com o nervosismo e preocupações no dia a dia.",
     image: "https://images.pexels.com/photos/887352/pexels-photo-887352.jpeg",
   },
   {
-    id: "depressao",
+    id: "compreendendo-depressao",
     name: "Depressão",
     description: "Entenda sintomas, formas de prevenção e caminhos para o bem-estar.",
     image: "https://images.pexels.com/photos/887481/pexels-photo-887481.jpeg",
   },
   {
-    id: "estresse",
+    id: "tecnicas-para-aliviar-estresse",
     name: "Estresse",
     description: "Descubra estratégias para reduzir o estresse e melhorar a qualidade de vida.",
     image: "https://images.pexels.com/photos/4050430/pexels-photo-4050430.jpeg",
   },
   {
-    id: "autoconhecimento",
+    id: "autoconhecimento-para-saude-mental",
     name: "Autoconhecimento",
     description: "Desvende seus padrões emocionais e fortaleça sua autoestima e confiança.",
     image: "https://images.pexels.com/photos/1370295/pexels-photo-1370295.jpeg",
   },
   {
-    id: "disturbios-sono",
+    id: "disturbios-do-sono",
     name: "Distúrbios do Sono",
     description: "Saiba como identificar e tratar insônia, apneia e outros problemas do sono.",
     image: "https://images.pexels.com/photos/4197545/pexels-photo-4197545.jpeg",
   },
   {
-    id: "cuidados-pandemia",
-    name: "Saúde Mental em Crise",
-    description: "Dicas para cuidar da mente em tempos de pandemia, crise econômica e isolamento.",
-    image: "https://images.pexels.com/photos/3930179/pexels-photo-3930179.jpeg",
+    id: "mindfulness-para-saude-mental",
+    name: "Mindfulness",
+    description: "Mindfulness é uma prática de atenção plena que ajuda a focar no momento presente.",
+    image: "https://images.pexels.com/photos/4197545/pexels-photo-4197545.jpeg",
+  },
+],
+
+
+espiritual: [
+  {
+    id: "autoestima-espiritual",
+    name: "Autoestima Espiritual",
+    description: "Aprenda como fortalecer sua conexão interior e elevar seu propósito através da espiritualidade.",
+    image: "https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg",
   },
   {
-    id: "relacionamentos",
-    name: "Relacionamentos Saudáveis",
-    description: "Aprenda a construir relações que somam saúde mental e qualidade de vida.",
-    image: "https://images.pexels.com/photos/295826/pexels-photo-295826.jpeg",
+    id: "meditacao-avancada",
+    name: "Meditação Avançada",
+    description: "Técnicas para aprofundar sua prática meditativa e alcançar equilíbrio energético e emocional.",
+    image: "https://images.pexels.com/photos/3820324/pexels-photo-3820324.jpeg",
   },
   {
-    id: "tecnologia",
-    name: "Tecnologia e Saúde Mental",
-    description: "Como usar redes sociais e tecnologia de forma equilibrada para seu bem-estar.",
-    image: "https://images.pexels.com/photos/842339/pexels-photo-842339.jpeg",
+    id: "energia-positiva",
+    name: "Energia Positiva",
+    description: "Descubra formas de cultivar boas energias, fé e gratidão no seu cotidiano.",
+    image: "https://images.pexels.com/photos/3822624/pexels-photo-3822624.jpeg",
   },
   {
-    id: "trabalho",
-    name: "Saúde Mental no Trabalho",
-    description: "Como lidar com pressão, burnout e buscar equilíbrio na rotina profissional.",
-    image: "https://images.pexels.com/photos/3769021/pexels-photo-3769021.jpeg",
+    id: "equilibrio-espiritual-diario",
+    name: "Reflexão Interior",
+    description: "Práticas e pensamentos que ajudam no autoconhecimento e na evolução espiritual pessoal.",
+    image: "https://images.pexels.com/photos/3801665/pexels-photo-3801665.jpeg",
+  },
+  {
+    id: "gratidao",
+    name: "Gratidão e Propósito",
+    description: "Desenvolva um estilo de vida com base na gratidão, propósito e equilíbrio espiritual.",
+    image: "https://images.pexels.com/photos/4098343/pexels-photo-4098343.jpeg",
   }
-]
+],
+
 
 };
 
