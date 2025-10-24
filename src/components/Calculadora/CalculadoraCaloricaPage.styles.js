@@ -30,30 +30,24 @@ export const Subtitle = styled.h2`
 
 export const TwoColumns = styled.section`
   display: flex;
+  flex-wrap: wrap; /* evita overflow */
   gap: 2.5rem;
   align-items: flex-start;
   justify-content: center;
+
   @media (max-width: 860px) {
     flex-direction: column-reverse;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 `;
 
 export const CalculatorCard = styled.div`
-  background: #f8fcfb;
-  box-shadow: 0 8px 30px rgba(42, 157, 143, 0.09);
-  border-radius: 18px;
-  padding: 2.2rem 1.7rem;
-  flex: 1 1 340px;
+  box-sizing: border-box;
+  width: 100%;
   max-width: 430px;
   margin: 0 auto;
-
-  @media (max-width: 600px) {
-    padding: 1.2rem 0.7rem;
-    max-width: 100%;
-  }
+  overflow-x: hidden; /* previne scroll lateral */
 `;
-
 
 export const InfoCard = styled.div`
   background: #f8fcfb;

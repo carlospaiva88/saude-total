@@ -5,7 +5,7 @@ const article = {
   date: "23/10/2025",
   readingTime: "6 min",
   category: "emocional",
-  subcategory: "relacionamentos",
+  subcategory: "lidando-com-relacionamentos-emocionais",
   content: `
     <p>Relacionamentos saudáveis são fundamentais para o bem-estar emocional. Saiba como cultivar empatia, comunicação eficaz e resolver conflitos com sabedoria.</p>
 

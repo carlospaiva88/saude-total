@@ -5,7 +5,7 @@ const article = {
   date: "03/09/2025",
   readingTime: "6 min",
   category: "emocional",
-  subcategory: "meditacao",
+  subcategory: "introducao-meditacao",
   content: `
    <h2>Por que Meditar? O Guia Definitivo para Iniciantes</h2>
 

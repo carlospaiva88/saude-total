@@ -1,5 +1,4 @@
 // src/pages/BlogHome.js
-import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Navbar from "../components/Navbar/Navbar";
@@ -23,6 +22,12 @@ const blogCategories = [
     name: "Saúde Emocional",
     description: "Equilibre emoções e fortaleça a inteligência emocional.",
     image: "https://images.pexels.com/photos/791764/pexels-photo-791764.jpeg",
+  },
+    {
+    id: "espiritual",
+    name: "Saúde Espiritual",
+    description: "Encontre a sua força interior e fortaleça a sua fé.",
+    image: "https://images.pexels.com/photos/32593588/pexels-photo-32593588.jpeg",
   },
 ];
 

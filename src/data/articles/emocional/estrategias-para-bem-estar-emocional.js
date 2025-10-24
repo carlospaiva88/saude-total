@@ -5,7 +5,7 @@ const article = {
   date: "23/10/2025",
   readingTime: "5 min",
   category: "emocional",
-  subcategory: "bemestar",
+  subcategory: "estrategias-para-bem-estar-emocional",
   content: `
     <p>O bem-estar emocional envolve cuidar das emoções de forma consciente para levar uma vida mais leve e satisfatória.</p>
 
