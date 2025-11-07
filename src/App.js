@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { lazy, Suspense } from "react";
+import { ThemeProvider } from "styled-components";
+import { theme } from "./styles/theme"; 
 
 // Componentes comuns
 import Navbar from "./components/Navbar/Navbar";
@@ -8,12 +10,13 @@ import Hero from "./components/Hero/Hero";
 import FinalCTA from "./components/FinalCTA/FinalCTA";
 import Footer from "./components/Footer/Footer";
 import HealthTips from "./components/HealthTips/HealthTips";
+import { MainContainer } from "./components/Navbar/Navbar.styles";
 
 import CalculadorasInterativas from './components/Calculadora/CalculadorasInterativas';
 import CalculadoraCaloricaPage from "./components/Calculadora/CalculadoraCaloricaPage";
 import CalculadoraIMCPage from "./components/Calculadora/CalculadoraIMCPage";
-
-
+import ProductShowcase from "./components/ProductShowcase/ProductShowcase";
+import HealthyRecipes from "./components/HealthyRecipes/HealthyRecipes";
 
 // Lazy loading das páginas
 const BlogHome = lazy(() => import("./pages/BlogHome"));
@@ -26,6 +29,7 @@ const ProductsPage = lazy(() => import("./components/ProductsPage/ProductsPage")
 function App() {
   return (
     <HelmetProvider>
+      <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Suspense fallback={<div>Carregando...</div>}>
           <Routes>
@@ -34,12 +38,16 @@ function App() {
               path="/"
               element={
                 <>
+           
                   <Navbar />
                   <Hero />
                   <HealthTips />
                   <CalculadorasInterativas />
+                  <HealthyRecipes />
+                  <ProductShowcase />
                   <FinalCTA />
                   <Footer />
+            
                 </>
               }
             />
@@ -78,6 +86,7 @@ function App() {
           </Routes>
         </Suspense>
       </BrowserRouter>
+      </ThemeProvider>
     </HelmetProvider>
   );
 }

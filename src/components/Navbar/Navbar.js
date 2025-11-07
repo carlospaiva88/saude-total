@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
-import Logo from "../Navbar/Logo"; // ajuste caminho conforme sua estrutura
 import {
   NavbarContainer,
   Menu,
@@ -16,9 +15,11 @@ import {
   ResultItem,
   EmojiIcon,
   NoResults,
+  LogoImg
 } from "./Navbar.styles";
 import { articlesArray } from "../../data/articles";
 import productsData from "../../data/products";
+import logoImg from "../../components/Navbar/viva.png";
 
 export default function Navbar() {
   const location = useLocation();
@@ -129,17 +130,36 @@ export default function Navbar() {
 
   return (
     <NavbarContainer>
-      <Logo />
-
+      <LogoImg src={logoImg}/>
       <Menu>
+        <MenuItem>
+          <StyledNavLink to="/blog" onClick={() => setIsOpen(false)}>
+            Blog
+          </StyledNavLink>
+        </MenuItem>
+        <MenuItem>
+          <StyledNavLink to="/receitas" onClick={() => setIsOpen(false)}>
+            Receitas
+          </StyledNavLink>
+        </MenuItem>
         <MenuItem>
           <StyledNavLink to="/produtos" onClick={() => setIsOpen(false)}>
             Produtos
           </StyledNavLink>
         </MenuItem>
         <MenuItem>
-          <StyledNavLink to="/blog" onClick={() => setIsOpen(false)}>
-            Blog de Saúde
+          <StyledNavLink to="/ebooks" onClick={() => setIsOpen(false)}>
+            e-Books
+          </StyledNavLink>
+        </MenuItem>
+        <MenuItem>
+          <StyledNavLink to="/viagens" onClick={() => setIsOpen(false)}>
+            Viagens
+          </StyledNavLink>
+        </MenuItem>
+        <MenuItem>
+          <StyledNavLink to="/sobrenos" onClick={() => setIsOpen(false)}>
+            Sobre nós
           </StyledNavLink>
         </MenuItem>
       </Menu>

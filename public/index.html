@@ -30,7 +30,31 @@
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 
-    <title>Saúde com Movimento</title>
+      <!--Pré-carregamento de fontes e ícones-->
+      <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" as="style" />
+      <link rel="preload" href="%PUBLIC_URL%/saude.png" as="image" />
+
+      <!--Favicons e PWA completos-->
+      <link rel="icon" sizes="32x32" href="%PUBLIC_URL%/saude-32.png" />
+      <link rel="icon" sizes="192x192" href="%PUBLIC_URL%/saude-192.png" />
+      <link rel="apple-touch-icon" href="%PUBLIC_URL%/saude-apple.png" />
+
+      <!--Estrutura de SEO Avançada-->
+      <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Viva no Flow",
+          "url": "https://saude-com-movimento.vercel.app/",
+          "description": "Dicas, produtos e conteúdo sobre saúde, fitness e bem-estar.",
+          "author": {
+            "@type": "Organization",
+            "name": "Viva no Flow"
+          }
+        }
+      </script>
+
+    <title>Viva no Flow</title>
 
     <!--Google Analytics -->
     <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=SEU_ID"></script>
