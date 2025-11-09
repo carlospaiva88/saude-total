@@ -10,7 +10,6 @@ import Hero from "./components/Hero/Hero";
 import FinalCTA from "./components/FinalCTA/FinalCTA";
 import Footer from "./components/Footer/Footer";
 import HealthTips from "./components/HealthTips/HealthTips";
-import { MainContainer } from "./components/Navbar/Navbar.styles";
 
 import CalculadorasInterativas from './components/Calculadora/CalculadorasInterativas';
 import CalculadoraCaloricaPage from "./components/Calculadora/CalculadoraCaloricaPage";

@@ -1,6 +1,5 @@
 // Footer.js
-import React from "react";
-import { FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
 import { FooterContainer, FooterTop, FooterBottom, SocialLinks } from "./Footer.styles";
 
 export default function Footer() {

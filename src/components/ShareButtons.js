@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { FaLinkedin, FaFacebook, FaTwitter, FaWhatsapp, FaInstagram, FaLink } from "react-icons/fa";
+import { FaLinkedin, FaFacebook, FaWhatsapp, FaInstagram, FaLink } from "react-icons/fa";
 
 // Contêiner dos botões organizados horizontalmente
 const ShareContainer = styled.div`

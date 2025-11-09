@@ -1,8 +1,7 @@
-import { keyframes } from "styled-components";
-import styled  from "styled-components";
+import styled, { keyframes, css } from "styled-components";
 
 // Animações suaves
-export const fadeInUp = keyframes`
+const fadeInUp = keyframes`
   from {
     opacity: 0;
     transform: translateY(25px);
@@ -13,11 +12,12 @@ export const fadeInUp = keyframes`
   }
 `;
 
-export const floatImage = keyframes`
+const floatImage = keyframes`
   0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-12px); }
   100% { transform: translateY(0); }
 `;
+
 export const HeroSection = styled.section`
   display: flex;
   align-items: center;
@@ -25,17 +25,22 @@ export const HeroSection = styled.section`
   padding: 4rem 2rem;
   background: ${({ theme }) => theme.gradients.hero};
   color: ${({ theme }) => theme.colors.white};
-  min-height: 400px;
+  min-height: 500px;
   gap: 2rem;
+  overflow: hidden;
+  position: relative;
 
   @media (max-width: 768px) {
     flex-direction: column;
     text-align: center;
+    min-height: 600px;
   }
 `;
+
 export const HeroContent = styled.div`
   max-width: 600px;
   animation: ${fadeInUp} 1s ease forwards;
+  z-index: 2;
 `;
 
 export const HeroHeadline = styled.h1`
@@ -51,6 +56,7 @@ export const HeroSubheadline = styled.p`
   font-weight: 500;
   color: ${({ theme }) => theme.colors.light};
 `;
+
 export const HeroButton = styled.a`
   display: inline-block;
   padding: 0.9rem 2rem;
@@ -70,11 +76,13 @@ export const HeroButton = styled.a`
 `;
 
 export const HeroImageWrapper = styled.div`
+  position: relative;
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
   animation: ${fadeInUp} 1.2s ease forwards;
+  z-index: 1;
 `;
 
 export const HeroImage = styled.img`
@@ -91,3 +99,41 @@ export const HeroImage = styled.img`
   }
 `;
 
+// Imagens flutuantes adicionais
+export const FloatingImage = styled.img`
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 16px;
+  opacity: 0.9;
+  animation: ${floatImage} 5s ease-in-out infinite alternate;
+  animation-delay: ${({ delay }) => delay || "0s"};
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.15));
+
+  ${({ position }) =>
+    position === "top-left" &&
+    css`
+      top: 0;
+      left: -40px;
+      transform: rotate(-8deg);
+    `}
+  ${({ position }) =>
+    position === "top-right" &&
+    css`
+      top: -20px;
+      right: -50px;
+      transform: rotate(6deg);
+    `}
+  ${({ position }) =>
+    position === "bottom-right" &&
+    css`
+      bottom: -30px;
+      right: 10px;
+      transform: rotate(-5deg);
+    `}
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;

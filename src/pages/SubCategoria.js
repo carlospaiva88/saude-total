@@ -55,26 +55,7 @@ const Container = styled.div`
   padding: 0 1.5rem;
 `;
 
-const BreadcrumbContainer = styled.div`
-  max-width: 1100px;
-  margin: 1.5rem auto 0;
-  padding: 0 1.5rem;
-  font-size: 0.9rem;
-  color: #40514e;
 
-  a {
-    color: #43aa8b;
-    text-decoration: none;
-    &:hover {
-      color: #2a6f61;
-    }
-  }
-
-  span {
-    display: inline-block;
-    margin-right: 0.25rem;
-  }
-`;
 
 const Title = styled.h1`
   font-size: 2rem;
