@@ -29,6 +29,7 @@ const Label = styled.label`
 
 const Input = styled.input`
   width: 100%;
+  max-width: 60px;
   padding: 0.7rem 1rem;
   border-radius: 12px;
   border: 2px solid #43aa8b;
@@ -47,6 +48,8 @@ const Input = styled.input`
 `;
 
 const Select = styled.select`
+  width: 100%;
+  max-width: 390px;
   padding: 0.7rem 1rem;
   border-radius: 12px;
   border: 2px solid #43aa8b;
@@ -226,7 +229,28 @@ export default function CalculadoraCalorica({ onCalcular }) {
           <option value="masculino">Masculino</option>
           <option value="feminino">Feminino</option>
         </Select>
-
+<Label htmlFor="nivelAtividade">Nível de atividade física</Label>
+        <Select
+          id="nivelAtividade"
+          value={nivelAtividade}
+          onChange={(e) => setNivelAtividade(e.target.value)}
+          required
+        >
+          <option value="sedentario">
+            Sedentário (pouco ou nenhum exercício)
+          </option>
+          <option value="levemente">
+            Levemente ativo (exercício leve 1-3 dias/semana)
+          </option>
+          <option value="moderado">
+            Moderadamente ativo (exercício moderado 3-5 dias/semana)
+          </option>
+          <option value="muito">Muito ativo (exercício forte 6-7 dias/semana)</option>
+          <option value="extremo">
+            Atleta (exercício intenso e trabalho físico pesado)
+          </option>
+        </Select>
+        
         <Label htmlFor="idade">Idade</Label>
         <Input
           id="idade"
@@ -263,27 +287,7 @@ export default function CalculadoraCalorica({ onCalcular }) {
           required
         />
 
-        <Label htmlFor="nivelAtividade">Nível de atividade física</Label>
-        <Select
-          id="nivelAtividade"
-          value={nivelAtividade}
-          onChange={(e) => setNivelAtividade(e.target.value)}
-          required
-        >
-          <option value="sedentario">
-            Sedentário (pouco ou nenhum exercício)
-          </option>
-          <option value="levemente">
-            Levemente ativo (exercício leve 1-3 dias/semana)
-          </option>
-          <option value="moderado">
-            Moderadamente ativo (exercício moderado 3-5 dias/semana)
-          </option>
-          <option value="muito">Muito ativo (exercício forte 6-7 dias/semana)</option>
-          <option value="extremo">
-            Atleta (exercício intenso e trabalho físico pesado)
-          </option>
-        </Select>
+        
 
         <Button type="submit" disabled={!peso || !altura || !idade}>
           Calcular

@@ -49,7 +49,24 @@ export default function Hero() {
           position="bottom-right"
           delay="2s"
         />
-       
+        <FloatingImage
+          src="https://images.pexels.com/photos/3757375/pexels-photo-3757375.jpeg"
+          alt="Meditação"
+          position="bottom-left"
+          delay="2.5s"
+        />
+        <FloatingImage
+          src="https://images.pexels.com/photos/3823039/pexels-photo-3823039.jpeg"
+          alt="Alongamento"
+          position="middle-left"
+          delay="3s"
+        />
+        <FloatingImage
+          src="https://images.pexels.com/photos/2088170/pexels-photo-2088170.jpeg"
+          alt="Surf"
+          position="middle-right"
+          delay="3.5s"
+        />
       </HeroImageWrapper>
     </HeroSection>
   );

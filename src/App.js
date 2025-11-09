@@ -10,9 +10,14 @@ import Hero from "./components/Hero/Hero";
 import FinalCTA from "./components/FinalCTA/FinalCTA";
 import Footer from "./components/Footer/Footer";
 import HealthTips from "./components/HealthTips/HealthTips";
+import Receitas from "./components/Receitas/Receitas";
+import Viagens from "./components/Viagens/Viagens";
+import Sobre from "./components/Sobre/Sobre";
+
+
+import CalculadoraCaloricaPage from './components/Calculadora/CalculadoraCaloricaPage';
 
 import CalculadorasInterativas from './components/Calculadora/CalculadorasInterativas';
-import CalculadoraCaloricaPage from "./components/Calculadora/CalculadoraCaloricaPage";
 import CalculadoraIMCPage from "./components/Calculadora/CalculadoraIMCPage";
 import ProductShowcase from "./components/ProductShowcase/ProductShowcase";
 import HealthyRecipes from "./components/HealthyRecipes/HealthyRecipes";
@@ -64,6 +69,11 @@ function App() {
             />
             <Route path="/calculadora-imc" element={<CalculadoraIMCPage />} />
             <Route path="/calculadora-calorica" element={<CalculadoraCaloricaPage />} />
+
+            <Route path="/receitas" element={<Receitas />} />
+            <Route path="/sobre" element={<Sobre />} />
+            <Route path="/viagens" element={<Viagens />} />
+
 
             {/* Redirecionamentos antigos */}
             <Route path="/dicas-saude" element={<Navigate to="/blog" replace />} />

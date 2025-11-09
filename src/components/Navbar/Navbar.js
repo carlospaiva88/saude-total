@@ -94,7 +94,13 @@ export default function Navbar() {
   return (
     <>
       <NavbarContainer>
-        <LogoImg src={logoImg} alt="Viva no Flow" />
+    
+      <LogoImg
+        src={logoImg}
+        alt="Viva no Flow"
+        style={{ cursor: "pointer" }}
+        onClick={() => navigate("/")}
+      />
 
         {/* Menu Desktop */}
         <Menu data-type="desktop">
@@ -102,7 +108,7 @@ export default function Navbar() {
           <MenuItem><StyledNavLink to="/receitas">Receitas</StyledNavLink></MenuItem>
           <MenuItem><StyledNavLink to="/produtos">Produtos</StyledNavLink></MenuItem>
           <MenuItem><StyledNavLink to="/viagens">Viagens</StyledNavLink></MenuItem>
-          <MenuItem><StyledNavLink to="/sobrenos">Sobre nós</StyledNavLink></MenuItem>
+          <MenuItem><StyledNavLink to="/sobre">Sobre nós</StyledNavLink></MenuItem>
         </Menu>
 
         {/* Ícones à direita */}

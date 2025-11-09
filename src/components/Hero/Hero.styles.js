@@ -1,15 +1,9 @@
 import styled, { keyframes, css } from "styled-components";
 
-// Animações suaves
+// animações
 const fadeInUp = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(25px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
 `;
 
 const floatImage = keyframes`
@@ -99,7 +93,6 @@ export const HeroImage = styled.img`
   }
 `;
 
-// Imagens flutuantes adicionais
 export const FloatingImage = styled.img`
   position: absolute;
   width: 140px;
@@ -114,23 +107,44 @@ export const FloatingImage = styled.img`
   ${({ position }) =>
     position === "top-left" &&
     css`
-      top: 0;
+      top: -30px;
       left: -40px;
       transform: rotate(-8deg);
     `}
   ${({ position }) =>
     position === "top-right" &&
     css`
-      top: -20px;
-      right: -50px;
+      top: -100px;
+      right: -25px;
       transform: rotate(6deg);
     `}
   ${({ position }) =>
     position === "bottom-right" &&
     css`
-      bottom: -30px;
+      bottom: -150px;
       right: 10px;
       transform: rotate(-5deg);
+    `}
+  ${({ position }) =>
+    position === "bottom-left" &&
+    css`
+      bottom: -180px;
+      left: 0;
+      transform: rotate(8deg);
+    `}
+  ${({ position }) =>
+    position === "middle-left" &&
+    css`
+      top: 220px;
+      left: -180px;
+      transform: rotate(-4deg);
+    `}
+  ${({ position }) =>
+    position === "middle-right" &&
+    css`
+      top: 280px;
+      right: 240px;
+      transform: rotate(5deg);
     `}
 
   @media (max-width: 768px) {
