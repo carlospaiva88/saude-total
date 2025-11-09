@@ -1,74 +1,69 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { FiSearch } from "react-icons/fi";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { FiSearch, FiX, FiMenu } from "react-icons/fi";
+import { motion, AnimatePresence } from "framer-motion";
+
 import {
   NavbarContainer,
+  LogoImg,
   Menu,
   MenuItem,
   StyledNavLink,
-  Hamburger,
-  MobileMenu,
-  SearchContainer,
-  SearchInput,
-  SearchButtonMobile,
-  ResultsDropdown,
+  SearchIconButton,
+  SearchOverlay,
+  SearchBox,
+  SearchInputLarge,
+  ResultsList,
   ResultItem,
-  EmojiIcon,
   NoResults,
-  LogoImg
+  MobileMenuButton,
+  MobileMenuContainer,
 } from "./Navbar.styles";
+
 import { articlesArray } from "../../data/articles";
 import productsData from "../../data/products";
 import logoImg from "../../components/Navbar/viva.png";
 
 export default function Navbar() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
-  const [showSearchMobile, setShowSearchMobile] = useState(false);
-  const searchRef = useRef(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  const normalizeText = (text) => {
-    if (!text) return "";
-    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  };
+  const normalizeText = (text) =>
+    text?.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (!query.trim()) {
-        setResults([]);
-        return;
-      }
+      if (!query.trim()) return setResults([]);
+
       const lowerQuery = normalizeText(query);
+
       const filteredArticles = articlesArray
-        .filter((article) =>
-          [article.title, article.slug, article.friendlySlug].some((f) =>
+        .filter((a) =>
+          [a.title, a.slug, a.friendlySlug].some((f) =>
             normalizeText(f).includes(lowerQuery)
           )
         )
-        .map((article) => ({
+        .map((a) => ({
           type: "article",
-          title: article.title,
-          description: article.excerpt || "",
-          slug: `/blog/${article.category}/${article.subcategory}/${article.friendlySlug}`,
+          title: a.title,
+          description: a.excerpt || "",
+          slug: `/blog/${a.category}/${a.subcategory}/${a.friendlySlug}`,
         }));
 
       const filteredProducts = productsData.products
-        .filter((product) =>
-          [product.name, product.description].some((f) =>
+        .filter((p) =>
+          [p.name, p.description].some((f) =>
             normalizeText(f).includes(lowerQuery)
           )
         )
-        .map((product) => ({
+        .map((p) => ({
           type: "product",
-          title: product.name,
-          id: product.id,
-          description:
-            product.shortDescription ||
-            "Veja mais detalhes na página de produtos.",
+          title: p.name,
+          id: p.id,
+          description: p.shortDescription || "",
         }));
 
       setResults([...filteredArticles, ...filteredProducts]);
@@ -76,37 +71,6 @@ export default function Navbar() {
 
     return () => clearTimeout(handler);
   }, [query]);
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (
-        showSearchMobile &&
-        searchRef.current &&
-        !searchRef.current.contains(event.target)
-      ) {
-        setShowSearchMobile(false);
-      }
-      if (
-        results.length > 0 &&
-        searchRef.current &&
-        !searchRef.current.contains(event.target)
-      ) {
-        setResults([]);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showSearchMobile, results]);
-
-  useEffect(() => {
-    function handleResize() {
-      setIsMobile(window.innerWidth <= 768);
-    }
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   function handleResultClick(result) {
     if (result.type === "article") {
@@ -122,116 +86,113 @@ export default function Navbar() {
         });
       }
     }
+    setShowSearch(false);
     setQuery("");
     setResults([]);
-    setIsOpen(false);
-    setShowSearchMobile(false);
   }
 
   return (
-    <NavbarContainer>
-      <LogoImg src={logoImg}/>
-      <Menu>
-        <MenuItem>
-          <StyledNavLink to="/blog" onClick={() => setIsOpen(false)}>
-            Blog
-          </StyledNavLink>
-        </MenuItem>
-        <MenuItem>
-          <StyledNavLink to="/receitas" onClick={() => setIsOpen(false)}>
-            Receitas
-          </StyledNavLink>
-        </MenuItem>
-        <MenuItem>
-          <StyledNavLink to="/produtos" onClick={() => setIsOpen(false)}>
-            Produtos
-          </StyledNavLink>
-        </MenuItem>
-        <MenuItem>
-          <StyledNavLink to="/ebooks" onClick={() => setIsOpen(false)}>
-            e-Books
-          </StyledNavLink>
-        </MenuItem>
-        <MenuItem>
-          <StyledNavLink to="/viagens" onClick={() => setIsOpen(false)}>
-            Viagens
-          </StyledNavLink>
-        </MenuItem>
-        <MenuItem>
-          <StyledNavLink to="/sobrenos" onClick={() => setIsOpen(false)}>
-            Sobre nós
-          </StyledNavLink>
-        </MenuItem>
-      </Menu>
+    <>
+      <NavbarContainer>
+        <LogoImg src={logoImg} alt="Viva no Flow" />
 
-      <SearchContainer ref={searchRef} showSearchMobile={showSearchMobile}>
-        {(showSearchMobile || window.innerWidth > 768) && (
-          <SearchInput
-            type="text"
-            placeholder={isMobile ? "Buscar Algo.." : "Pesquisar artigos ou produtos..."}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            aria-label="Buscar artigos ou produtos"
-            aria-expanded={results.length > 0}
-            autoFocus={showSearchMobile}
-            maxLength={100}
-          />
-        )}
+        {/* Menu Desktop */}
+        <Menu data-type="desktop">
+          <MenuItem><StyledNavLink to="/blog">Blog</StyledNavLink></MenuItem>
+          <MenuItem><StyledNavLink to="/receitas">Receitas</StyledNavLink></MenuItem>
+          <MenuItem><StyledNavLink to="/produtos">Produtos</StyledNavLink></MenuItem>
+          <MenuItem><StyledNavLink to="/viagens">Viagens</StyledNavLink></MenuItem>
+          <MenuItem><StyledNavLink to="/sobrenos">Sobre nós</StyledNavLink></MenuItem>
+        </Menu>
 
-        {!showSearchMobile && window.innerWidth <= 768 && (
-          <SearchButtonMobile
-            onClick={() => setShowSearchMobile(true)}
-            aria-label="Abrir busca"
+        {/* Ícones à direita */}
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <SearchIconButton onClick={() => setShowSearch(true)}>
+            <FiSearch size={22} />
+          </SearchIconButton>
+
+          {/* Botão Mobile */}
+          <MobileMenuButton onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+          </MobileMenuButton>
+        </div>
+      </NavbarContainer>
+
+      {/* Menu Mobile */}
+      <AnimatePresence>
+        {menuOpen && (
+          <MobileMenuContainer
+            as={motion.div}
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "tween", duration: 0.3 }}
           >
-            <FiSearch />
-          </SearchButtonMobile>
+            <Menu style={{ flexDirection: "column", gap: "24px" }}>
+              <MenuItem><StyledNavLink to="/blog" onClick={() => setMenuOpen(false)}>Blog</StyledNavLink></MenuItem>
+              <MenuItem><StyledNavLink to="/receitas" onClick={() => setMenuOpen(false)}>Receitas</StyledNavLink></MenuItem>
+              <MenuItem><StyledNavLink to="/produtos" onClick={() => setMenuOpen(false)}>Produtos</StyledNavLink></MenuItem>
+              <MenuItem><StyledNavLink to="/viagens" onClick={() => setMenuOpen(false)}>Viagens</StyledNavLink></MenuItem>
+              <MenuItem><StyledNavLink to="/sobrenos" onClick={() => setMenuOpen(false)}>Sobre nós</StyledNavLink></MenuItem>
+            </Menu>
+          </MobileMenuContainer>
         )}
+      </AnimatePresence>
 
-        {results.length > 0 && (
-          <ResultsDropdown role="listbox">
-            {results.map((result, index) => (
-              <ResultItem
-                key={index}
-                onClick={() => handleResultClick(result)}
-                role="option"
-                tabIndex={0}
+      {/* Search Overlay */}
+      <AnimatePresence>
+        {showSearch && (
+          <SearchOverlay
+            as={motion.div}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <SearchBox
+              as={motion.div}
+              initial={{ y: -30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -30, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.6rem",
+                  marginBottom: "1rem",
+                }}
               >
-                <EmojiIcon>{result.type === "article" ? "📖" : "🛒"}</EmojiIcon>
-                <div>
-                  <strong>{result.title}</strong>
-                  <p>{result.description}</p>
-                </div>
-              </ResultItem>
+                <FiSearch size={22} />
+                <SearchInputLarge
+                  type="text"
+                  placeholder="Buscar artigos ou produtos..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  autoFocus
+                />
+                <FiX
+                  size={22}
+                  onClick={() => setShowSearch(false)}
+                  style={{ cursor: "pointer" }}
+                />
+              </div>
 
-            ))}
-          </ResultsDropdown>
+              <ResultsList>
+                {query && results.length === 0 && (
+                  <NoResults>Nenhum resultado encontrado</NoResults>
+                )}
+                {results.map((result, i) => (
+                  <ResultItem key={i} onClick={() => handleResultClick(result)}>
+                    <strong>{result.title}</strong>
+                    <p>{result.description}</p>
+                  </ResultItem>
+                ))}
+              </ResultsList>
+            </SearchBox>
+          </SearchOverlay>
         )}
-
-        {query && results.length === 0 && (
-          <ResultsDropdown>
-            <NoResults>Nenhum resultado para “{query}”</NoResults>
-          </ResultsDropdown>
-        )}
-      </SearchContainer>
-
-      <Hamburger onClick={() => setIsOpen(!isOpen)} aria-label="Abrir menu">
-        <span />
-        <span />
-        <span />
-      </Hamburger>
-
-      <MobileMenu isOpen={isOpen}>
-        <MenuItem>
-          <StyledNavLink to="/produtos" onClick={() => setIsOpen(false)}>
-            Produtos
-          </StyledNavLink>
-        </MenuItem>
-        <MenuItem>
-          <StyledNavLink to="/blog" onClick={() => setIsOpen(false)}>
-            Blog de Saúde
-          </StyledNavLink>
-        </MenuItem>
-      </MobileMenu>
-    </NavbarContainer>
+      </AnimatePresence>
+    </>
   );
 }
