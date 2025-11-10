@@ -1,7 +1,7 @@
 const viagem = {
   slug: "lisboa",
   title: "Lisboa: História, Sol e Sabores em Cada Esquina",
-  image: "https://images.pexels.com/photos/458917/pexels-photo-458917.jpeg",
+  image: "https://images.pexels.com/photos/1534560/pexels-photo-1534560.jpeg",
   date: "11/11/2025",
   readingTime: "7 min",
   category: "internacionais",

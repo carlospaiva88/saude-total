@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
-import recipesData from "../../data/recipes"; // objeto para acesso rápido
+import { recipes } from "../../data/recipes"; // ✅ agora pegamos o array
 
 import Navbar from "../Navbar/Navbar";
 import NavbarSpacer from "../Navbar/NavbarSpacer";
@@ -63,8 +63,10 @@ const AdPlaceholder = styled.div`
 export default function ReceitaPage() {
   const { slug } = useParams();
 
-  // busca no objeto recipesData (funciona tanto para slug quanto friendlySlug)
-  const receita = recipesData[slug];
+  // ✅ agora buscamos no array de receitas
+  const receita = recipes.find(
+    (r) => r.slug === slug || r.friendlySlug === slug
+  );
 
   if (!receita) {
     return (
@@ -73,6 +75,7 @@ export default function ReceitaPage() {
         <NavbarSpacer />
         <Container>
           <h1>Receita não encontrada 😔</h1>
+          <p>Verifique se o link está correto.</p>
         </Container>
         <Footer />
       </>
@@ -88,6 +91,7 @@ export default function ReceitaPage() {
 
       <Navbar />
       <NavbarSpacer />
+
       <Container>
         <Image src={receita.image} alt={receita.title} />
         <Title>{receita.title}</Title>
@@ -115,6 +119,7 @@ export default function ReceitaPage() {
 
         <ShareButtons title={receita.title} url={window.location.href} />
       </Container>
+
       <Footer />
     </>
   );

@@ -3,6 +3,10 @@ import styled from "styled-components";
 import { Helmet } from "react-helmet-async";
 import Navbar from "../components/Navbar/Navbar";
 import NavbarSpacer from "../components/Navbar/NavbarSpacer";
+import BreadcrumbsViagens from "../components/BreadcrumbsViagens";
+import RelatedCarousel from "../components/RelatedCarousel";
+import AdBlock from "../components/AdBlock";
+
 
 import Footer from "../components/Footer/Footer";
 import viagensData from "../data/viagens";
@@ -24,6 +28,8 @@ export default function ViagemPage() {
 
       <Navbar />
       <NavbarSpacer />
+      <BreadcrumbsViagens />
+
       <Article>
         <Header>
           <img src={viagem.image} alt={viagem.title} />
@@ -34,7 +40,11 @@ export default function ViagemPage() {
         </Header>
 
         <Content dangerouslySetInnerHTML={{ __html: viagem.content }} />
-
+        <AdBlock />
+        <RelatedCarousel
+          viagens={viagensData[categoria].filter((v) => v.slug !== slug)}
+          categoria={categoria}
+        />
         {viagem.product && (
           <ProductBox>
             <h3>Produto Recomendado</h3>

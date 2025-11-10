@@ -3,7 +3,7 @@ const viagem = {
   title: "Rio de Janeiro: Dicas Imperdíveis Para Viver a Cidade Maravilhosa",
   category: "nacionais",
   subcategory: "praias",
-  image: "https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg",
+  image: "https://images.pexels.com/photos/2876407/pexels-photo-2876407.jpeg",
   date: "10/11/2025",
   readingTime: "7 min",
   shortDescription: "Descubra os encantos do Rio: praias, trilhas, cultura e boa energia.",

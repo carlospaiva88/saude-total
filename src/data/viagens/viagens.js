@@ -22,7 +22,7 @@ const chapadaDiamantina = {
 const rioDeJaneiro = {
   slug: "rio-de-janeiro",
   title: "Rio de Janeiro: Praias e Aventuras Inesquecíveis",
-  image: "https://images.pexels.com/photos/1796729/pexels-photo-1796729.jpeg",
+  image: "https://images.pexels.com/photos/2876407/pexels-photo-2876407.jpeg",
   date: "05/11/2025",
   readingTime: "7 min",
   category: "nacionais",

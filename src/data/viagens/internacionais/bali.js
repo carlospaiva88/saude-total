@@ -1,7 +1,7 @@
 const viagem = {
   slug: "bali",
   title: "Bali: Espiritualidade, Natureza e Beleza Sem Igual",
-  image: "https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg",
+  image: "https://images.pexels.com/photos/1544351/pexels-photo-1544351.jpeg",
   date: "11/11/2025",
   readingTime: "10 min",
   category: "internacionais",

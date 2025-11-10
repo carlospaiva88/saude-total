@@ -2,7 +2,8 @@ import styled from "styled-components";
 import { Helmet } from "react-helmet-async";
 import Navbar from "../components/Navbar/Navbar";
 import NavbarSpacer from "../components/Navbar/NavbarSpacer";
-
+import HeroCarousel from "../components/Viagens/HeroCarousel";
+import DestinosDestaque from "../components/Viagens/DestinosDestaque";
 import Footer from "../components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
 
@@ -21,9 +22,12 @@ export default function ViagensHome() {
 
       <Navbar />
       <NavbarSpacer />
+      <HeroCarousel />
+      <DestinosDestaque />
+
       <Section>
         <h1>Escolha seu tipo de viagem</h1>
-        <p>Explore o mundo enquanto cuida de você 🌿✈️</p>
+        <p>Explore o mundo enquanto cuida de você </p>
 
         <Grid>
           <Card onClick={() => navigate("/viagens/nacionais")}>
