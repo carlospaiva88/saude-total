@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import ProductCardComponent from '../ProductCard/ProductCard';
 import Navbar from '../Navbar/Navbar';
+import NavbarSpacer from '../Navbar/NavbarSpacer';
+
 import Footer from '../Footer/Footer';
 import productsData from '../../data/products';
 
@@ -145,6 +147,7 @@ export default function ProductsPage() {
   return (
     <>
       <Navbar />
+      <NavbarSpacer />
       <PageContainer>
         <CategoryHighlight>
           <ProductImage src={image} alt={title} />

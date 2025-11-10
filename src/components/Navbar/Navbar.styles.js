@@ -8,7 +8,7 @@ export const NavbarContainer = styled.nav`
   left: 0;
   right: 0;
   height: 70px;
-  background: rgba(255, 255, 255, 0.95);
+  background: white;
   backdrop-filter: blur(8px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   display: flex;
@@ -104,7 +104,7 @@ export const MobileMenuContainer = styled(motion.div)`
   right: 0;
   width: 100%;
   height: calc(100vh - 70px);
-  background: rgba(255, 255, 255, 0.98);
+  background: white;
   backdrop-filter: blur(6px);
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.05);
   display: flex;

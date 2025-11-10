@@ -6,13 +6,22 @@ import { theme } from "./styles/theme";
 
 // Componentes comuns
 import Navbar from "./components/Navbar/Navbar";
+import NavbarSpacer from "./components/Navbar/NavbarSpacer";
+
 import Hero from "./components/Hero/Hero";
 import FinalCTA from "./components/FinalCTA/FinalCTA";
 import Footer from "./components/Footer/Footer";
 import HealthTips from "./components/HealthTips/HealthTips";
 import Receitas from "./components/Receitas/Receitas";
-import Viagens from "./components/Viagens/Viagens";
 import Sobre from "./components/Sobre/Sobre";
+import ReceitaPage from "./components/Receitas/ReceitaPage";
+import TravelHighlights from "./components/TravelHighlights/TravelHighlights";
+import viagensData from "./data/viagens";
+
+import ViagemPage from "./pages/ViagemPage";
+import ViagensHome from "./pages/ViagensHome";
+import ViagensCategoria from "./pages/ViagensCategoria";
+
 
 
 import CalculadoraCaloricaPage from './components/Calculadora/CalculadoraCaloricaPage';
@@ -44,10 +53,12 @@ function App() {
                 <>
            
                   <Navbar />
+                  <NavbarSpacer /> 
                   <Hero />
                   <HealthTips />
                   <CalculadorasInterativas />
                   <HealthyRecipes />
+                  <TravelHighlights travels = {viagensData}/>                  
                   <ProductShowcase />
                   <FinalCTA />
                   <Footer />
@@ -71,8 +82,14 @@ function App() {
             <Route path="/calculadora-calorica" element={<CalculadoraCaloricaPage />} />
 
             <Route path="/receitas" element={<Receitas />} />
+            <Route path="/receitas/:slug" element={<ReceitaPage />} />
+
+
             <Route path="/sobre" element={<Sobre />} />
-            <Route path="/viagens" element={<Viagens />} />
+                  
+            <Route path="/viagens" element={<ViagensHome />} />
+            <Route path="/viagens/:categoria" element={<ViagensCategoria />} />
+            <Route path="/viagens/:categoria/:slug" element={<ViagemPage />} />
 
 
             {/* Redirecionamentos antigos */}

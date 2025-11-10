@@ -2,6 +2,8 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Navbar from "../components/Navbar/Navbar";
+import NavbarSpacer from "../components/Navbar/NavbarSpacer";
+
 import Footer from "../components/Footer/Footer";
 
 const blogCategories = [
@@ -35,6 +37,7 @@ export default function BlogHome() {
   return (
     <>
       <Navbar />
+      <NavbarSpacer />
       <Container>
         <Title>Blog de Saúde</Title>
         <Subtitle>Escolha uma categoria e descubra artigos científicos e dicas práticas</Subtitle>

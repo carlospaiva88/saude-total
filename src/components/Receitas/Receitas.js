@@ -1,10 +1,10 @@
+import React from "react";
 import styled from "styled-components";
 import { Helmet } from "react-helmet-async";
-
-
-import {recipes} from "../../data/recipes";
 import Navbar from "../Navbar/Navbar";
+import NavbarSpacer from "../Navbar/NavbarSpacer";
 import Footer from "../Footer/Footer";
+import { recipes } from "../../data/recipes"; // array de receitas para listagem
 
 export default function Receitas() {
   return (
@@ -18,6 +18,7 @@ export default function Receitas() {
       </Helmet>
 
       <Navbar />
+      <NavbarSpacer />
       <Section>
         <h1>Receitas Saudáveis</h1>
         <p>Transforme sua alimentação com pratos simples, equilibrados e cheios de sabor.</p>
@@ -28,7 +29,7 @@ export default function Receitas() {
               <img src={item.image} alt={item.title} loading="lazy" />
               <h3>{item.title}</h3>
               <p>{item.shortDescription}</p>
-              <a href={item.affiliateLink || `/receitas/${item.slug}`}>Ver mais</a>
+              <a href={`/receitas/${item.friendlySlug || item.slug}`}>Ver mais</a>
             </Card>
           ))}
         </Grid>

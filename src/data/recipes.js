@@ -6,13 +6,26 @@ export const recipes = [
     shortDescription: "Refrescante, nutritiva e perfeita para o almoço leve.",
     affiliateLink: "https://www.amazon.com.br/dp/B08KFN8H6Y",
   },
-  {
-    title: "Panqueca de Banana e Aveia",
+{
     slug: "panqueca-banana-aveia",
-    image: "https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg",
-    shortDescription: "Ideal para um café da manhã energético e saudável.",
-    affiliateLink: "",
+    title: "Panqueca de Banana com Aveia",
+    image: "https://images.unsplash.com/photo-1589302168068-964664d93dc0",
+    description: "Uma panqueca nutritiva, deliciosa e sem açúcar refinado.",
+    ingredients: [
+      "1 banana madura",
+      "2 colheres de sopa de aveia",
+      "1 ovo",
+      "1 pitada de canela",
+      "Óleo de coco para untar"
+    ],
+    instructions: [
+      "Amasse bem a banana com um garfo.",
+      "Adicione o ovo e a aveia e misture até ficar homogêneo.",
+      "Aqueça uma frigideira antiaderente e unte com óleo de coco.",
+      "Despeje pequenas porções e asse dos dois lados até dourar."
+    ]
   },
+
   {
     title: "Smoothie Verde Detox",
     slug: "smoothie-verde-detox",
@@ -28,3 +41,6 @@ export const recipes = [
     affiliateLink: "",
   },
 ];
+
+
+export default recipes;
