@@ -107,28 +107,28 @@ export const FloatingImage = styled.img`
   ${({ position }) =>
     position === "top-left" &&
     css`
-      top: -30px;
+      top: -90px;
       left: -40px;
       transform: rotate(-8deg);
     `}
   ${({ position }) =>
     position === "top-right" &&
     css`
-      top: -100px;
+      top: -50px;
       right: -25px;
       transform: rotate(6deg);
     `}
   ${({ position }) =>
     position === "bottom-right" &&
     css`
-      bottom: -150px;
-      right: 10px;
+      bottom: -50px;
+      right: -30px;
       transform: rotate(-5deg);
     `}
   ${({ position }) =>
     position === "bottom-left" &&
     css`
-      bottom: -180px;
+      bottom: -90px;
       left: 0;
       transform: rotate(8deg);
     `}
@@ -142,8 +142,8 @@ export const FloatingImage = styled.img`
   ${({ position }) =>
     position === "middle-right" &&
     css`
-      top: 280px;
-      right: 240px;
+      top: 180px;
+      right: -18px;
       transform: rotate(5deg);
     `}
 

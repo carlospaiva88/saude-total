@@ -32,7 +32,7 @@ export default function Breadcrumbs() {
 
           return (
             <span key={part}>
-              <Divider>›</Divider>
+              <Divider>-</Divider>
               {isLast ? (
                 <strong>{label}</strong>
               ) : (

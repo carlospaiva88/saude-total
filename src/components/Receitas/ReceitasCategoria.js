@@ -1,22 +1,17 @@
-import { useParams, useNavigate } from "react-router-dom";
-import receitas from "../../data/receitas";
-import RecipeCard from "../../components/Receitas/RecipeCard";
+import React from "react";
+import { useParams, Link } from "react-router-dom";
 import styled from "styled-components";
-import { motion } from "framer-motion";
-import Navbar from "../../components/Navbar/Navbar";
-import NavbarSpacer from "../../components/Navbar/NavbarSpacer";
-import Footer from "../../components/Footer/Footer";
+import receitas  from "../../data/receitas/index";
+import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
+
 
 export default function ReceitasCategoria() {
   const { categoria } = useParams();
-  const navigate = useNavigate();
-
-  const categoriaFormatada = categoria
-    ?.replace(/-/g, " ")
-    .replace(/\b\w/g, (l) => l.toUpperCase());
+  const categoriaNome = categoria.charAt(0).toUpperCase() + categoria.slice(1);
 
   const receitasFiltradas = receitas.filter(
-    (r) => r.categoria.toLowerCase().replace(/\s/g, "-") === categoria
+    (r) => r.categoria.toLowerCase() === categoriaNome.toLowerCase()
   );
 
   return (
@@ -24,82 +19,56 @@ export default function ReceitasCategoria() {
       <Navbar />
       <NavbarSpacer />
 
-      <Container
-        as={motion.div}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        <Breadcrumb>
-          <span onClick={() => navigate("/")} className="link">
-            Início
-          </span>{" "}
-          /{" "}
-          <span onClick={() => navigate("/receitas")} className="link">
-            Receitas
-          </span>{" "}
-          / <strong>{categoriaFormatada}</strong>
-        </Breadcrumb>
-
-        <Header>
-          <h1>{categoriaFormatada}</h1>
-          <p>
-            Encontre receitas deliciosas e saudáveis de {categoriaFormatada.toLowerCase()} — todas testadas e aprovadas!
-          </p>
-        </Header>
-
-        <Grid>
-          {receitasFiltradas.map((r) => (
-            <RecipeCard key={r.slug} receita={r} />
+      <PageContainer>
+        <h2>Receitas de {categoriaNome}</h2>
+        <RecipesGrid>
+          {receitasFiltradas.map((receita) => (
+            <RecipeCard key={receita.slug}>
+              <Link to={`/receitas/${receita.slug}`}>
+                <img src={receita.imagem} alt={receita.titulo} />
+                <h3>{receita.titulo}</h3>
+              </Link>
+            </RecipeCard>
           ))}
-        </Grid>
-      </Container>
+        </RecipesGrid>
+      </PageContainer>
 
       <Footer />
     </>
   );
 }
 
-const Container = styled.div`
-  padding: 4rem 2rem;
-  text-align: center;
-  background: ${({ theme }) => theme.colors.background};
-  min-height: 80vh;
+const NavbarSpacer = styled.div`
+  height: 80px;
 `;
 
-const Breadcrumb = styled.div`
-  font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 1rem;
-
-  .link {
-    cursor: pointer;
-    color: ${({ theme }) => theme.colors.primary};
-    transition: 0.3s;
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
-
-const Header = styled.header`
-  margin-bottom: 2rem;
-
-  h1 {
-    font-size: 2rem;
-    color: ${({ theme }) => theme.colors.primary};
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    color: #555;
-  }
-`;
-
-const Grid = styled.div`
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+const PageContainer = styled.div`
+  padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+`;
+
+const RecipesGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+`;
+
+const RecipeCard = styled.div`
+  background: #fff;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+
+  img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  h3 {
+    padding: 1rem;
+    color: #2a9d8f;
+  }
 `;

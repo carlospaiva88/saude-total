@@ -25,7 +25,7 @@ export default function Hero() {
       <HeroImageWrapper>
         {/* Imagem principal */}
         <HeroImage
-          src="https://images.pexels.com/photos/386024/pexels-photo-386024.jpeg"
+          src="https://images.pexels.com/photos/1005456/pexels-photo-1005456.jpeg"
           alt="Pessoa saudável fazendo exercício"
           loading="lazy"
         />
@@ -62,8 +62,8 @@ export default function Hero() {
           delay="3s"
         />
         <FloatingImage
-          src="https://images.pexels.com/photos/2088170/pexels-photo-2088170.jpeg"
-          alt="Surf"
+          src="https://images.pexels.com/photos/209943/pexels-photo-209943.jpeg"
+          alt="skate"
           position="middle-right"
           delay="3.5s"
         />

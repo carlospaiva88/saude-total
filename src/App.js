@@ -7,12 +7,13 @@ import { theme } from "./styles/theme";
 // Componentes comuns
 import Navbar from "./components/Navbar/Navbar";
 import NavbarSpacer from "./components/Navbar/NavbarSpacer";
+import ScrollToTop from "./components/ScrollToTop";
 
 import Hero from "./components/Hero/Hero";
 import FinalCTA from "./components/FinalCTA/FinalCTA";
 import Footer from "./components/Footer/Footer";
 import HealthTips from "./components/HealthTips/HealthTips";
-import Receitas from "./components/Receitas/Receitas";
+import ReceitasPage from "./components/Receitas/ReceitasPage";
 import Sobre from "./components/Sobre/Sobre";
 import ReceitaPage from "./components/Receitas/ReceitaPage";
 import TravelHighlights from "./components/TravelHighlights/TravelHighlights";
@@ -23,6 +24,7 @@ import ViagemPage from "./pages/ViagemPage";
 import ViagensHome from "./pages/ViagensHome";
 import ViagensCategoria from "./pages/ViagensCategoria";
 
+import HomeReceitasSection from "./components/Receitas/HomeReceitasSection";
 
 
 import CalculadoraCaloricaPage from './components/Calculadora/CalculadoraCaloricaPage';
@@ -30,7 +32,6 @@ import CalculadoraCaloricaPage from './components/Calculadora/CalculadoraCaloric
 import CalculadorasInterativas from './components/Calculadora/CalculadorasInterativas';
 import CalculadoraIMCPage from "./components/Calculadora/CalculadoraIMCPage";
 import ProductShowcase from "./components/ProductShowcase/ProductShowcase";
-import HealthyRecipes from "./components/HealthyRecipes/HealthyRecipes";
 
 // Lazy loading das páginas
 const BlogHome = lazy(() => import("./pages/BlogHome"));
@@ -45,6 +46,7 @@ function App() {
     <HelmetProvider>
       <ThemeProvider theme={theme}>
       <BrowserRouter>
+        <ScrollToTop />
         <Suspense fallback={<div>Carregando...</div>}>
           <Routes>
             {/* Home */}
@@ -58,7 +60,7 @@ function App() {
                   <Hero />
                   <HealthTips />
                   <CalculadorasInterativas />
-                  <HealthyRecipes />
+                  <HomeReceitasSection />
                   <TravelHighlights travels = {viagensData}/>                  
                   <ProductShowcase />
                   <FinalCTA />
@@ -82,9 +84,12 @@ function App() {
             <Route path="/calculadora-imc" element={<CalculadoraIMCPage />} />
             <Route path="/calculadora-calorica" element={<CalculadoraCaloricaPage />} />
 
-            <Route path="/receitas" element={<Receitas />} />
-            <Route path="/receitas/:categoria" element={<ReceitasCategoria />} />
+            <Route path="/receitas" element={<ReceitasPage />} />
+            <Route path="/receitas/categoria/:categoria" element={<ReceitasCategoria />} />
             <Route path="/receitas/:slug" element={<ReceitaPage />} />
+
+            <Route path="/receitas/receita" element={<Navigate to="/receitas" replace />} />
+
 
 
 
