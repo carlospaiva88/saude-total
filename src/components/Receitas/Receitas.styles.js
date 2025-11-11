@@ -1,63 +1,141 @@
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
-export const PageContainer = styled.div`
-  padding: 100px 2rem 50px;
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-export const PageHeader = styled.div`
-  text-align: center;
-  margin-bottom: 3rem;
-  h1 {
-    font-size: 2.5rem;
-    color: ${({ theme }) => theme.colors.primary};
-  }
-  p {
-    color: ${({ theme }) => theme.colors.text};
-  }
-`;
-
-export const RecipesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+export const ReceitasContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
+  padding: 2rem;
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
-export const RecipeCard = styled.div`
-  background: #fff;
-  border-radius: ${({ theme }) => theme.radius.card};
-  box-shadow: ${({ theme }) => theme.shadow.light};
+/* Banner rotativo */
+export const BannerRotativo = styled.div`
+  position: relative;
+  height: 320px;
+  border-radius: 16px;
   overflow: hidden;
-  transition: 0.3s ease;
+`;
+
+export const BannerItem = styled(motion.div)`
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  border-radius: 16px;
+`;
+
+export const BannerOverlay = styled.div`
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2rem;
+  height: 100%;
+  color: #fff;
+
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+  }
+
+  p {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 0.8rem;
+  }
+
+  .btn-banner {
+    background: ${({ theme }) => theme.colors.primary};
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+
+    &:hover {
+      background: ${({ theme }) => theme.colors.primaryDark};
+    }
+  }
+`;
+
+/* Filtro */
+export const CategoriasFiltro = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+
+  button {
+    background: ${({ theme }) => theme.colors.surface};
+    border: 1px solid ${({ theme }) => theme.colors.border};
+    border-radius: 20px;
+    padding: 0.4rem 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: ${({ theme }) => theme.colors.text};
+    transition: all 0.3s;
+
+    &.ativo {
+      background: ${({ theme }) => theme.colors.primary};
+      color: #fff;
+      border-color: ${({ theme }) => theme.colors.primary};
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+`;
+
+/* Cards */
+export const ListaReceitas = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+`;
+
+export const ReceitaCard = styled(motion.div)`
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: ${({ theme }) => theme.shadow.medium};
+    transform: scale(1.03);
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
   }
 
   img {
     width: 100%;
-    height: 200px;
+    height: 180px;
     object-fit: cover;
   }
 
-  h3 {
-    margin: 1rem;
-  }
+  .receita-info {
+    padding: 1rem;
 
-  p {
-    margin: 0 1rem 1rem;
-    color: #555;
-  }
+    h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.4rem;
+    }
 
-  a {
-    display: block;
-    padding: 0.8rem;
-    text-align: center;
-    background: ${({ theme }) => theme.gradients.button};
-    color: #fff;
-    font-weight: bold;
-    border-radius: 0 0 16px 16px;
+    p {
+      font-size: 0.95rem;
+      color: ${({ theme }) => theme.colors.textSecondary};
+      margin-bottom: 0.6rem;
+    }
+
+    span {
+      font-size: 0.85rem;
+      color: ${({ theme }) => theme.colors.primary};
+    }
   }
 `;

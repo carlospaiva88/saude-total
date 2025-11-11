@@ -17,6 +17,7 @@ import Sobre from "./components/Sobre/Sobre";
 import ReceitaPage from "./components/Receitas/ReceitaPage";
 import TravelHighlights from "./components/TravelHighlights/TravelHighlights";
 import viagensData from "./data/viagens";
+import ReceitasCategoria from "./components/Receitas/ReceitasCategoria"
 
 import ViagemPage from "./pages/ViagemPage";
 import ViagensHome from "./pages/ViagensHome";
@@ -82,7 +83,9 @@ function App() {
             <Route path="/calculadora-calorica" element={<CalculadoraCaloricaPage />} />
 
             <Route path="/receitas" element={<Receitas />} />
+            <Route path="/receitas/:categoria" element={<ReceitasCategoria />} />
             <Route path="/receitas/:slug" element={<ReceitaPage />} />
+
 
 
             <Route path="/sobre" element={<Sobre />} />

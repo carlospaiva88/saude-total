@@ -1,109 +1,104 @@
-import React from "react";
-import styled from "styled-components";
-import { Helmet } from "react-helmet-async";
-import Navbar from "../Navbar/Navbar";
-import NavbarSpacer from "../Navbar/NavbarSpacer";
-import Footer from "../Footer/Footer";
-import { recipes } from "../../data/recipes"; // array de receitas para listagem
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import receitasData from "../../data/receitas";
+import {
+  ReceitasContainer,
+  BannerRotativo,
+  BannerItem,
+  BannerOverlay,
+  CategoriasFiltro,
+  ListaReceitas,
+  ReceitaCard,
+} from "./Receitas.styles";
+
+const categorias = ["Todas", "Café da manhã", "Almoço", "Jantar", "Sobremesas", "Snacks"];
 
 export default function Receitas() {
+  const [categoriaAtiva, setCategoriaAtiva] = useState("Todas");
+  const [receitasFiltradas, setReceitasFiltradas] = useState(receitasData);
+  const [bannerIndex, setBannerIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBannerIndex((prev) => (prev + 1) % receitasData.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (categoriaAtiva === "Todas") {
+      setReceitasFiltradas(receitasData);
+    } else {
+      setReceitasFiltradas(
+        receitasData.filter((r) => r.categoria === categoriaAtiva)
+      );
+    }
+  }, [categoriaAtiva]);
+
   return (
-    <>
-      <Helmet>
-        <title>Receitas Saudáveis | Viva no Flow</title>
-        <meta
-          name="description"
-          content="Receitas saudáveis, deliciosas e fáceis de preparar. Descubra opções para todos os momentos e mantenha o equilíbrio no seu dia a dia."
-        />
-      </Helmet>
+    <ReceitasContainer>
+      {/* Banner rotativo */}
+      <BannerRotativo>
+        <AnimatePresence mode="wait">
+          <BannerItem
+            key={bannerIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1 }}
+            style={{
+              backgroundImage: `url(${receitasData[bannerIndex].imagem})`,
+            }}
+          >
+            <BannerOverlay>
+              <h2>{receitasData[bannerIndex].titulo}</h2>
+              <p>{receitasData[bannerIndex].descricao}</p>
+              <Link
+                to={`/receitas/${receitasData[bannerIndex].slug}`}
+                className="btn-banner"
+              >
+                Ver receita
+              </Link>
+            </BannerOverlay>
+          </BannerItem>
+        </AnimatePresence>
+      </BannerRotativo>
 
-      <Navbar />
-      <NavbarSpacer />
-      <Section>
-        <h1>Receitas Saudáveis</h1>
-        <p>Transforme sua alimentação com pratos simples, equilibrados e cheios de sabor.</p>
+      {/* Filtro */}
+      <CategoriasFiltro>
+        {categorias.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setCategoriaAtiva(cat)}
+            className={categoriaAtiva === cat ? "ativo" : ""}
+          >
+            {cat}
+          </button>
+        ))}
+      </CategoriasFiltro>
 
-        <Grid>
-          {recipes.map((item) => (
-            <Card key={item.slug}>
-              <img src={item.image} alt={item.title} loading="lazy" />
-              <h3>{item.title}</h3>
-              <p>{item.shortDescription}</p>
-              <a href={`/receitas/${item.friendlySlug || item.slug}`}>Ver mais</a>
-            </Card>
+      {/* Lista de receitas */}
+      <ListaReceitas>
+        <AnimatePresence>
+          {receitasFiltradas.map((receita) => (
+            <ReceitaCard
+              key={receita.slug}
+              whileHover={{ scale: 1.03 }}
+              transition={{ type: "spring", stiffness: 200 }}
+            >
+              <Link to={`/receitas/${receita.slug}`}>
+                <img src={receita.imagem} alt={receita.titulo} />
+                <div className="receita-info">
+                  <h3>{receita.titulo}</h3>
+                  <p>{receita.descricao}</p>
+                  <span>{receita.categoria}</span>
+                </div>
+              </Link>
+            </ReceitaCard>
           ))}
-        </Grid>
-      </Section>
-      <Footer />
-    </>
+        </AnimatePresence>
+      </ListaReceitas>
+    </ReceitasContainer>
   );
 }
-
-const Section = styled.section`
-  padding: 4rem 2rem;
-  text-align: center;
-  background: ${({ theme }) => theme.colors.background};
-
-  h1 {
-    font-size: 2.4rem;
-    color: ${({ theme }) => theme.colors.primary};
-  }
-
-  p {
-    max-width: 700px;
-    margin: 1rem auto 3rem;
-    color: ${({ theme }) => theme.colors.text};
-  }
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-`;
-
-const Card = styled.div`
-  background: white;
-  border-radius: ${({ theme }) => theme.radius.card};
-  box-shadow: ${({ theme }) => theme.shadow.light};
-  overflow: hidden;
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: ${({ theme }) => theme.shadow.medium};
-  }
-
-  img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-
-  h3 {
-    margin: 1rem;
-    font-size: 1.25rem;
-    color: ${({ theme }) => theme.colors.dark};
-  }
-
-  p {
-    margin: 0 1rem 1.5rem;
-    color: ${({ theme }) => theme.colors.text};
-    font-size: 0.95rem;
-  }
-
-  a {
-    display: inline-block;
-    margin-bottom: 1.5rem;
-    padding: 0.6rem 1.2rem;
-    background: ${({ theme }) => theme.gradients.button};
-    color: white;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 600;
-
-    &:hover {
-      background: ${({ theme }) => theme.gradients.buttonHover};
-    }
-  }
-`;

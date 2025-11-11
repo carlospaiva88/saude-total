@@ -1,126 +1,84 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
-import styled from "styled-components";
-import { recipes } from "../../data/recipes"; // ✅ agora pegamos o array
-
-import Navbar from "../Navbar/Navbar";
-import NavbarSpacer from "../Navbar/NavbarSpacer";
-import Footer from "../Footer/Footer";
-import ShareButtons from "../ShareButtons";
-
-const Container = styled.div`
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const Image = styled.img`
-  width: 100%;
-  height: auto;
-  border-radius: ${({ theme }) => theme.radius.card};
-  box-shadow: ${({ theme }) => theme.shadow.light};
-  margin-bottom: 24px;
-`;
-
-const Title = styled.h1`
-  font-size: 2.2rem;
-  color: ${({ theme }) => theme.colors.primary};
-  margin-bottom: 16px;
-`;
-
-const Section = styled.section`
-  margin-top: 32px;
-
-  h2 {
-    color: ${({ theme }) => theme.colors.secondary};
-    margin-bottom: 12px;
-  }
-
-  ul {
-    list-style: disc;
-    margin-left: 20px;
-    line-height: 1.6;
-  }
-
-  p {
-    line-height: 1.8;
-    margin-bottom: 12px;
-  }
-`;
-
-const AdPlaceholder = styled.div`
-  background: #f5f5f5;
-  border: 2px dashed #ccc;
-  border-radius: 8px;
-  text-align: center;
-  color: #888;
-  padding: 30px;
-  margin: 40px 0;
-`;
+import { useParams, Link } from "react-router-dom";
+import receitasData from "../../data/receitas";
+import {
+  ReceitaDetalhe,
+  Breadcrumb,
+  ReceitaHero,
+  ReceitaConteudo,
+  ReceitasRelacionadas,
+} from "./ReceitaPage.styles";
 
 export default function ReceitaPage() {
   const { slug } = useParams();
-
-  // ✅ agora buscamos no array de receitas
-  const receita = recipes.find(
-    (r) => r.slug === slug || r.friendlySlug === slug
-  );
+  const receita = receitasData.find((r) => r.slug === slug);
 
   if (!receita) {
     return (
-      <>
-        <Navbar />
-        <NavbarSpacer />
-        <Container>
-          <h1>Receita não encontrada 😔</h1>
-          <p>Verifique se o link está correto.</p>
-        </Container>
-        <Footer />
-      </>
+      <ReceitaDetalhe>
+        <h2>Receita não encontrada 😕</h2>
+        <Link to="/receitas">Voltar às receitas</Link>
+      </ReceitaDetalhe>
     );
   }
 
+  const relacionadas = receitasData
+    .filter(
+      (r) => r.categoria === receita.categoria && r.slug !== receita.slug
+    )
+    .slice(0, 3);
+
   return (
-    <>
-      <Helmet>
-        <title>{receita.title} | Viva no Flow</title>
-        <meta name="description" content={receita.description} />
-      </Helmet>
+    <ReceitaDetalhe>
+      <Breadcrumb>
+        <Link to="/">Início</Link> / <Link to="/receitas">Receitas</Link> /{" "}
+        <span>{receita.titulo}</span>
+      </Breadcrumb>
 
-      <Navbar />
-      <NavbarSpacer />
+      <ReceitaHero>
+        <img src={receita.imagem} alt={receita.titulo} />
+        <div className="receita-meta">
+          <h1>{receita.titulo}</h1>
+          <p>{receita.descricao}</p>
+          <span>{receita.categoria}</span>
+          <span>Tempo: {receita.tempoPreparo}</span>
+          <span>Dificuldade: {receita.dificuldade}</span>
+        </div>
+      </ReceitaHero>
 
-      <Container>
-        <Image src={receita.image} alt={receita.title} />
-        <Title>{receita.title}</Title>
-        <p>{receita.description}</p>
-
-        <AdPlaceholder>Espaço para Google AdSense</AdPlaceholder>
-
-        <Section>
+      <ReceitaConteudo>
+        <section>
           <h2>Ingredientes</h2>
           <ul>
-            {receita.ingredients?.map((item, index) => (
-              <li key={index}>{item}</li>
+            {receita.ingredientes.map((item, i) => (
+              <li key={i}>{item}</li>
             ))}
           </ul>
-        </Section>
+        </section>
 
-        <Section>
+        <section>
           <h2>Modo de preparo</h2>
-          {receita.instructions?.map((step, index) => (
-            <p key={index}>{step}</p>
-          ))}
-        </Section>
+          <ol>
+            {receita.modoPreparo.map((etapa, i) => (
+              <li key={i}>{etapa}</li>
+            ))}
+          </ol>
+        </section>
+      </ReceitaConteudo>
 
-        <AdPlaceholder>Espaço para banner de afiliados</AdPlaceholder>
-
-        <ShareButtons title={receita.title} url={window.location.href} />
-      </Container>
-
-      <Footer />
-    </>
+      {relacionadas.length > 0 && (
+        <ReceitasRelacionadas>
+          <h3>Outras receitas {receita.categoria.toLowerCase()}:</h3>
+          <div className="grid-relacionadas">
+            {relacionadas.map((r) => (
+              <Link key={r.slug} to={`/receitas/${r.slug}`} className="card-relacionada">
+                <img src={r.imagem} alt={r.titulo} />
+                <p>{r.titulo}</p>
+              </Link>
+            ))}
+          </div>
+        </ReceitasRelacionadas>
+      )}
+    </ReceitaDetalhe>
   );
 }
