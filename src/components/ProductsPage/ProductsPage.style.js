@@ -1,166 +1,253 @@
 import styled from "styled-components";
 
+// Container principal da página, centralizado e com padding responsivo
 export const PageContainer = styled.div`
-  max- width: 1100px;
-  margin: 2rem auto 4rem;
-  padding: 0 1.5rem;
-  min-height: 80vh; 
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-`;
+  padding: 2rem 4rem;
+  max-width: ${({ theme }) => theme.layout.maxWidth};
+  margin: 0 auto;
 
- export const CategoryHighlight = styled.section`
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  padding: 1.75rem 2rem;
-  background: #edf7f4;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(42, 157, 143, 0.1);
+  @media (max-width: ${({ theme }) => theme.breakpoints.laptop}) {
+    padding: 1rem 2rem;
+  }
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    text-align: center;
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    padding: 1rem;
   }
 `;
 
- export const HighlightImage = styled.img`
-  height: 180px;
-  border-radius: 12px;
-  object-fit: cover;
+// Hero banner impactante e espaçado
+export const HeroSection = styled.div`
+  width: 100%;
+  min-height: 320px;
+  padding: 5rem 2rem 3rem; // espaço topo para navbar
+  border-radius: ${({ theme }) => theme.radius.lg};
+  background: ${({ theme }) => theme.gradients.hero};
+  color: ${({ theme }) => theme.colors.surface};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-shadow: inset 0 0 50px rgba(0,0,0,0.15);
+  margin-bottom: 3rem;
 
-  @media (max-width: 768px) {
+  h1 {
+    font-family: ${({ theme }) => theme.fonts.heading};
+    font-weight: 900;
+    font-size: 3.5rem;
+    max-width: 700px;
+    line-height: 1.1;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+    margin-bottom: 1rem;
+
+    @media (max-width: ${({ theme }) => theme.breakpoints.laptop}) {
+      font-size: 2.4rem;
+    }
+    @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+      font-size: 1.8rem;
+    }
+  }
+
+  p {
+    font-weight: 400;
+    font-size: 1.25rem;
+    max-width: 500px;
+    opacity: 0.85;
+  }
+`;
+
+export const HeroContent = styled.div`
+  max-width: 700px;
+`;
+
+// Breadcrumbs com cor e espaçamento do tema
+export const BreadcrumbsWrapper = styled.div`
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+// MainContent flexível, sidebar + conteúdo, responsivo
+export const MainContent = styled.div`
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.laptop}) {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+`;
+
+// Sidebar fixa e responsiva estilizada por theme
+export const Sidebar = styled.aside`
+  width: 220px;
+  max-width: 100%;
+  min-width: 180px;
+  flex-shrink: 0;
+  padding: 1.5rem;
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.radius.sm};
+  box-shadow: ${({ theme }) => theme.shadow.xs};
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  h3 {
+    margin-bottom: 0.5rem;
+    color: ${({ theme }) => theme.colors.dark};
+    font-weight: 600;
+    font-family: ${({ theme }) => theme.fonts.heading};
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.4rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: ${({ theme }) => theme.colors.text};
+    font-weight: 500;
+
+    input {
+      margin-right: 0.6rem;
+      cursor: pointer;
+    }
+  }
+
+  input[type="range"] {
+    width: 100%;
+    margin-top: 0.4rem;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.laptop}) {
+    width: 100%;
+    min-width: 0;
     margin-bottom: 1rem;
   }
 `;
 
- export const HighlightText = styled.div`
-  flex: 1;
+// Área flexível do conteúdo
+export const ContentArea = styled.div`
+  flex: 1 1 0;
+  min-width: 300px;
+`;
 
-  h2 {
-    font-size: 2rem;
-    color: #2a6f61;
-    margin-bottom: 0.5rem;
-  }
+// Seção com sombra leve e padding confortável
+export const Section = styled.div`
+  margin-bottom: 2rem;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  background: ${({ theme }) => theme.colors.surface};
+  box-shadow: ${({ theme }) => theme.shadow.xs};
+  padding: 1rem 1.2rem;
 
-  p {
-    font-size: 1.05rem;
-    color: #40514e;
-    line-height: 1.5;
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    padding: 0.8rem 0.6rem;
   }
 `;
 
- export const CategoryMenu = styled.div`
+// Título das seções com borda inferior e tema
+export const SectionTitle = styled.h2`
+  margin-bottom: 1rem;
+  font-family: ${({ theme }) => theme.fonts.heading};
+  font-size: 1.4rem;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.border};
+  padding-bottom: 0.4rem;
+  color: ${({ theme }) => theme.colors.dark};
+`;
+
+// Menu de categorias flexível com wrap
+export const CategoryMenu = styled.div`
   display: flex;
-  gap: 1.7rem;
-  margin-bottom: 3rem;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
-  justify-content: center;
 `;
 
- export const CategoryButton = styled.button`
-  padding: 0.6rem 1.5rem;
-  border-radius: 24px;
-  border: none;
-  background: ${(props) => (props.active ? "#43aa8b" : "#d8eae5")};
-  color: ${(props) => (props.active ? "white" : "#264653")};
+// Botões estilo categoria com hover e estado ativo
+export const CategoryItem = styled.a`
+  padding: 0.6rem 1rem;
+  border-radius: ${({ theme }) => theme.radius.pill};
+  background: ${({ theme }) => theme.colors.background};
+  border: 1.5px solid transparent;
   cursor: pointer;
-  font-weight: 700;
-  font-size: 1.1rem;
-  box-shadow: ${(props) =>
-    props.active ? "0 8px 18px rgba(67,170,139,0.45)" : "none"};
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: #2a6f61;
-    color: white;
-    box-shadow: 0 8px 20px rgba(42, 157, 143, 0.6);
-  }
-`;
-
- export const ProductsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
-  gap: 2rem;
-`;
-
- export const ProductCard = styled.article`
-  background: #e9f5f2;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(42, 157, 143, 0.15);
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  transition: transform 0.35s ease;
-
-  &:hover {
-    transform: translateY(-8px);
-  }
-`;
-
- export const ProductImage = styled.img`
-  width: 100%;
-  height: 280px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-`;
-
- export const ProductName = styled.h3`
-  color: #264653;
-  font-size: 1.2rem;
-  margin-bottom: 0.3rem;
-`;
-
-export const ProductPrice = styled.p`
-  color: #2a6f61;
-  font-weight: 700;
-  margin-bottom: 0.8rem;
-  font-size: 1.1rem;
-`;
-
-export const ProductDescription = styled.p`
-  font-size: 0.9rem;
-  color: #40514e;
-  flex-grow: 1;
-  min-height: 70px; /* altura fixa para alinhar o conteúdo */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* limita a 3 linhas */
-  -webkit-box-orient: vertical;
-  margin-bottom: 1rem;
-`;
-
-export const ProductScience = styled.p`
-  font-size: 0.85rem;
-  font-style: italic;
-  color: #496c5f;
-  line-height: 1.35;
-  margin-bottom: 1rem;
-`;
-
-export const BuyButton = styled.a`
-  display: inline-block;
-  padding: 0.65rem 1.6rem;
-  background: #43aa8b;
-  color: white;
   font-weight: 600;
-  border-radius: 32px;
-  text-align: center;
+  color: ${({ theme }) => theme.colors.text};
   text-decoration: none;
-  transition: background 0.3s ease;
+  transition: all ${({ theme }) => theme.transitions.normal};
 
-  &:hover {
-    background: #2a6f61;
+  &:hover,
+  &.active {
+    background: ${({ theme }) => theme.colors.primary};
+    border-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.surface};
   }
 `;
-export const ProductCardStyled = styled.article`
-  &.highlight {
-    background-color: #d1f7ff;
-    box-shadow: 0 0 0 2px #43aa8b;
-    transition: all 0.5s ease;
+
+// Container do carrossel com scroll oculto e scrollbar estilizado
+export const CarouselContainer = styled.div`
+  overflow-x: hidden;
+  max-width: 100%;
+  position: relative;
+  padding: 0.5rem 1.5rem;
+`;
+
+// Track do carrossel com flex para scroll e espaçamento
+export const CarouselTrack = styled.div`
+  display: flex;
+  gap: 1rem;
+  scroll-behavior: smooth;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+`;
+
+// Item do carrossel com tamanho fixo proporcional
+export const CarouselItem = styled.div`
+  flex: 0 0 auto;
+  width: 200px;
+  max-width: 220px;
+`;
+
+// Grid responsivo de produtos
+export const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.2rem;
+  overflow: hidden;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+`;
+
+// Botões de navegação do carrossel
+export const CarouselNavButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.25);
+  color: ${({ theme }) => theme.colors.surface};
+  border-radius: 50%;
+  border: none;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  transition: background ${({ theme }) => theme.transitions.fast};
+  z-index: 10;
+
+  &:hover {
+    background: rgba(0,0,0,0.45);
+  }
+
+  &.left {
+    left: 8px;
+  }
+  &.right {
+    right: 8px;
   }
 `;

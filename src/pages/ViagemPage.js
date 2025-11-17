@@ -6,10 +6,11 @@ import NavbarSpacer from "../components/Navbar/NavbarSpacer";
 import BreadcrumbsViagens from "../components/BreadcrumbsViagens";
 import RelatedCarousel from "../components/RelatedCarousel";
 import AdBlock from "../components/AdBlock";
-
-
 import Footer from "../components/Footer/Footer";
 import viagensData from "../data/viagens";
+import {
+  ProductRecommendationCard
+} from "../components/Viagens/ViagemCard.style";
 
 export default function ViagemPage() {
   const { categoria, slug } = useParams();
@@ -25,7 +26,6 @@ export default function ViagemPage() {
         <title>{viagem.title} | Viva no Flow</title>
         <meta name="description" content={viagem.shortDescription} />
       </Helmet>
-
       <Navbar />
       <NavbarSpacer />
       <BreadcrumbsViagens />
@@ -46,8 +46,7 @@ export default function ViagemPage() {
           categoria={categoria}
         />
         {viagem.product && (
-          <ProductBox>
-            <h3>Produto Recomendado</h3>
+          <ProductRecommendationCard>
             <a href={viagem.product.link} target="_blank" rel="noreferrer">
               <img src={viagem.product.image} alt={viagem.product.name} />
               <div>
@@ -55,7 +54,7 @@ export default function ViagemPage() {
                 <p>{viagem.product.description}</p>
               </div>
             </a>
-          </ProductBox>
+          </ProductRecommendationCard>
         )}
       </Article>
       <Footer />
@@ -81,26 +80,6 @@ const Header = styled.header`
 const Content = styled.div`
   line-height: 1.7;
   color: #333;
-  h2, h3 { margin-top: 2rem; color: ${({ theme }) => theme.colors.primary}; }
-  blockquote { border-left: 3px solid ${({ theme }) => theme.colors.primary}; padding-left: 1rem; font-style: italic; color: #555; }
-`;
-
-const ProductBox = styled.div`
-  margin-top: 3rem;
-  background: #f9f9f9;
-  border-radius: 10px;
-  padding: 1.5rem;
-  text-align: center;
-  a {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    text-decoration: none;
-    color: inherit;
-    justify-content: center;
-  }
-  img {
-    width: 100px;
-    border-radius: 10px;
-  }
+  h2, h3 { margin-top: 2rem; color: #2a6f61; }
+  blockquote { border-left: 3px solid #2a6f61; padding-left: 1rem; font-style: italic; color: #555; }
 `;

@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import {  useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import styled from "styled-components";
@@ -7,8 +7,8 @@ import Breadcrumbs from "../components/BreadCrumbs";
 
 export default function Subcategoria() {
   const { categoria, subcategoria } = useParams();
+  const navigate = useNavigate();
 
-  // Evita duplicações ao filtrar artigos
   const seen = new Set();
   const subArticles = Object.values(articlesData)
     .filter(article => article.category === categoria && article.subcategory === subcategoria)
@@ -29,14 +29,12 @@ export default function Subcategoria() {
         </Title>
         <ArticlesGrid>
           {subArticles.map(article => (
-            <ArticleCard key={article.slug}>
+            <ArticleCard as="button" key={article.slug} onClick={() => navigate(`./${article.friendlySlug}`)} onKeyDown={(e) => { if(e.key === 'Enter') navigate(`./${article.friendlySlug}`); }}>
               <ArticleImage src={article.image} alt={article.title} />
               <ArticleContent>
                 <ArticleTitle>{article.title}</ArticleTitle>
                 <ArticleDescription>{article.description}</ArticleDescription>
-                <ArticleLink to={`./${article.friendlySlug}`}>
-                  Ler artigo &gt;
-                </ArticleLink>
+                <ReadButton>Ler artigo</ReadButton>
               </ArticleContent>
             </ArticleCard>
           ))}
@@ -47,7 +45,6 @@ export default function Subcategoria() {
   );
 };
 
-
 // Styled Components
 const Container = styled.div`
   max-width: 1100px;
@@ -55,13 +52,12 @@ const Container = styled.div`
   padding: 0 1.5rem;
 `;
 
-
-
 const Title = styled.h1`
   font-size: 2rem;
-  color: #264653;
+  color: ${({ theme }) => theme.colors.primaryDark};
   text-align: center;
   margin-bottom: 2rem;
+  font-family: ${({ theme }) => theme.fonts.heading};
 `;
 
 const ArticlesGrid = styled.div`
@@ -70,15 +66,24 @@ const ArticlesGrid = styled.div`
   gap: 2rem;
 `;
 
-const ArticleCard = styled.div`
-  background: #edf7f4;
-  border-radius: 16px;
+const ArticleCard = styled.button`
+  background: ${({ theme }) => theme.colors.background};
+  border-radius: ${({ theme }) => theme.radius.lg};
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(42, 157, 143, 0.15);
-  transition: transform 0.3s ease;
+  box-shadow: ${({ theme }) => theme.shadow.sm};
+  transition: transform 0.3s ease, box-shadow 0.3s;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
 
-  &:hover {
+  &:hover,
+  &:focus {
     transform: translateY(-6px);
+    box-shadow: ${({ theme }) => theme.shadow.md};
+    outline: none;
   }
 `;
 
@@ -86,29 +91,45 @@ const ArticleImage = styled.img`
   width: 100%;
   height: 180px;
   object-fit: cover;
+  flex-shrink: 0;
 `;
 
 const ArticleContent = styled.div`
-  padding: 1.5rem;
+  padding: 1.5rem 1.5rem 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 `;
 
 const ArticleTitle = styled.h3`
   font-size: 1.5rem;
-  color: #2a6f61;
+  color: ${({ theme }) => theme.colors.primaryDark};
+  margin-bottom: 0.5rem;
+  font-family: ${({ theme }) => theme.fonts.heading};
 `;
 
 const ArticleDescription = styled.p`
   font-size: 0.95rem;
-  color: #40514e;
+  color: ${({ theme }) => theme.colors.text};
+  flex-grow: 1;
+  margin-bottom: 1.25rem;
 `;
 
-const ArticleLink = styled(Link)`
-  display: inline-block;
+const ReadButton = styled.span`
+  align-self: flex-start;
   font-weight: 600;
-  color: #43aa8b;
-  text-decoration: none;
+  color: ${({ theme }) => theme.colors.primary};
+  background: ${({ theme }) => theme.colors.background};
+  padding: 0.5rem 1rem;
+  border-radius: ${({ theme }) => theme.radius.pill};
+  box-shadow: ${({ theme }) => theme.shadow.xs};
+  transition: background ${({ theme }) => theme.transitions.fast}, color ${({ theme }) => theme.transitions.fast};
+  cursor: pointer;
 
-  &:hover {
-    color: #2a6f61;
+  &:hover,
+  &:focus {
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.surface};
+    outline: none;
   }
 `;

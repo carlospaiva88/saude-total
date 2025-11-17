@@ -6,6 +6,13 @@ import HeroCarousel from "../components/Viagens/HeroCarousel";
 import DestinosDestaque from "../components/Viagens/DestinosDestaque";
 import Footer from "../components/Footer/Footer";
 import { useNavigate } from "react-router-dom";
+import {
+  ViagemCardBase,
+  ViagemCardImage,
+  ViagemCardBody,
+  ViagemCardTitle,
+  ViagemCardDescription
+} from "../components/Viagens/ViagemCard.style";
 
 export default function ViagensHome() {
   const navigate = useNavigate();
@@ -30,23 +37,31 @@ export default function ViagensHome() {
         <p>Explore o mundo enquanto cuida de você </p>
 
         <Grid>
-          <Card onClick={() => navigate("/viagens/nacionais")}>
-            <img
+          <ViagemCardBase onClick={() => navigate("/viagens/nacionais")}>
+            <ViagemCardImage
               src="https://images.pexels.com/photos/1761279/pexels-photo-1761279.jpeg"
               alt="Viagens Nacionais"
             />
-            <h3>🇧🇷 Viagens Nacionais</h3>
-            <p>Natureza, cultura e gastronomia — dentro do Brasil.</p>
-          </Card>
+            <ViagemCardBody>
+              <ViagemCardTitle>🇧🇷 Viagens Nacionais</ViagemCardTitle>
+              <ViagemCardDescription>
+                Natureza, cultura e gastronomia — dentro do Brasil.
+              </ViagemCardDescription>
+            </ViagemCardBody>
+          </ViagemCardBase>
 
-          <Card onClick={() => navigate("/viagens/internacionais")}>
-            <img
+          <ViagemCardBase onClick={() => navigate("/viagens/internacionais")}>
+            <ViagemCardImage
               src="https://images.pexels.com/photos/338515/pexels-photo-338515.jpeg"
               alt="Viagens Internacionais"
             />
-            <h3>🌍 Viagens Internacionais</h3>
-            <p>Descubra o mundo, novas culturas e bem-estar global.</p>
-          </Card>
+            <ViagemCardBody>
+              <ViagemCardTitle>🌍 Viagens Internacionais</ViagemCardTitle>
+              <ViagemCardDescription>
+                Descubra o mundo, novas culturas e bem-estar global.
+              </ViagemCardDescription>
+            </ViagemCardBody>
+          </ViagemCardBase>
         </Grid>
       </Section>
 
@@ -58,43 +73,12 @@ export default function ViagensHome() {
 const Section = styled.section`
   padding: 4rem 2rem;
   text-align: center;
-  background: ${({ theme }) => theme.colors.background};
+  background: #edf7f4;
 `;
 
 const Grid = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
   gap: 2rem;
-`;
-
-const Card = styled.div`
-  background: white;
-  border-radius: ${({ theme }) => theme.radius.card};
-  box-shadow: ${({ theme }) => theme.shadow.light};
-  overflow: hidden;
-  width: 300px;
-  cursor: pointer;
-  transition: 0.3s;
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: ${({ theme }) => theme.shadow.medium};
-  }
-
-  img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-
-  h3 {
-    margin: 1rem;
-    color: ${({ theme }) => theme.colors.primary};
-  }
-
-  p {
-    margin: 0 1rem 1.5rem;
-    color: #444;
-  }
+  margin-top: 2rem;
 `;

@@ -170,22 +170,22 @@ export default function BlogCategory() {
       <Navbar />
       <Breadcrumbs />
       <Container>
-        <Title>Explorando Saúde {categoria}</Title>
+        <Title>Explorando Saúde {categoria.charAt(0).toUpperCase() + categoria.slice(1)}</Title>
         <Subtitle>Escolha um tema para aprofundar seu conhecimento</Subtitle>
 
         <CategoriesGrid>
-          {category.map((sub) => (
-            <CategoryCard key={sub.id}>
-              <CategoryImage src={sub.image} alt={sub.name} />
-              <CategoryContent>
-                <CategoryTitle>{sub.name}</CategoryTitle>
-                <CategoryDescription>{sub.description}</CategoryDescription>
-                <CategoryLink to={`/blog/${categoria}/${sub.id}`}>
-                  Ver artigos &gt;
-                </CategoryLink>
-              </CategoryContent>
-            </CategoryCard>
-          ))}
+         {category.map((sub) => (
+        <CategoryLink to={`/blog/${categoria}/${sub.id}`} key={sub.id}>
+          <CategoryCard>
+            <CategoryImage src={sub.image} alt={sub.name} />
+            <CategoryContent>
+              <CategoryTitle>{sub.name}</CategoryTitle>
+              <CategoryDescription>{sub.description}</CategoryDescription>
+              <ViewArticlesButton>Ver Artigos</ViewArticlesButton>
+            </CategoryContent>
+          </CategoryCard>
+        </CategoryLink>
+      ))}
         </CategoriesGrid>
       </Container>
       <Footer />
@@ -193,7 +193,27 @@ export default function BlogCategory() {
   );
 }
 
-// Styled Components
+// Styled components
+
+const ViewArticlesButton = styled.button`
+  display: inline-block;
+  background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.surface};
+  font-weight: 600;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: ${({ theme }) => theme.radius.pill};
+  cursor: pointer;
+  transition: background ${({ theme }) => theme.transitions.fast};
+  margin-top: 1rem;
+
+  &:hover,
+  &:focus {
+    background: ${({ theme }) => theme.colors.primaryDark};
+    outline: none;
+  }
+`;
+
 const Container = styled.div`
   max-width: 1100px;
   margin: 2rem auto 4rem;
@@ -202,15 +222,17 @@ const Container = styled.div`
 
 const Title = styled.h1`
   font-size: 2rem;
-  color: #264653;
+  color: ${({ theme }) => theme.colors.primaryDark};
   text-align: center;
+  margin-bottom: 0.5rem;
+  font-family: ${({ theme }) => theme.fonts.heading};
 `;
 
 const Subtitle = styled.p`
   font-size: 1.1rem;
+  color: ${({ theme }) => theme.colors.text};
   text-align: center;
   margin-bottom: 2rem;
-  color: #40514e;
 `;
 
 const CategoriesGrid = styled.div`
@@ -220,15 +242,16 @@ const CategoriesGrid = styled.div`
 `;
 
 const CategoryCard = styled.div`
-  background: #edf7f4;
-  border-radius: 16px;
+  background: ${({ theme }) => theme.colors.background};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  box-shadow: ${({ theme }) => theme.shadow.sm};
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(42, 157, 143, 0.15);
   transition: transform 0.3s ease;
   cursor: pointer;
 
   &:hover {
     transform: translateY(-6px);
+    box-shadow: ${({ theme }) => theme.shadow.md};
   }
 `;
 
@@ -244,21 +267,20 @@ const CategoryContent = styled.div`
 
 const CategoryTitle = styled.h3`
   font-size: 1.5rem;
-  color: #2a6f61;
+  color: ${({ theme }) => theme.colors.primaryDark};
+  margin-bottom: 0.4rem;
+  font-family: ${({ theme }) => theme.fonts.heading};
 `;
 
 const CategoryDescription = styled.p`
   font-size: 0.95rem;
-  color: #40514e;
+  color: ${({ theme }) => theme.colors.text};
+  margin-bottom: 1rem;
 `;
 
 const CategoryLink = styled(Link)`
-  display: inline-block;
-  font-weight: 600;
-  color: #43aa8b;
   text-decoration: none;
-
-  &:hover {
-    color: #2a6f61;
-  }
+  color: inherit;
+  display: block;
+  cursor: pointer;
 `;

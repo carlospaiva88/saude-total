@@ -2,39 +2,47 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { lazy, Suspense } from "react";
 import { ThemeProvider } from "styled-components";
-import { theme } from "./styles/theme"; 
+import { theme } from "./styles/theme";
+
+// Layout
+import SectionWrapper from "./Layout/SectionWrapper"
 
 // Componentes comuns
 import Navbar from "./components/Navbar/Navbar";
 import NavbarSpacer from "./components/Navbar/NavbarSpacer";
 import ScrollToTop from "./components/ScrollToTop";
-
-import Hero from "./components/Hero/Hero";
-import FinalCTA from "./components/FinalCTA/FinalCTA";
 import Footer from "./components/Footer/Footer";
-import HealthTips from "./components/HealthTips/HealthTips";
-import ReceitasPage from "./components/Receitas/ReceitasPage";
-import Sobre from "./components/Sobre/Sobre";
-import ReceitaPage from "./components/Receitas/ReceitaPage";
-import TravelHighlights from "./components/TravelHighlights/TravelHighlights";
-import viagensData from "./data/viagens";
-import ReceitasCategoria from "./components/Receitas/ReceitasCategoria"
 
-import ViagemPage from "./pages/ViagemPage";
+
+// Home components
+import Hero from "./components/Hero/Hero";
+import HealthTips from "./components/HealthTips/HealthTips";
+import CalculadorasInterativas from "./components/Calculadora/CalculadorasInterativas";
+import HomeReceitasSection from "./components/Receitas/HomeReceitasSection";
+import TravelHighlights from "./components/TravelHighlights/TravelHighlights";
+import FinalCTA from "./components/FinalCTA/FinalCTA";
+
+import viagensData from "./data/viagens";
+
+// Páginas Receitas
+import ReceitasPage from "./components/Receitas/ReceitasPage";
+import ReceitaPage from "./components/Receitas/ReceitaPage";
+import ReceitasCategoria from "./components/Receitas/ReceitasCategoria";
+
+// Calculadoras
+import CalculadoraIMCPage from "./components/Calculadora/CalculadoraIMCPage";
+import CalculadoraCaloricaPage from "./components/Calculadora/CalculadoraCaloricaPage";
+
+// Viagens
 import ViagensHome from "./pages/ViagensHome";
 import ViagensCategoria from "./pages/ViagensCategoria";
+import ViagemPage from "./pages/ViagemPage";
 
-import HomeReceitasSection from "./components/Receitas/HomeReceitasSection";
+// Sobre
+import Sobre from "./components/Sobre/Sobre";
 
-
-import CalculadoraCaloricaPage from './components/Calculadora/CalculadoraCaloricaPage';
-
-import CalculadorasInterativas from './components/Calculadora/CalculadorasInterativas';
-import CalculadoraIMCPage from "./components/Calculadora/CalculadoraIMCPage";
-import ProductShowcase from "./components/ProductShowcase/ProductShowcase";
-
-// Lazy loading das páginas
-const BlogHome = lazy(() => import("./pages/BlogHome"));
+// Lazy Loading
+const BlogHome = lazy(() => import("./components/BlogPage/BlogHome"));
 const Categoria = lazy(() => import("./pages/Categoria"));
 const Subcategoria = lazy(() => import("./pages/SubCategoria"));
 const Artigo = lazy(() => import("./pages/Artigo"));
@@ -45,81 +53,83 @@ function App() {
   return (
     <HelmetProvider>
       <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Suspense fallback={<div>Carregando...</div>}>
-          <Routes>
-            {/* Home */}
-            <Route
-              path="/"
-              element={
-                <>
-           
-                  <Navbar />
-                  <NavbarSpacer /> 
-                  <Hero />
-                  <HealthTips />
-                  <CalculadorasInterativas />
-                  <HomeReceitasSection />
-                  <TravelHighlights travels = {viagensData}/>                  
-                  <ProductShowcase />
-                  <FinalCTA />
-                  <Footer />
-            
-                </>
-              }
-            />
+        <BrowserRouter>
+          <ScrollToTop />
 
-            {/* Produtos */}
-            <Route path="/produtos" element={<ProductsPage />} />
+          <Suspense fallback={<div>Carregando...</div>}>
 
-            {/* Blog */}
-            <Route path="/blog" element={<BlogHome />} />
-            <Route path="/blog/:categoria" element={<Categoria />} />
-            <Route path="/blog/:categoria/:subcategoria" element={<Subcategoria />} />
-            <Route
-              path="/blog/:categoria/:subcategoria/:slug"
-              element={<Artigo />}
-            />
-            <Route path="/calculadora-imc" element={<CalculadoraIMCPage />} />
-            <Route path="/calculadora-calorica" element={<CalculadoraCaloricaPage />} />
+            <Routes>
 
-            <Route path="/receitas" element={<ReceitasPage />} />
-            <Route path="/receitas/categoria/:categoria" element={<ReceitasCategoria />} />
-            <Route path="/receitas/:slug" element={<ReceitaPage />} />
+              {/* HOME */}
+              <Route
+                path="/"
+                element={
+                  <>
+                    <Navbar />
+                    <NavbarSpacer />
 
-            <Route path="/receitas/receita" element={<Navigate to="/receitas" replace />} />
+                    <SectionWrapper>
+                      <Hero />
+                    </SectionWrapper>
 
+                    <SectionWrapper>
+                      <HealthTips />
+                    </SectionWrapper>
 
+                    <SectionWrapper>
+                      <CalculadorasInterativas />
+                    </SectionWrapper>
 
+                    <SectionWrapper>
+                      <HomeReceitasSection />
+                    </SectionWrapper>
 
-            <Route path="/sobre" element={<Sobre />} />
-                  
-            <Route path="/viagens" element={<ViagensHome />} />
-            <Route path="/viagens/:categoria" element={<ViagensCategoria />} />
-            <Route path="/viagens/:categoria/:slug" element={<ViagemPage />} />
+                    <SectionWrapper>
+                      <TravelHighlights travels={viagensData} />
+                    </SectionWrapper>
 
+                 
 
-            {/* Redirecionamentos antigos */}
-            <Route path="/dicas-saude" element={<Navigate to="/blog" replace />} />
-            <Route
-              path="/dicas-saude/:categoria"
-              element={<Navigate to="/blog/:categoria" replace />}
-            />
-            <Route
-              path="/dicas-saude/:categoria/:subcategoria"
-              element={<Navigate to="/blog/:categoria/:subcategoria" replace />}
-            />
-            <Route
-              path="/dicas-saude/:categoria/:subcategoria/:slug"
-              element={<Navigate to="/blog/:categoria/:subcategoria/:slug" replace />}
-            />
+                    <FinalCTA />
+                    <Footer />
+                  </>
+                }
+              />
 
-            {/* Página 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+              {/* PRODUTOS */}
+              <Route path="/produtos" element={<ProductsPage />} />
+
+              {/* BLOG */}
+              <Route path="/blog" element={<BlogHome />} />
+              <Route path="/blog/:categoria" element={<Categoria />} />
+              <Route path="/blog/:categoria/:subcategoria" element={<Subcategoria />} />
+              <Route path="/blog/:categoria/:subcategoria/:slug" element={<Artigo />} />
+
+              {/* CALCULADORAS */}
+              <Route path="/calculadora-imc" element={<CalculadoraIMCPage />} />
+              <Route path="/calculadora-calorica" element={<CalculadoraCaloricaPage />} />
+
+              {/* RECEITAS */}
+              <Route path="/receitas" element={<ReceitasPage />} />
+              <Route path="/receitas/categoria/:categoria" element={<ReceitasCategoria />} />
+              <Route path="/receitas/:slug" element={<ReceitaPage />} />
+              <Route path="/receitas/receita" element={<Navigate to="/receitas" replace />} />
+
+              {/* SOBRE */}
+              <Route path="/sobre" element={<Sobre />} />
+
+              {/* VIAGENS */}
+              <Route path="/viagens" element={<ViagensHome />} />
+              <Route path="/viagens/:categoria" element={<ViagensCategoria />} />
+              <Route path="/viagens/:categoria/:slug" element={<ViagemPage />} />
+
+              {/* REDIRECIONAMENTOS ANTIGOS */}
+              <Route path="/dicas-saude" element={<Navigate to="/blog" replace />} />
+
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
       </ThemeProvider>
     </HelmetProvider>
   );

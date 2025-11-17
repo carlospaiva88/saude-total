@@ -1,37 +1,31 @@
 import React from "react";
-import ProductImage from "../ProductImage/ProductImage";
 import {
-  ProductCard,
-  ProductDescription,
-  ProductName,
-  ProductPrice,
-  ProductScience,
-  BuyButton,
-} from "../ProductsPage/ProductsPage.style";
+  CardBase,
+  CardImage,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  CardDescription,
+  CardPrice,
+  CardButton,
+  CardSticker
+} from "../CardBase/cardBase";
 
-export default function ProductCardComponent({
-  id,
-  name,
-  price,
-  image,
-  description,
-  scienceText,
-  affiliateLink,
-}) {
+export default function ProductCard({ product, onBuy }) {
   return (
-    <ProductCard tabIndex="0" aria-label={`${name}, ${price}`}>
-      <ProductImage src={image} alt={name} />
-      <ProductName>{name}</ProductName>
-      <ProductPrice>{price}</ProductPrice>
-      <ProductDescription>{description}</ProductDescription>
-      <ProductScience>{scienceText}</ProductScience>
-      <BuyButton
-        href={affiliateLink}
-        target="_blank"
-        rel="nofollow noopener noreferrer"
-      >
-        Comprar
-      </BuyButton>
-    </ProductCard>
+    <CardBase>
+      {product.category && <CardSticker>{product.category}</CardSticker>}
+      <CardImage src={product.image} alt={product.name} />
+      <CardBody>
+        <CardTitle>{product.name}</CardTitle>
+        {product.category && <CardSubtitle>{product.category}</CardSubtitle>}
+        {product.description && (
+          <CardDescription>{product.description}</CardDescription>
+        )}
+        {product.price && <CardPrice>€ {product.price}</CardPrice>}
+
+        <CardButton  onClick={onBuy}>Comprar</CardButton>
+      </CardBody>
+    </CardBase>
   );
 }

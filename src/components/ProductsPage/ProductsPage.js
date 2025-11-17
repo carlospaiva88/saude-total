@@ -1,189 +1,217 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-import ProductCardComponent from '../ProductCard/ProductCard';
-import Navbar from '../Navbar/Navbar';
-import NavbarSpacer from '../Navbar/NavbarSpacer';
+import React, { useState } from "react";
+import styled, { keyframes, css } from "styled-components";
+import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
+import ProductCard from "../ProductCard/ProductCard";
+import productsData from "../../data/products";
 
-import Footer from '../Footer/Footer';
-import productsData from '../../data/products';
-
-// Estilos personalizados (você pode manter seus estilos do ProductsPage.styles.js se preferir)
-const PageContainer = styled.div`
-  max-width: 1100px;
-  margin: 2rem auto 4rem;
-  padding: 0 1.5rem;
-  min-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
+// Animação fade-in para os cards
+const fadeInUp = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 `;
 
-const CategoryHighlight = styled.section`
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  padding: 1.75rem 2rem;
-  background: #edf7f4;
-  border-radius: 16px;
-  box-shadow: 0 6px 20px rgba(42, 157, 143, 0.1);
-  @media (max-width: 768px) {
-    flex-direction: column;
-    text-align: center;
-  }
+// Wrapper animado para cada card
+const AnimatedCard = styled.div`
+  opacity: 0;
+  animation: ${css`${fadeInUp} 0.5s forwards`};
+  animation-delay: ${props => props.delay || 0}s;
 `;
-
-const ProductImage = styled.img`
-  height: 180px;
-  border-radius: 12px;
-  object-fit: cover;
-  @media (max-width: 768px) {
-    margin-bottom: 1rem;
-  }
-`;
-
-const HighlightText = styled.div`
-  flex: 1;
-  h2 {
-    font-size: 2rem;
-    color: #2a6f61;
-    margin-bottom: 0.5rem;
-  }
-  p {
-    font-size: 1.05rem;
-    color: #40514e;
-    line-height: 1.5;
-  }
-`;
-
-const CategoryMenu = styled.div`
-  display: flex;
-  gap: 1.7rem;
-  margin-bottom: 3rem;
-  flex-wrap: wrap;
-  justify-content: center;
-`;
-
-const CategoryButton = styled.button`
-  padding: 0.6rem 1.5rem;
-  border-radius: 24px;
-  border: none;
-  background: ${(props) => (props.active ? '#43aa8b' : '#d8eae5')};
-  color: ${(props) => (props.active ? 'white' : '#264653')};
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 1.1rem;
-  box-shadow: ${(props) => (props.active ? '0 8px 18px rgba(67,170,139,0.45)' : 'none')};
-  transition: all 0.3s ease;
-  &:hover {
-    background: #2a6f61;
-    color: white;
-    box-shadow: 0 8px 20px rgba(42, 157, 143, 0.6);
-  }
-`;
-
-const ProductsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-`;
-
-// ⚠️ ESSE É O WRAPPER DO PRODUTO, DEVE SER FEITO ASSIM PARA O DESTAQUE FUNCIONAR
-const ProductWrapper = styled.div`
-  &.highlight-product {
-    background-color: #d1f7ff;
-    box-shadow: 0 0 0 2px #43aa8b;
-    transition: background-color 0.3s ease;
-  }
-`;
-
-// Introdução por categoria
-const categoryIntroText = {
-  suplementos: {
-    title: 'Suplementos Premium para Você',
-    description: 'Explore nossa linha selecionada de suplementos que auxiliam no desempenho, recuperação e saúde geral. Produtos com respaldo científico para resultados reais.',
-    image: 'https://images.pexels.com/photos/791764/pexels-photo-791764.jpeg',
-  },
-  acessorios: {
-    title: 'Acessórios Funcionais',
-    description: 'Equipamentos e acessórios de alta qualidade para apoiar seus treinos e bem-estar diário. Durabilidade e performance em cada item.',
-    image: 'https://images.pexels.com/photos/4162451/pexels-photo-4162451.jpeg',
-  },
-  vitaminas: {
-    title: 'Vitaminas e Saúde',
-    description: 'Vitaminas essenciais para fortalecer seu organismo, com fórmulas exclusivas para suporte imunológico, energia e equilíbrio.',
-    image: 'https://images.pexels.com/photos/7605733/pexels-photo-7605733.jpeg',
-  },
-};
 
 export default function ProductsPage() {
-  const location = useLocation();
-  const [activeCategory, setActiveCategory] = useState(productsData.categories[0].id);
-  const { searchedProductId, searchedCategory } = location.state || {};
+  const todasCategorias = productsData.categories;
+  const todosProdutos = productsData.products;
 
-  // ➡️ Ao buscar e clicar em um produto, vai para a categoria certa e destaca o produto
-  useEffect(() => {
-    if (searchedProductId && searchedCategory) {
-      setActiveCategory(searchedCategory);
-      setTimeout(() => {
-        const productElement = document.getElementById(searchedProductId);
-        if (productElement) {
-          productElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          productElement.classList.add('highlight-product');
-          setTimeout(() => {
-            productElement.classList.remove('highlight-product');
-          }, 3000);
-        }
-      }, 150);
-    }
-  }, [searchedProductId, searchedCategory]);
+  const [categoriaAtiva, setCategoriaAtiva] = useState("todos");
 
-  const { title, description, image } = categoryIntroText[activeCategory] || {};
-
-  const filteredProducts = productsData.products
-    .filter(p => p.category === activeCategory)
-    .slice(0, 8);
+  // Filtra produtos de acordo com a categoria
+  const produtosFiltrados =
+    categoriaAtiva === "todos"
+      ? todosProdutos
+      : todosProdutos.filter((p) => p.category === categoriaAtiva);
 
   return (
     <>
       <Navbar />
       <NavbarSpacer />
-      <PageContainer>
-        <CategoryHighlight>
-          <ProductImage src={image} alt={title} />
-          <HighlightText>
-            <h2>{title}</h2>
-            <p>{description}</p>
-          </HighlightText>
-        </CategoryHighlight>
 
-        <CategoryMenu>
-          {productsData.categories.map(cat => (
+      <PageContainer>
+        {/* Hero premium */}
+        <HeroSection>
+          <HeroOverlay />
+          <HeroContent>
+            <h1>Eleve Seu Jogo com Produtos Premium</h1>
+            <p>Suplementos, acessórios e vitaminas para melhorar seu desempenho.</p>
+            <HeroCTA onClick={() => window.scrollTo({ top: 600, behavior: "smooth" })}>
+              Compre Agora
+            </HeroCTA>
+          </HeroContent>
+        </HeroSection>
+
+        {/* Menu de categorias centralizado */}
+        <CategoryMenu role="tablist" aria-label="Seleção de categorias">
+          <CategoryButton
+            role="tab"
+            aria-selected={categoriaAtiva === "todos"}
+            onClick={() => setCategoriaAtiva("todos")}
+            aria-current={categoriaAtiva === "todos" ? "true" : "false"}
+          >
+            Todos
+          </CategoryButton>
+          {todasCategorias.map((cat) => (
             <CategoryButton
               key={cat.id}
-              active={cat.id === activeCategory}
-              onClick={() => setActiveCategory(cat.id)}
+              role="tab"
+              aria-selected={categoriaAtiva === cat.id}
+              onClick={() => setCategoriaAtiva(cat.id)}
+              aria-current={categoriaAtiva === cat.id ? "true" : "false"}
             >
               {cat.name}
             </CategoryButton>
           ))}
         </CategoryMenu>
 
+        {/* Grid de produtos filtrados */}
         <ProductsGrid>
-          {filteredProducts.map(({ id, name, price, image, description, affiliateLink }) => (
-            <ProductWrapper id={id} key={id}>
-              <ProductCardComponent
-                name={name}
-                price={price}
-                image={image}
-                description={description}
-                affiliateLink={affiliateLink}
+          {produtosFiltrados.map((product, index) => (
+            <AnimatedCard key={product.id} delay={index * 0.1}>
+              <ProductCard
+                product={product}
+                onBuy={() => window.open(product.affiliateLink, "_blank")}
               />
-            </ProductWrapper>
+            </AnimatedCard>
           ))}
         </ProductsGrid>
       </PageContainer>
+
       <Footer />
     </>
   );
 }
+
+// Styled Components
+const NavbarSpacer = styled.div`
+  height: 80px;
+`;
+
+const PageContainer = styled.div`
+  padding: 2rem 4rem;
+  max-width: ${({ theme }) => theme.layout.maxWidth};
+  margin: 0 auto;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.laptop}) {
+    padding: 1rem 2rem;
+  }
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    padding: 1rem;
+  }
+`;
+
+const HeroSection = styled.section`
+  position: relative;
+  width: 100%;
+  height: 450px;
+  border-radius: ${({ theme }) => theme.radius.lg};
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 3rem;
+`;
+
+const HeroOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+      to bottom right,
+      rgba(0, 0, 0, 0.45),
+      rgba(0, 0, 0, 0.7)
+    ),
+    url("https://images.pexels.com/photos/3328582/pexels-photo-3328582.jpeg");
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+`;
+
+const HeroContent = styled.div`
+  position: relative;
+  color: ${({ theme }) => theme.colors.surface};
+  max-width: 700px;
+  padding: 0 1rem;
+
+  h1 {
+    font-family: ${({ theme }) => theme.fonts.heading};
+    font-weight: 900;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+
+    @media (max-width: ${({ theme }) => theme.breakpoints.laptop}) {
+      font-size: 2.2rem;
+    }
+
+    @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+      font-size: 1.8rem;
+    }
+  }
+
+  p {
+    font-weight: 400;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+  }
+`;
+
+const HeroCTA = styled.button`
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 50px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.surface};
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    background-color: ${({ theme }) => theme.colors.primaryDark};
+  }
+`;
+
+const CategoryMenu = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+`;
+
+const CategoryButton = styled.button`
+  flex: 0 0 auto;
+  padding: 0.6rem 1.4rem;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: ${({ theme, 'aria-current': current }) =>
+    current === "true" ? theme.colors.primary : theme.colors.secondary};
+  color: ${({ theme, 'aria-current': current }) =>
+    current === "true" ? theme.colors.surface : theme.colors.dark};
+  transition: background 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primaryDark};
+    color: ${({ theme }) => theme.colors.surface};
+  }
+`;
+
+const ProductsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+`;

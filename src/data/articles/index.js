@@ -28,6 +28,7 @@ import meditacaoAvancada from "./espiritual/meditacao-avancada";
 import energiaPositiva from "./espiritual/energia-positiva";
 import poderGratidao from "./espiritual/poder-gratidao";
 import equilibrioEspiritual from "./espiritual/equilibrio-espiritual-diario";
+import sintomasAnsiedade from "./mental/sintomas-ansiedade";
 
 const articles = [
   // emocional
@@ -53,6 +54,7 @@ const articles = [
   { ...tecnicasParaAliviarEstresse, friendlySlug: "tecnicas-para-aliviar-estresse" },
   { ...autoconhecimentoParaSaudeMental, friendlySlug: "autoconhecimento-para-saude-mental" },
   { ...mindfulness, friendlySlug: "mindfulness-para-saude-mental" },
+  { ...sintomasAnsiedade, friendlySlug: "sintomas-ansiedade"},
 
   // espiritual
   { ...autoestimaEspiritual, friendlySlug: "autoestima-espiritual" },

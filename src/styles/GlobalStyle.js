@@ -1,12 +1,13 @@
-// src/styles/GlobalStyle.js
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
-  /* Reset CSS básico */
+  /* ------------------------------ */
+  /* RESET BASE MODERNO            */
+  /* ------------------------------ */
   *, *::before, *::after {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
   }
 
   html {
@@ -15,15 +16,21 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: ${({ theme }) => theme.fonts.main};
-    color: ${({ theme }) => theme.colors.dark};
-    background-color: ${({ theme }) => theme.colors.light};
+    background: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors.text};
     line-height: 1.6;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
   }
 
   a {
-    color: ${({ theme }) => theme.colors.primaryDark};
     text-decoration: none;
+    color: ${({ theme }) => theme.colors.primaryDark};
     transition: ${({ theme }) => theme.transitions.normal};
 
     &:hover {
@@ -32,11 +39,14 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   button {
-    font-family: ${({ theme }) => theme.fonts.main};
+    font-family: inherit;
     cursor: pointer;
     border: none;
-    border-radius: ${({ theme }) => theme.borderRadius.md};
     transition: ${({ theme }) => theme.transitions.fast};
+  }
+
+  input, textarea {
+    font-family: ${({ theme }) => theme.fonts.main};
   }
 
   ::selection {
