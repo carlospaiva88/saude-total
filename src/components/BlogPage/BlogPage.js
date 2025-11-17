@@ -1,7 +1,15 @@
 import React, { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-
 import blogPosts from "../../data/blogPosts";
+
+// Calculadoras
+import CalculadoraIMC from "../../components/Calculadora/CalculadoraIMC";
+import CalculadoraCalorica from "../../components/Calculadora/CalculadoraCalorica";
+
+// Utilidades
+import { parseDatePtBr, formatDatePtBr } from "./utils";
+
+// Estilos
 import {
   Page,
   Breadcrumbs,
@@ -9,37 +17,18 @@ import {
   Meta,
   Cover,
   ArticleBody,
-  ProductsSection,
-  CtaButton,
-  NotFound,
-  SectionTitle,
-  ProductCard,
-  ProductDesc,
-  ProductGrid,
-  ProductName,
-  RelatedCard,
-  RelatedGrid,
-  RelatedSection,
-  RelatedThumb,
-  RelatedTitle,
+  ToolsSection,
+  ToolsTitle,
+  ToolsSubtitle,
+  CalculatorsWrapper,
+  NotFound
 } from "./BlogPage.styles";
-
-import { parseDatePtBr, formatDatePtBr } from "./utils";
 
 export default function BlogPage() {
   const { slug } = useParams();
   const post = blogPosts?.[slug];
 
   const publishedAt = useMemo(() => parseDatePtBr(post?.date), [post?.date]);
-
-  const related = useMemo(() => {
-    if (!blogPosts || !slug) return [];
-    return Object.entries(blogPosts)
-      .filter(([key]) => key !== slug)
-      .map(([s, data]) => ({ slug: s, ...data }))
-      .sort((a, b) => parseDatePtBr(b.date) - parseDatePtBr(a.date))
-      .slice(0, 3);
-  }, [slug]);
 
   if (!post) {
     return (
@@ -86,57 +75,17 @@ export default function BlogPage() {
 
       <ArticleBody>{post.text}</ArticleBody>
 
-      {/* Produtos recomendados */}
-      {Array.isArray(post.products) && post.products.length > 0 && (
-        <ProductsSection aria-labelledby="produtos-recomendados">
-          <SectionTitle id="produtos-recomendados">
-            Produtos recomendados
-          </SectionTitle>
-          <ProductGrid>
-            {post.products.map((p, i) => (
-              <ProductCard key={i}>
-                <ProductName>{p.name}</ProductName>
-                {p.description && <ProductDesc>{p.description}</ProductDesc>}
-                <CtaButton
-                  href={p.link}
-                  target="_blank"
-                  rel="nofollow sponsored noopener noreferrer"
-                  aria-label={`Ver ${p.name} na Amazon (link externo, afiliado)`}
-                >
-                  Ver na Amazon
-                </CtaButton>
-              </ProductCard>
-            ))}
-          </ProductGrid>
-        </ProductsSection>
-      )}
-
-      {/* Artigos relacionados */}
-      {related.length > 0 && (
-        <RelatedSection aria-labelledby="artigos-relacionados">
-          <SectionTitle id="artigos-relacionados">
-            Artigos relacionados
-          </SectionTitle>
-          <RelatedGrid>
-            {related.map((rp) => (
-              <RelatedCard
-                key={rp.slug}
-                to={`/blog/${rp.slug}`}
-                aria-label={`Ir para ${rp.title}`}
-              >
-                {rp.image && (
-                  <RelatedThumb src={rp.image} alt="" loading="lazy" />
-                )}
-                <RelatedTitle>{rp.title}</RelatedTitle>
-                <Meta style={{ margin: 0 }}>
-                  {formatDatePtBr(parseDatePtBr(rp.date))}
-                  {rp.readTime ? ` · ${rp.readTime} min` : ""}
-                </Meta>
-              </RelatedCard>
-            ))}
-          </RelatedGrid>
-        </RelatedSection>
-      )}
+      {/* Bloco de Calculadoras */}
+      <ToolsSection>
+        <ToolsTitle>Ferramentas de Saúde</ToolsTitle>
+        <ToolsSubtitle>
+          Calcule seu IMC ou suas necessidades calóricas e acompanhe sua saúde!
+        </ToolsSubtitle>
+        <CalculatorsWrapper>
+          <CalculadoraIMC />
+          <CalculadoraCalorica />
+        </CalculatorsWrapper>
+      </ToolsSection>
     </Page>
   );
 }

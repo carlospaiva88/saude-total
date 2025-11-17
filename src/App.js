@@ -17,10 +17,10 @@ import Footer from "./components/Footer/Footer";
 // Home components
 import Hero from "./components/Hero/Hero";
 import HealthTips from "./components/HealthTips/HealthTips";
-import CalculadorasInterativas from "./components/Calculadora/CalculadorasInterativas";
 import HomeReceitasSection from "./components/Receitas/HomeReceitasSection";
 import TravelHighlights from "./components/TravelHighlights/TravelHighlights";
 import FinalCTA from "./components/FinalCTA/FinalCTA";
+import BlogPage from "./components/BlogPage/BlogPage";
 
 import viagensData from "./data/viagens";
 
@@ -29,9 +29,13 @@ import ReceitasPage from "./components/Receitas/ReceitasPage";
 import ReceitaPage from "./components/Receitas/ReceitaPage";
 import ReceitasCategoria from "./components/Receitas/ReceitasCategoria";
 
+
 // Calculadoras
-import CalculadoraIMCPage from "./components/Calculadora/CalculadoraIMCPage";
-import CalculadoraCaloricaPage from "./components/Calculadora/CalculadoraCaloricaPage";
+import CalculadorasIndex from "./pages/Calculadoras/CalculadoraIndex"
+import CalculadoraIMC from "./components/Calculadora/CalculadoraIMC"
+import CalculadoraCalorica from "./components/Calculadora/CalculadoraCalorica"
+
+
 
 // Viagens
 import ViagensHome from "./pages/ViagensHome";
@@ -76,9 +80,7 @@ function App() {
                       <HealthTips />
                     </SectionWrapper>
 
-                    <SectionWrapper>
-                      <CalculadorasInterativas />
-                    </SectionWrapper>
+                 
 
                     <SectionWrapper>
                       <HomeReceitasSection />
@@ -104,10 +106,13 @@ function App() {
               <Route path="/blog/:categoria" element={<Categoria />} />
               <Route path="/blog/:categoria/:subcategoria" element={<Subcategoria />} />
               <Route path="/blog/:categoria/:subcategoria/:slug" element={<Artigo />} />
+              <Route path="/blog/:categoria/:subcategoria/:slug" element={<BlogPage />} />
+
 
               {/* CALCULADORAS */}
-              <Route path="/calculadora-imc" element={<CalculadoraIMCPage />} />
-              <Route path="/calculadora-calorica" element={<CalculadoraCaloricaPage />} />
+              <Route path="/calculadora" element={<CalculadorasIndex />} />
+              <Route path="/calculadora/imc" element={<CalculadoraIMC />} />
+              <Route path="/calculadora/calorica" element={<CalculadoraCalorica />} />
 
               {/* RECEITAS */}
               <Route path="/receitas" element={<ReceitasPage />} />
