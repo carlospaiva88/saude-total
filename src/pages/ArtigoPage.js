@@ -1,380 +1,225 @@
-import React, { useRef } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import Navbar from "../components/Navbar/Navbar";
-import Footer from "../components/Footer/Footer";
 import blogPosts from "../data/blogPosts";
-import Breadcrumbs from "../components/BreadCrumbs";
-import Comentarios from '../components/Comentarios';
-import ShareButtons from "../components/ShareButtons";
-import AudioReader from "../components/AudioReader";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 
+// ------------ ESTILOS ------------
+const PageWrapper = styled.div`
+  max-width: ${({ theme }) => theme.layout.maxWidth};
+  padding: ${({ theme }) => theme.layout.sectionPadding};
+  margin: auto;
+`;
+
+const HeaderImage = styled.img`
+  width: 100%;
+  height: 350px;
+  border-radius: ${({ theme }) => theme.radius.lg};
+  object-fit: cover;
+  box-shadow: ${({ theme }) => theme.shadow.md};
+  margin-bottom: 2rem;
+`;
+
+const Title = styled.h1`
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: ${({ theme }) => theme.colors.dark};
+`;
+
+const Meta = styled.div`
+  display: flex;
+  gap: 1rem;
+  color: #777;
+  margin-bottom: 2rem;
+`;
+
+const Content = styled.div`
+  font-size: 1.1rem;
+  color: ${({ theme }) => theme.colors.text};
+  line-height: 1.7;
+
+  p {
+    margin: 1rem 0;
+  }
+
+  ul {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+`;
+
+const SectionTitle = styled.h2`
+  margin-top: 4rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.dark};
+  margin-bottom: 1.5rem;
+`;
+
+// ------------ PRODUTOS RELACIONADOS ------------
+const ProductGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+`;
+
+const ProductCard = styled.a`
+  display: block;
+  background: white;
+  border-radius: ${({ theme }) => theme.radius.md};
+  padding: 1rem;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: ${({ theme }) => theme.shadow.sm};
+  transition: ${({ theme }) => theme.transitions.normal};
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: ${({ theme }) => theme.shadow.md};
+  }
+`;
+
+const ProductImage = styled.img`
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  margin-bottom: 1rem;
+`;
+
+const ProductName = styled.h4`
+  margin-bottom: 0.4rem;
+`;
+
+const ProductPrice = styled.p`
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.primary};
+  margin-bottom: 0.5rem;
+`;
+
+const ProductDesc = styled.p`
+  font-size: 0.9rem;
+  color: #666;
+`;
+
+// ------------ RECOMENDADOS ------------
+const RecommendedGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+`;
+
+const RecCard = styled.a`
+  display: block;
+  background: white;
+  border-radius: ${({ theme }) => theme.radius.md};
+  overflow: hidden;
+  box-shadow: ${({ theme }) => theme.shadow.sm};
+  transition: ${({ theme }) => theme.transitions.normal};
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: ${({ theme }) => theme.shadow.md};
+  }
+`;
+
+const RecImage = styled.img`
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+`;
+
+const RecInfo = styled.div`
+  padding: 1rem;
+`;
+
+const RecTitle = styled.h4`
+  font-size: 1.2rem;
+`;
+
+// ------------ COMPONENTE PRINCIPAL ------------
 export default function ArtigoPage() {
-  const { categoria, slug } = useParams();
-  const navigate = useNavigate();
+  const { categoria, subcategoria, slug } = useParams();
 
-  const artigo = blogPosts.find((post) => post.slug === slug);
-  const seenSlugs = new Set();
-
-  const recentPosts = artigo
-    ? Object.values(blogPosts)
-        .filter(a => a.category === artigo.category && a.slug !== artigo.slug)
-        .filter(a => {
-          if (seenSlugs.has(a.slug)) return false;
-          seenSlugs.add(a.slug);
-          return true;
-        })
-        .slice(0, 5)
-    : [];
-
-  const carouselRef = useRef(null);
+  const artigo = blogPosts.find(
+    (post) =>
+      post.category === categoria &&
+      post.subCategory === subcategoria &&
+      post.slug === slug
+  );
 
   if (!artigo) {
     return (
-      <>
-        <Navbar />
-        <Breadcrumbs />
-        <Container>
-          <Title>Artigo não encontrado</Title>
-          <Link to="/blog">Voltar ao Blog</Link>
-        </Container>
-        <Footer />
-      </>
+      <PageWrapper>
+        <h1>Artigo não encontrado</h1>
+      </PageWrapper>
     );
   }
 
-  const scroll = (direction) => {
-    if (!carouselRef.current) return;
-    const { clientWidth, scrollLeft } = carouselRef.current;
-    const scrollAmount = direction === "left" ? scrollLeft - clientWidth : scrollLeft + clientWidth;
-    carouselRef.current.scrollTo({
-      left: scrollAmount,
-      behavior: "smooth",
-    });
-  };
-
-  // Touch Handling
-  let startX = 0;
-  let scrollLeftStart = 0;
-
-  const onTouchStart = (e) => {
-    startX = e.touches[0].pageX;
-    scrollLeftStart = carouselRef.current.scrollLeft;
-  };
-
-  const onTouchMove = (e) => {
-    if (!carouselRef.current) return;
-    const x = e.touches[0].pageX;
-    const walk = startX - x; // distance moved
-    carouselRef.current.scrollLeft = scrollLeftStart + walk;
-  };
+  const artigosRecomendados = blogPosts
+    .filter((post) => post.id !== artigo.id)
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 3);
 
   return (
     <>
       <Helmet>
-        <title>{artigo.title} - Saúde em Movimento</title>
-        <meta name="description" content={artigo.description || artigo.excerpt || ''} />
-        <meta property="og:title" content={artigo.title} />
-        <meta property="og:description" content={artigo.description || artigo.excerpt || ''} />
-        <meta property="og:image" content={artigo.image} />
-        <meta property="og:url" content={window.location.href} />
-        <meta property="og:type" content="article" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={artigo.title} />
-        <meta name="twitter:description" content={artigo.description || artigo.excerpt || ''} />
-        <meta name="twitter:image" content={artigo.image} />
+        <title>{artigo.title} | Viva no Flow</title>
+        <meta name="description" content={artigo.title} />
       </Helmet>
 
-      <Navbar />
-      <Breadcrumbs />
+      <PageWrapper>
+        <HeaderImage src={artigo.image} alt={artigo.title} />
 
-      <Container>
         <Title>{artigo.title}</Title>
-        
-        <MetaInfo>
-          Publicado em {artigo.date} • {artigo.readingTime}
-        </MetaInfo>
 
-        {artigo.image && <HeroImage src={artigo.image} alt={artigo.title} />}
-
-        <AudioReader texto={artigo.content.replace(/<[^>]+>/g, "")} />
+        <Meta>
+          <span>{artigo.date}</span>
+          <span>•</span>
+          <span>{artigo.readingTime}</span>
+        </Meta>
 
         <Content dangerouslySetInnerHTML={{ __html: artigo.content }} />
 
+        {/* PRODUTOS RELACIONADOS */}
         {artigo.relatedProducts && artigo.relatedProducts.length > 0 && (
-          <ProductSection>
-            <h2>Produtos relacionados</h2>
-            {artigo.relatedProducts.map((prod) => (
-              <ProductCardBlogBase key={prod.id}>
-                <ProductCardBlogImage src={prod.image} alt={prod.name} />
-                <ProductCardBlogBody>
-                  <ProductCardBlogTitle>{prod.name}</ProductCardBlogTitle>
-                  {prod.price && <ProductCardBlogPrice>{prod.price}</ProductCardBlogPrice>}
-                  <ProductCardBlogDescription>{prod.description}</ProductCardBlogDescription>
-                  <ProductCardBlogButton
-                    href={prod.affiliateLink}
-                    target="_blank"
-                    rel="nofollow noopener noreferrer"
-                  >
-                    Ver Produto
-                  </ProductCardBlogButton>
-                </ProductCardBlogBody>
-              </ProductCardBlogBase>
-            ))}
-          </ProductSection>
+          <>
+            <SectionTitle>Produtos Recomendados</SectionTitle>
+            <ProductGrid>
+              {artigo.relatedProducts.map((p) => (
+                <ProductCard
+                  key={p.id}
+                  href={p.affiliateLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ProductImage src={p.image} alt={p.name} />
+                  <ProductName>{p.name}</ProductName>
+                  <ProductPrice>{p.price}</ProductPrice>
+                  <ProductDesc>{p.description}</ProductDesc>
+                </ProductCard>
+              ))}
+            </ProductGrid>
+          </>
         )}
 
-        <ShareButtons />
-
-        <Comentarios slug={slug} />
-
-        {recentPosts.length > 0 && (
-          <RecentPostsSection>
-            <h2>Últimos Posts em {artigo.category.charAt(0).toUpperCase() + artigo.category.slice(1)}</h2>
-            <CarouselWrapper>
-              <ArrowLeft onClick={() => scroll("left")} aria-label="Scroll Left">
-                <FaChevronLeft size={24} />
-              </ArrowLeft>
-
-              <RecentPostsCarousel
-                ref={carouselRef}
-                onTouchStart={onTouchStart}
-                onTouchMove={onTouchMove}
-                tabIndex={0}
-                aria-label="Carrossel de últimos posts"
-              >
-                {recentPosts.map(post => (
-                  <PostCard key={post.slug} to={`/blog/${post.category}/${post.slug}`}>
-                    <img src={post.image} alt={post.title} />
-                    <PostTitle>{post.title}</PostTitle>
-                  </PostCard>
-                ))}
-              </RecentPostsCarousel>
-
-              <ArrowRight onClick={() => scroll("right")} aria-label="Scroll Right">
-                <FaChevronRight size={24} />
-              </ArrowRight>
-            </CarouselWrapper>
-          </RecentPostsSection>
-        )}
-
-        <BackLink to={`/blog/${artigo.category}`}>
-          ← Voltar para {artigo.category.charAt(0).toUpperCase() + artigo.category.slice(1)}
-        </BackLink>
-      </Container>
-
-      <Footer />
+        {/* ARTIGOS RECOMENDADOS */}
+        <SectionTitle>Artigos Recentes</SectionTitle>
+        <RecommendedGrid>
+          {artigosRecomendados.map((r) => (
+            <RecCard
+              key={r.id}
+              href={`/blog/${r.category}/${r.subCategory}/${r.slug}`}
+            >
+              <RecImage src={r.image} alt={r.title} />
+              <RecInfo>
+                <RecTitle>{r.title}</RecTitle>
+              </RecInfo>
+            </RecCard>
+          ))}
+        </RecommendedGrid>
+      </PageWrapper>
     </>
   );
 }
-
-// Styled Components
-
-const Container = styled.div`
-  max-width: 900px;
-  margin: 2rem auto 4rem;
-  padding: 0 1.5rem;
-  line-height: 1.7;
-`;
-
-const Title = styled.h1`
-  font-size: 2.2rem;
-  color: #264653;
-  margin-bottom: 0.5rem;
-  text-align: center;
-`;
-
-const MetaInfo = styled.p`
-  text-align: center;
-  font-size: 0.95rem;
-  color: #6c757d;
-  margin-bottom: 1.5rem;
-`;
-
-const HeroImage = styled.img`
-  width: 100%;
-  height: 400px;
-  object-fit: cover;
-  border-radius: 16px;
-  margin: 1.5rem 0;
-  transition: transform 0.2s ease;
-  &:hover {
-    transform: scale(1.02);
-  }
-`;
-
-const Content = styled.div`
-  font-size: 1.05rem;
-  color: #40514e;
-
-  h2 {
-    font-size: 1.6rem;
-    margin: 1.5rem 0 1rem;
-    color: #2a6f61;
-  }
-
-  h3 {
-    font-size: 1.2rem;
-    margin: 1rem 0;
-    color: #43aa8b;
-  }
-
-  p {
-    margin-bottom: 1rem;
-  }
-
-  ul,
-  ol {
-    margin: 1rem 0 1.5rem 1.5rem;
-  }
-`;
-
-const ProductSection = styled.section`
-  margin-top: 3rem;
-  background: #fff;
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(42, 157, 143, 0.08);
-  border: 1px solid rgba(42, 157, 143, 0.12);
-
-  h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: #264653;
-    font-size: 1.4rem;
-  }
-`;
-
-const RecentPostsSection = styled.section`
-  margin-top: 4rem;
-
-  h2 {
-    text-align: center;
-    color: #2a6f61;
-    margin-bottom: 1.5rem;
-  }
-`;
-
-const CarouselWrapper = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-`;
-
-const RecentPostsCarousel = styled.div`
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding-bottom: 1rem;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-
-  &::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #43aa8b;
-    border-radius: 4px;
-  }
-
-  &:focus {
-    outline: none;
-  }
-`;
-
-const ArrowLeft = styled.button`
-  position: absolute;
-  left: 0;
-  z-index: 1;
-  background: rgba(66, 170, 139, 0.9);
-  border: none;
-  color: white;
-  padding: 0.75rem;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.2s ease;
-
-  &:hover {
-    background: #2a6f61;
-  }
-
-  @media (max-width: 600px) {
-    display: none;
-  }
-`;
-
-const ArrowRight = styled.button`
-  position: absolute;
-  right: 0;
-  z-index: 1;
-  background: rgba(66, 170, 139, 0.9);
-  border: none;
-  color: white;
-  padding: 0.75rem;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.2s ease;
-
-  &:hover {
-    background: #2a6f61;
-  }
-
-  @media (max-width: 600px) {
-    display: none;
-  }
-`;
-
-const PostCard = styled(Link)`
-  flex: 0 0 200px;
-  scroll-snap-align: start;
-  background: #edf7f4;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(42, 157, 143, 0.12);
-  text-decoration: none;
-  color: #264653;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.2s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-
-  img {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 12px 12px 0 0;
-  }
-
-  &:focus {
-    outline: 2px solid #2a6f61;
-    outline-offset: 2px;
-  }
-`;
-
-const PostTitle = styled.div`
-  font-size: 1rem;
-  padding: 0.75rem;
-  flex-grow: 1;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const BackLink = styled(Link)`
-  display: inline-block;
-  margin-top: 2rem;
-  font-weight: 600;
-  color: #43aa8b;
-  text-decoration: none;
-
-  &:hover {
-    color: #2a6f61;
-  }
-`;

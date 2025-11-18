@@ -1,5 +1,5 @@
 const article = {
-  slug: "fortalecimento-joelho",
+  slug: "joelho",
   title: "Fortalecimento do Joelho: Cuidados e Exercícios Essenciais",
   image: "https://images.pexels.com/photos/8018976/pexels-photo-8018976.jpeg",
   date: "05/09/2025",

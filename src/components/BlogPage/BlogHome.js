@@ -1,354 +1,393 @@
-import React, { useRef } from "react";
+// src/pages/BlogHome.jsx
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar/Navbar";
+import NavbarSpacer from "../../components/Navbar/NavbarSpacer";
+import Footer from "../../components/Footer/Footer";
+import ArticleCard from "../../components/ArticleCard/ArticleCard";
+import articlesData from "../../data/articles/index"; 
+import receitas from "../../data/receitas/index"; 
+import CalculadoraPreview from "../../components/Calculadora/CalculadoraPreview";
+import ContinueExploring from "./BlogPage";
+import TagsCloud from "../../components/BlogPage/TagsCloud";
+import NewsletterCTA from "../../components/BlogPage/NewsletterCTA";
 
-import Navbar from "../Navbar/Navbar";
-import NavbarSpacer from "../Navbar/NavbarSpacer";
-import Footer from "../Footer/Footer";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
 
-import {ToolsTitle, ToolsSubtitle, CalculatorsWrapper, CalculatorCard, ToolsSection  } from "../Calculadora/WrapperCalculadora"
+const categories = [
+  { id: "fisica", name: "Física", image: "https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg" },
+  { id: "mental", name: "Mental", image: "https://images.pexels.com/photos/4804320/pexels-photo-4804320.jpeg" },
+  { id: "emocional", name: "Emocional", image: "https://images.pexels.com/photos/6765024/pexels-photo-6765024.jpeg" },
+  { id: "espiritual", name: "Espiritual", image: "https://images.pexels.com/photos/999309/pexels-photo-999309.jpeg" },
+];
 
-import { CardBase, CardImage, CardBody, CardTitle, CardDescription } from "../CardBase/cardBase";
-import CalculadoraCalorica from "../Calculadora/CalculadoraCalorica";
-import CalculadoraIMC from "../Calculadora/CalculadoraIMC";
+export default function BlogHome() {
+  const navigate = useNavigate();
 
-  const blogCategories = [
-    {
-      id: "fisica",
-      name: "Saúde Física",
-      description: "Fortaleça seu corpo com dicas, exercícios e hábitos saudáveis.",
-      image: "https://images.pexels.com/photos/4162451/pexels-photo-4162451.jpeg",
-      slug: "fisica",
-    },
-    {
-      id: "mental",
-      name: "Saúde Mental",
-      description: "Cuide da mente, reduza o estresse e melhore seu bem-estar.",
-      image: "https://images.pexels.com/photos/7605733/pexels-photo-7605733.jpeg",
-      slug: "mental",
-    },
-    {
-      id: "emocional",
-      name: "Saúde Emocional",
-      description: "Equilibre emoções e fortaleça a inteligência emocional.",
-      image: "https://images.pexels.com/photos/791764/pexels-photo-791764.jpeg",
-      slug: "emocional",
-    },
-    {
-      id: "espiritual",
-      name: "Saúde Espiritual",
-      description: "Encontre a sua força interior e fortaleça a sua fé.",
-      image: "https://images.pexels.com/photos/32593588/pexels-photo-32593588.jpeg",
-      slug: "espiritual",
-    },
-  ];
+  // Flatten articles (works whether user exports array or object)
+  const postsArray = useMemo(() => {
+    if (!articlesData) return [];
+    return Array.isArray(articlesData) ? articlesData : Object.values(articlesData);
+  }, []);
 
-  const popularPosts = [
-    {
-      id: "1",
-      title: "10 Dicas para Saúde Física Completa",
-      excerpt: "Descubra hábitos simples para fortalecer seu corpo e aumentar sua disposição diária.",
-      image: "https://images.pexels.com/photos/414029/pexels-photo-414029.jpeg",
-      slug: "dicas-saude-fisica",
-    },
-    {
-      id: "2",
-      title: "Como reduzir o estresse com meditação",
-      excerpt: "Técnicas comprovadas para melhorar seu foco e reduzir ansiedade.",
-      image: "https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg",
-      slug: "reduzir-estresse-meditacao",
-    },
-    {
-      id: "3",
-      title: "Fortalecendo a saúde emocional no dia a dia",
-      excerpt: "Passos práticos para uma vida emocional equilibrada e feliz.",
-      image: "https://images.pexels.com/photos/3991613/pexels-photo-3991613.jpeg",
-      slug: "saude-emocional",
-    },
-  ];
+  // Ordena por data (mais recentes primeiro)
+  const recent = useMemo(() => {
+    return postsArray
+      .slice()
+      .sort((a, b) => {
+        const da = new Date(a.date || a.datePublished || 0).getTime();
+        const db = new Date(b.date || b.datePublished || 0).getTime();
+        return db - da;
+      })
+      .slice(0, 9);
+  }, [postsArray]);
 
-  export default function BlogHome() {
-    const navigate = useNavigate();
-    const carouselRef = useRef(null);
+  const popular = useMemo(() => {
+    return postsArray
+      .filter(p => p.featured || p.destaque || p.popular)
+      .slice(0, 6);
+  }, [postsArray]);
 
-    // Funções para scroll manual no carrossel
-    const scrollLeft = () => {
-      if (carouselRef.current) {
-        carouselRef.current.scrollBy({ left: -300, behavior: "smooth" });
-      }
-    };
+  return (
+    <>
+      <Navbar />
+      <NavbarSpacer />
+      <Wrapper>
+        <Hero>
+          <HeroText>
+            <h1>Como está a sua saúde hoje?</h1>
+            <p>Conteúdo confiável sobre corpo, mente e hábitos para uma vida com mais energia e bem-estar.</p>
+            <PrimaryCta onClick={() => navigate("/blog")}>Explorar o Blog</PrimaryCta>
+          </HeroText>
+          <HeroImg src="https://images.pexels.com/photos/28061/pexels-photo.jpg" alt="Saúde e bem-estar" />
+        </Hero>
 
-    const scrollRight = () => {
-      if (carouselRef.current) {
-        carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
-      }
-    };
+        <SectionTitle>Categorias</SectionTitle>
+        <Swiper
+          modules={[Navigation]}
+          navigation
+          spaceBetween={20}
+          slidesPerView={3}
+          breakpoints={{ 640: { slidesPerView: 1 }, 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }}
+          style={{ paddingBottom: "1.25rem", marginBottom: "1.5rem" }}
+        >
+          {categories.map(c => (
+            <SwiperSlide key={c.id}>
+              <CatCard to={`/blog/${c.id}`}>
+                <CatThumb style={{ backgroundImage: `url(${c.image})` }} />
+                <CatBody>
+                  <h4>{c.name}</h4>
+                  <p>Conteúdos sobre {c.name.toLowerCase()} para seu bem-estar.</p>
+                </CatBody>
+              </CatCard>
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
-    return (
-      <>
-        <Navbar />
-        <NavbarSpacer />
-        <Container>
-          <HeroBanner>
-            <HeroText>
-              <h1>Como está a sua saúde hoje?</h1>
-              <p>Explore nosso conteúdo para cuidar do corpo, mente e emoções.</p>
-            </HeroText>
-            <HeroImage
-              src="https://images.pexels.com/photos/4056723/pexels-photo-4056723.jpeg"
-              alt="Saúde e Bem-estar"
-            />
-          </HeroBanner>
+        <TwoColumnRow>
+          <Column flex="2">
+            <SectionTitle>Artigos Recentes</SectionTitle>
+            <Grid>
+              {recent.map((post) => (
+                <ArticleCard
+                  key={post.slug || post.id}
+                  item={post}
+                  to={`/blog/${post.category || post.categoria || "geral"}/${post.slug || post.friendlySlug || post.id}`}
+                />
+              ))}
+            </Grid>
 
-          <SectionTitle>Categorias</SectionTitle>
-          <CarouselWrapper>
-            <ArrowButtonLeft onClick={scrollLeft} aria-label="Scroll Left">&#8249;</ArrowButtonLeft>
-            <CarouselContainer ref={carouselRef} tabIndex={0} aria-label="Carrossel de categorias">
-              <CarouselTrack>
-                {blogCategories.map((cat) => (
-                  <CategoryCard key={cat.id} as={Link} to={`/blog/${cat.slug}`}>
-                    <CardBase>
-                      <CardImage src={cat.image} alt={cat.name} />
-                      <CardBody>
-                        <CardTitle>{cat.name}</CardTitle>
-                        <CardDescription>{cat.description}</CardDescription>
-                      </CardBody>
-                    </CardBase>
-                  </CategoryCard>
+            {/* final: continue exploring + tags + newsletter */}
+            <ContinueSection>
+              <ContinueExploring posts={postsArray} receitas={Object.values(receitas || {}).flat()} />
+              <TagsNewsletterRow>
+                <TagsCloud articles={postsArray} />
+                <NewsletterCTA />
+              </TagsNewsletterRow>
+            </ContinueSection>
+          </Column>
+
+          <Column flex="1">
+            <SideBox>
+              <h3>Populares</h3>
+              <PopularList>
+                {popular.length ? popular.map(p => (
+                  <SmallPopular key={p.slug || p.id} to={`/blog/${p.category || p.categoria || "geral"}/${p.slug || p.friendlySlug || p.id}`}>
+                    <img src={p.image || p.imagem} alt={p.title || p.titulo} />
+                    <div>
+                      <strong>{p.title || p.titulo}</strong>
+                      <span>{(p.excerpt || p.descricao || p.description || "").slice(0, 90)}...</span>
+                    </div>
+                  </SmallPopular>
+                )) : <Empty>Sem artigos em destaque</Empty>}
+              </PopularList>
+
+              <Divider />
+
+              <h3>Calculadoras Rápidas</h3>
+              <CalculadoraPreview />
+
+              <Divider />
+
+              <h3>Receitas recomendadas</h3>
+              <MiniRecipes>
+                {Object.values(receitas || {}).flat().slice(0, 3).map(r => (
+                  <MiniRecipe key={r.slug} to={`/receitas/${r.slug}`}>
+                    <img src={r.imagem || r.image} alt={r.titulo || r.title} />
+                    <div>
+                      <strong>{r.titulo}</strong>
+                      <small>{r.tempo || ""}</small>
+                    </div>
+                  </MiniRecipe>
                 ))}
-              </CarouselTrack>
-            </CarouselContainer>
-            <ArrowButtonRight onClick={scrollRight} aria-label="Scroll Right">&#8250;</ArrowButtonRight>
-          </CarouselWrapper>
+              </MiniRecipes>
+            </SideBox>
+          </Column>
+        </TwoColumnRow>
 
-          <SectionTitle>Artigos Populares</SectionTitle>
-          <PopularPostsSection>
-            {popularPosts.map((post) => (
-              <PopularPost
-                key={post.id}
-                onClick={() => navigate(`/blog/artigo/${post.slug}`)}
-                tabIndex={0}
-                role="button"
-                onKeyDown={(e) => { if(e.key === "Enter") navigate(`/blog/artigo/${post.slug}`); }}
-              >
-                <CardImage src={post.image} alt={post.title} />
-                <PopularPostContent>
-                  <h3>{post.title}</h3>
-                  <p>{post.excerpt}</p>
-                  <MoreDetailsLink to={`/blog/artigo/${post.slug}`}>Mais detalhes &rarr;</MoreDetailsLink>
-                </PopularPostContent>
-              </PopularPost>
-            ))}
-          </PopularPostsSection>
-              <ToolsSection>
-              <ToolsTitle>Ferramentas de Saúde</ToolsTitle>
-              <ToolsSubtitle>
-                Calcule seu IMC ou suas necessidades calóricas e acompanhe sua saúde!
-              </ToolsSubtitle>
+      </Wrapper>
+      <Footer />
+    </>
+  );
+}
 
-              <CalculatorsWrapper>
-                <CalculatorCard>
-                  <CalculadoraIMC />
-                </CalculatorCard>
-                <CalculatorCard>
-                  <CalculadoraCalorica />
-                </CalculatorCard>
-                </CalculatorsWrapper>
-                </ToolsSection>
+/* ---------------- Styled ---------------- */
 
-        </Container>
-        <Footer />
-      </>
-    );
-  }
-
-  // Styled Components
-
-  const Container = styled.div`
-    max-width: 1100px;
-    margin: 2rem auto 4rem;
-    padding: 0 1.5rem;
-  `;
-
-  const HeroBanner = styled.section`
-    display: flex;
-    gap: 3rem;
-    align-items: center;
-    margin-bottom: 4rem;
-    padding: 2rem;
-    background: ${({ theme }) => theme.gradients.soft};
-    border-radius: ${({ theme }) => theme.radius.lg};
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      padding: 1rem;
-    }
-  `;
-
-  const HeroText = styled.div`
-    flex: 1;
-
-    h1 {
-      font-size: 3rem;
-      color: ${({ theme }) => theme.colors.primaryDark};
-      font-family: ${({ theme }) => theme.fonts.heading};
-      margin-bottom: 1rem;
-    }
-
-    p {
-      font-size: 1.3rem;
-      color: ${({ theme }) => theme.colors.text};
-      margin-bottom: 2rem;
-      font-weight: 300;
-    }
-  `;
-
-  const HeroImage = styled.img`
-    flex: 1;
-    border-radius: ${({ theme }) => theme.radius.md};
-    max-height: 300px;
-    object-fit: cover;
-    box-shadow: ${({ theme }) => theme.shadow.sm};
-
-    @media (max-width: 768px) {
-      max-height: 220px;
-      width: 100%;
-      margin-top: 1rem;
-    }
-  `;
-
-  const SectionTitle = styled.h2`
-    font-family: ${({ theme }) => theme.fonts.heading};
-    font-size: 2rem;
-    color: ${({ theme }) => theme.colors.primaryDark};
-    margin-bottom: 1.5rem;
+const Hero = styled.section`
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  padding: 1.6rem;
+  background: ${({ theme }) => theme.gradients.soft};
+  border-radius: ${({ theme }) => theme.radius.lg};
+  
+  @media (max-width: 980px) {
+    grid-template-columns: 1fr;
     text-align: center;
-  `;
+  }
+`;
 
-  const CarouselWrapper = styled.div`
-    position: relative;
-    margin-bottom: 4rem;
-  `;
+const HeroText = styled.div`
+  h1 { 
+    font-size: 2.4rem; 
+    margin-bottom: 0.6rem; 
+    color: ${({ theme }) => theme.colors.primaryDark}; 
+    font-family: ${({ theme }) => theme.fonts.heading}; 
+  }
+  p { 
+    font-size: 1.05rem; 
+    color: ${({ theme }) => theme.colors.text}; 
+    margin-bottom: 1rem; 
+  }
+`;
 
-  const CarouselContainer = styled.div`
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    white-space: nowrap;
-    padding-bottom: 0.5rem;
+const PrimaryCta = styled.button`
+  background: ${({ theme }) => theme.colors.primary};
+  color: white;
+  padding: 0.7rem 1.25rem;
+  border-radius: ${({ theme }) => theme.radius.pill};
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  box-shadow: ${({ theme }) => theme.shadow.xs};
+  
+  &:hover { 
+    opacity: 0.95; 
+    transform: translateY(-2px); 
+  }
+`;
 
-    &::-webkit-scrollbar {
-      height: 6px;
-    }
+const HeroImg = styled.img`
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.radius.md};
+  box-shadow: ${({ theme }) => theme.shadow.sm};
+  
+  @media (max-width: 980px) { 
+    margin-top: 1rem; 
+    height: 220px; 
+  }
+`;
 
-    &::-webkit-scrollbar-thumb {
-      background: ${({ theme }) => theme.colors.primaryDark};
-      border-radius: ${({ theme }) => theme.radius.sm};
-    }
-  `;
+const SectionTitle = styled.h2`
+  font-size: 1.6rem;
+  color: ${({ theme }) => theme.colors.primaryDark};
+  margin: 1.75rem 0 1rem;
+  text-align: center;
+`;
 
-  const CarouselTrack = styled.div`
-    display: inline-flex;
-    gap: 1rem;
-  `;
+const CatCard = styled(Link)`
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: ${({ theme }) => theme.radius.md};
+  padding: 0.9rem;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: ${({ theme }) => theme.shadow.sm};
+  cursor: pointer;
+  height: 100%;
+`;
 
-  const CategoryCard = styled(Link)`
-    display: inline-block;
-    text-decoration: none;
-    color: inherit;
-    width: 280px;
-    vertical-align: top;
-  `;
+const CatThumb = styled.div`
+  width: 100%;
+  height: 140px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+`;
 
-  const ArrowButton = styled.button`
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0,0,0,0.3);
-    color: white;
-    border-radius: 50%;
-    border: none;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-    transition: background 0.3s;
+const CatBody = styled.div`
+  h4 { 
+    margin: 0 0 0.25rem; 
+    color: ${({ theme }) => theme.colors.primaryDark}; 
+    font-size: 1.05rem; 
+  }
+  p { 
+    margin: 0; 
+    color: ${({ theme }) => theme.colors.text}; 
+    font-size: 0.95rem; 
+    opacity: 0.95; 
+  }
+`;
 
-    &:hover {
-      background: rgba(0,0,0,0.5);
-    }
-  `;
+const TwoColumnRow = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.25rem;
+  margin-top: 1rem;
 
-  const ArrowButtonLeft = styled(ArrowButton)`
-    left: 8px;
-  `;
+  @media (max-width: 980px) { 
+    grid-template-columns: 1fr; 
+  }
+`;
 
-  const ArrowButtonRight = styled(ArrowButton)`
-    right: 8px;
-  `;
+const Column = styled.div`
+  flex: ${(p) => p.flex || 1};
+`;
 
-  const PopularPostsSection = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  `;
+const Grid = styled.div`
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 0.6rem;
 
-  const PopularPost = styled.section`
-    display: flex;
-    gap: 1.5rem;
-    background: ${({ theme }) => theme.colors.surface};
-    border-radius: ${({ theme }) => theme.radius.md};
-    box-shadow: ${({ theme }) => theme.shadow.sm};
-    cursor: pointer;
-    padding: 1rem;
-    transition: box-shadow 0.3s;
+  @media (max-width: 1100px) { 
+    grid-template-columns: repeat(2, 1fr); 
+  }
+  @media (max-width: 720px) { 
+    grid-template-columns: 1fr; 
+  }
+`;
 
-    &:hover, &:focus {
-      box-shadow: ${({ theme }) => theme.shadow.md};
-      outline: none;
-    }
+const SideBox = styled.aside`
+  background: ${({ theme }) => theme.colors.surface};
+  padding: 1rem;
+  border-radius: ${({ theme }) => theme.radius.md};
+  box-shadow: ${({ theme }) => theme.shadow.xs};
+`;
 
-    @media (max-width: 768px) {
-      flex-direction: column;
-    }
+const PopularList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+`;
 
-    img {
-      width: 180px;
-      height: 140px;
-      object-fit: cover;
-      border-radius: ${({ theme }) => theme.radius.sm};
-      pointer-events: none;
-      user-select: none;
-    }
-  `;
+const SmallPopular = styled(Link)`
+  display: flex;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: inherit;
+  align-items: center;
+  img { 
+    width: 72px; 
+    height: 60px; 
+    object-fit: cover; 
+    border-radius: 8px; 
+    flex-shrink: 0; 
+  }
+  div { 
+    display: flex; 
+    flex-direction: column; 
+  }
+  strong { 
+    font-size: 0.95rem; 
+    color: ${({ theme }) => theme.colors.primaryDark}; 
+  }
+  span { 
+    font-size: 0.85rem; 
+    color: ${({ theme }) => theme.colors.text}; 
+    opacity: 0.9; 
+  }
+`;
 
-  const PopularPostContent = styled.div`
-    flex: 1;
+const MiniRecipes = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+`;
 
-    h3 {
-      font-family: ${({ theme }) => theme.fonts.heading};
-      margin-bottom: 0.5rem;
-      color: ${({ theme }) => theme.colors.primaryDark};
-    }
+const MiniRecipe = styled(Link)`
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  img { 
+    width: 64px; 
+    height: 56px; 
+    object-fit: cover; 
+    border-radius: 8px; 
+  }
+  strong { 
+    font-size: 0.95rem; 
+    color: ${({ theme }) => theme.colors.primaryDark}; 
+  }
+  small { 
+    font-size: 0.8rem; 
+    color: ${({ theme }) => theme.colors.text}; 
+  }
+`;
 
-    p {
-      font-size: 1rem;
-      color: ${({ theme }) => theme.colors.text};
-      margin-bottom: 1rem;
-    }
-  `;
+const Empty = styled.div`
+  color: ${({ theme }) => theme.colors.text};
+  opacity: 0.8;
+  font-size: 0.95rem;
+  padding: 0.6rem 0;
+`;
 
-  const MoreDetailsLink = styled(Link)`
-    font-weight: 600;
-    color: ${({ theme }) => theme.colors.primary};
-    text-decoration: none;
-    transition: color 0.3s;
+const Divider = styled.hr`
+  margin: 1rem 0;
+  border: none;
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+`;
 
-    &:hover {
-      color: ${({ theme }) => theme.colors.primaryDark};
-      text-decoration: underline;
-    }
-  `;
+const ContinueSection = styled.section`
+  margin-top: 2.5rem;
+`;
+
+const TagsNewsletterRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 1rem;
+  margin-top: 1.25rem;
+
+  @media (max-width: 980px) { 
+    grid-template-columns: 1fr; 
+  }
+`;
+
+const Wrapper = styled.main`
+  max-width: ${({ theme }) => theme.layout.maxWidth || "1200px"};
+  margin: 2.5rem auto;
+  padding: 0 1rem;
+`;

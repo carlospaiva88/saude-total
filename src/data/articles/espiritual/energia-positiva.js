@@ -6,6 +6,7 @@ const article = {
   readingTime: "4 min",
   category: "espiritual",
   subcategory: "energia-positiva",
+  featured: true, 
   content: `
     <p>Energia positiva é como uma corrente invisível que envolve seus pensamentos, emoções e atitudes. Ela não elimina os desafios, mas muda a forma como você reage a eles.</p>
 

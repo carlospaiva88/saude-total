@@ -1,10 +1,10 @@
 import React, { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import blogPosts from "../../data/blogPosts";
+import articlesData from "../../data/articles/index";
 
 // Calculadoras
-import CalculadoraIMC from "../../components/Calculadora/CalculadoraIMC";
-import CalculadoraCalorica from "../../components/Calculadora/CalculadoraCalorica";
+import CalculadoraIMC from "../../components/Calculadora/IMC/CalculadoraIMC";
+import CalculadoraCalorica from "../../components/Calculadora/Calorias/CalculadoraCalorica";
 
 // Utilidades
 import { parseDatePtBr, formatDatePtBr } from "./utils";
@@ -26,7 +26,7 @@ import {
 
 export default function BlogPage() {
   const { slug } = useParams();
-  const post = blogPosts?.[slug];
+  const post = articlesData?.[slug];
 
   const publishedAt = useMemo(() => parseDatePtBr(post?.date), [post?.date]);
 

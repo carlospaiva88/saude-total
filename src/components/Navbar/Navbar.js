@@ -140,6 +140,8 @@ export default function Navbar() {
               <MenuItem><StyledNavLink to="/produtos" onClick={() => setMenuOpen(false)}>Produtos</StyledNavLink></MenuItem>
               <MenuItem><StyledNavLink to="/viagens" onClick={() => setMenuOpen(false)}>Viagens</StyledNavLink></MenuItem>
               <MenuItem><StyledNavLink to="/sobrenos" onClick={() => setMenuOpen(false)}>Sobre nós</StyledNavLink></MenuItem>
+              <MenuItem><StyledNavLink to="/ferramentas" onClick={() => setMenuOpen(false)}>Ferramentas</StyledNavLink></MenuItem>
+
             </Menu>
           </MobileMenuContainer>
         )}

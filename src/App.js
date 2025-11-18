@@ -32,9 +32,9 @@ import ReceitasCategoria from "./components/Receitas/ReceitasCategoria";
 
 // Calculadoras
 import CalculadorasIndex from "./pages/Calculadoras/CalculadoraIndex"
-import CalculadoraIMC from "./components/Calculadora/CalculadoraIMC"
-import CalculadoraCalorica from "./components/Calculadora/CalculadoraCalorica"
-
+import CalculadoraIMC from "./components/Calculadora/IMC/CalculadoraIMC"
+import CalculadoraCaloricaPage from "./components/Calculadora/Calorias/CalculadoraCaloricaPage"
+import HealthToolsPage from "./components/Calculadora/HealthToolsPage";
 
 
 // Viagens
@@ -110,9 +110,12 @@ function App() {
 
 
               {/* CALCULADORAS */}
+              <Route path="/ferramentas" element={<HealthToolsPage />} />
               <Route path="/calculadora" element={<CalculadorasIndex />} />
               <Route path="/calculadora/imc" element={<CalculadoraIMC />} />
-              <Route path="/calculadora/calorica" element={<CalculadoraCalorica />} />
+              <Route path="/calculadora-calorica" element={<CalculadoraCaloricaPage />} />
+              
+
 
               {/* RECEITAS */}
               <Route path="/receitas" element={<ReceitasPage />} />

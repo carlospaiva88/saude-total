@@ -1,6 +1,6 @@
 const article = {
   slug: "entendendo-ansiedade",
-  title: "Entenda o Que É e Como Gerenciar",
+  title: "Entenda o que é e como gerenciar",
   image: "https://images.pexels.com/photos/887352/pexels-photo-887352.jpeg",
   date: "22/10/2025",
   readingTime: "6 min",

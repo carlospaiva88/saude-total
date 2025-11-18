@@ -6,6 +6,7 @@ const article  = {
     "readingTime": "6 min",
     "category": "mental",
     "subcategory": "entendendo-ansiedade",
+    featured: true, 
     "content": `
     <p>A ansiedade é uma resposta natural do corpo a situações de estresse, mas quando frequente ou intensa, pode comprometer a qualidade de vida e o funcionamento diário.</p>
 
