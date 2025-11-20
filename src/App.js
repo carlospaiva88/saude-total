@@ -3,6 +3,9 @@ import { HelmetProvider } from "react-helmet-async";
 import { lazy, Suspense } from "react";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./styles/theme";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 
 // Layout
 import SectionWrapper from "./Layout/SectionWrapper"
@@ -31,10 +34,10 @@ import ReceitasCategoria from "./components/Receitas/ReceitasCategoria";
 
 
 // Calculadoras
-import CalculadorasIndex from "./pages/Calculadoras/CalculadoraIndex"
-import CalculadoraIMC from "./components/Calculadora/IMC/CalculadoraIMC"
-import CalculadoraCaloricaPage from "./components/Calculadora/Calorias/CalculadoraCaloricaPage"
-import HealthToolsPage from "./components/Calculadora/HealthToolsPage";
+import GlobalCalculadoraPage from "./pages/Calculadoras/GlobalCalculadoraPage";
+import IMCCalculator from "./components/Calculadora/IMC/IMCCalculator";
+import TMBCalculator from "./components/Calculadora/TMB/TMBCalculator";
+import CaloriasCalculator from "./components/Calculadora/Calorias/CaloriasCalculator";
 
 
 // Viagens
@@ -109,12 +112,13 @@ function App() {
               <Route path="/blog/:categoria/:subcategoria/:slug" element={<BlogPage />} />
 
 
-              {/* CALCULADORAS */}
-              <Route path="/ferramentas" element={<HealthToolsPage />} />
-              <Route path="/calculadora" element={<CalculadorasIndex />} />
-              <Route path="/calculadora/imc" element={<CalculadoraIMC />} />
-              <Route path="/calculadora-calorica" element={<CalculadoraCaloricaPage />} />
-              
+           {/* CALCULADORAS */}
+
+         <Route path="/calculadora" element={<GlobalCalculadoraPage />} />
+
+        <Route path="/calculadora/imc" element={<IMCCalculator />} />
+        <Route path="/calculadora/tmb" element={<TMBCalculator />} />
+        <Route path="/calculadora/calorias" element={<CaloriasCalculator />} />
 
 
               {/* RECEITAS */}

@@ -9,9 +9,14 @@ import ArticleCard from "../../components/ArticleCard/ArticleCard";
 import articlesData from "../../data/articles/index"; 
 import receitas from "../../data/receitas/index"; 
 import CalculadoraPreview from "../../components/Calculadora/CalculadoraPreview";
-import ContinueExploring from "./BlogPage";
+import ContinueExploring from "./ContinueExploring";
 import TagsCloud from "../../components/BlogPage/TagsCloud";
 import NewsletterCTA from "../../components/BlogPage/NewsletterCTA";
+import viagensData from "../../data/viagens/index"
+import productsData from "../../data/products";
+import CarouselFinal from "../../components/BlogPage/CarouselFinal";
+
+
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
@@ -51,6 +56,39 @@ export default function BlogHome() {
       .filter(p => p.featured || p.destaque || p.popular)
       .slice(0, 6);
   }, [postsArray]);
+
+
+const carouselItems = useMemo(() => {
+  
+  // produtos
+  const produtos = (productsData.products || []).map(p => ({
+    title: p.name,
+    image: p.image,
+    link: `/produtos/${p.slug || p.id}`
+  }));
+
+  // receitas (vem agrupadas por categoria dentro de um objeto)
+  const recs = Object.values(receitas || {})
+    .flat()
+    .map(r => ({
+      title: r.titulo,
+      image: r.imagem,
+      link: `/receitas/${r.slug}`
+    }));
+
+  // viagens – usando a estrutura correta que você me mostrou
+  const viagens = Object.values(viagensData || {})
+    .flat()
+    .map(v => ({
+      title: v.title,
+      image: v.image,
+      link: `/viagens/${v.slug}`
+    }));
+
+  // combina tudo
+  return [...produtos, ...recs, ...viagens];
+
+}, []);
 
   return (
     <>
@@ -103,8 +141,13 @@ export default function BlogHome() {
 
             {/* final: continue exploring + tags + newsletter */}
             <ContinueSection>
-              <ContinueExploring posts={postsArray} receitas={Object.values(receitas || {}).flat()} />
-              <TagsNewsletterRow>
+            <ContinueExploring
+              posts={postsArray}
+              receitas={Object.values(receitas || {}).flat()}
+              products={productsData.products}
+              trips={viagensData}
+            />              
+                <TagsNewsletterRow>
                 <TagsCloud articles={postsArray} />
                 <NewsletterCTA />
               </TagsNewsletterRow>
@@ -148,8 +191,10 @@ export default function BlogHome() {
             </SideBox>
           </Column>
         </TwoColumnRow>
+          <CarouselFinal items={carouselItems} />
 
       </Wrapper>
+
       <Footer />
     </>
   );
@@ -391,3 +436,4 @@ const Wrapper = styled.main`
   margin: 2.5rem auto;
   padding: 0 1rem;
 `;
+

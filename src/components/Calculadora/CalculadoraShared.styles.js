@@ -1,157 +1,96 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-export const PageWrapper = styled.div`
-  width: 100%;
-  max-width: ${({ theme }) => theme.layout.maxWidth};
-  margin: 0 auto;
-  padding: ${({ theme }) => theme.layout.sectionPadding};
-`;
-
-export const Title = styled.h1`
-  font-size: 2.4rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1rem;
-  color: ${({ theme }) => theme.colors.dark};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    font-size: 2rem;
-  }
-`;
-
-export const Subtitle = styled.p`
-  font-size: 1.1rem;
-  text-align: center;
-  margin-bottom: 3rem;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-export const TwoColumns = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    grid-template-columns: 1fr;
-  }
+const fadeInUp = keyframes`
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 `;
 
 export const CalculatorCard = styled.div`
   background: ${({ theme }) => theme.colors.surface};
-  padding: 2rem;
-  border-radius: ${({ theme }) => theme.radius.md};
-  box-shadow: ${({ theme }) => theme.shadow.md};
-`;
-
-export const InfoCard = styled.div`
-  background: ${({ theme }) => theme.colors.surface};
-  padding: 2rem;
+  padding: 1.6rem;
   border-radius: ${({ theme }) => theme.radius.md};
   box-shadow: ${({ theme }) => theme.shadow.sm};
+  max-width: 680px;
+  width: 100%;
 `;
 
-export const InfoBlock = styled.div`
-  margin-bottom: 1.5rem;
-
-  h3 {
-    margin-bottom: 0.5rem;
-    color: ${({ theme }) => theme.colors.dark};
-  }
-
-  p, li {
-    color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 0.4rem;
-  }
-
-  ul {
-    padding-left: 1.3rem;
-  }
-`;
-
-export const Form = styled.form`
+export const FormRow = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+
+  & > div {
+    flex: 1 1 180px;
+  }
 `;
 
 export const Label = styled.label`
-  font-weight: 600;
+  display: block;
+  font-weight: 700;
+  margin-bottom: 6px;
   color: ${({ theme }) => theme.colors.dark};
+  font-size: 0.95rem;
 `;
 
 export const Input = styled.input`
+  width: 100%;
   padding: 0.75rem;
-  border-radius: 10px;
+  border-radius: ${({ theme }) => theme.radius.sm};
   border: 1px solid ${({ theme }) => theme.colors.border};
+  font-size: 1rem;
   outline: none;
 
   &:focus {
+    box-shadow: 0 6px 18px rgba(67,170,139,0.06);
     border-color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
-export const Button = styled.button`
+export const Select = styled.select`
   width: 100%;
-  padding: 0.9rem;
-  border-radius: ${({ theme }) => theme.radius.pill};
-  background: ${({ theme }) => theme.gradients.button};
-  color: white;
-  font-size: 1rem;
-  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
 
-  &:hover {
-    background: ${({ theme }) => theme.gradients.buttonHover};
-    transform: translateY(-2px);
-  }
+export const PrimaryBtn = styled.button`
+  background: ${({ theme }) => theme.colors.primary};
+  color: white;
+  padding: 0.85rem 1.1rem;
+  border-radius: ${({ theme }) => theme.radius.pill};
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 6px;
+
+  &:hover { transform: translateY(-3px); }
 `;
 
 export const ResultBox = styled.div`
-  margin-top: 3rem;
-  padding: 2rem;
-  background: ${({ theme }) => theme.gradients.soft};
-  border-radius: ${({ theme }) => theme.radius.md};
-  text-align: center;
-  box-shadow: ${({ theme }) => theme.shadow.sm};
-
-  strong {
-    font-size: 1.5rem;
-    color: ${({ theme }) => theme.colors.dark};
-  }
-`;
-
-export const CTAButton = styled.a`
-  display: inline-block;
   margin-top: 1rem;
-  padding: 0.9rem 1.5rem;
-  border-radius: ${({ theme }) => theme.radius.pill};
-  background: ${({ theme }) => theme.colors.primary};
-  color: white;
-  font-weight: 600;
-  transition: ${({ theme }) => theme.transitions.fast};
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.primaryDark};
-  }
+  padding: 1rem;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(109,188,163,0.06), rgba(244,164,141,0.04));
+  box-shadow: ${({ theme }) => theme.shadow.xs};
+  animation: ${fadeInUp} 0.35s ease;
 `;
 
-export const Recommendations = styled.div`
-  margin-top: 2rem;
+export const SmallMeta = styled.div`
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.text};
+  margin-top: 0.4rem;
+`;
 
-  h4 {
-    margin-bottom: 0.5rem;
-    color: ${({ theme }) => theme.colors.dark};
-  }
+export const CalculatorsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+`;
 
-  ul {
-    padding-left: 1.2rem;
-  }
-
-  li {
-    margin-bottom: 0.4rem;
-  }
-
-  a {
-    color: ${({ theme }) => theme.colors.primaryDark};
-    font-weight: 500;
-  }
+export const PageShell = styled.div`
+  max-width: ${({ theme }) => theme.layout.maxWidth};
+  margin: 2.2rem auto;
+  padding: 0 1rem;
 `;

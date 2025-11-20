@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import blogPosts from "../data/blogPosts";
+import articlesData from "../data/articles/index";
 import { Helmet } from "react-helmet-async";
 
 // ------------ ESTILOS ------------
@@ -142,7 +142,7 @@ const RecTitle = styled.h4`
 export default function ArtigoPage() {
   const { categoria, subcategoria, slug } = useParams();
 
-  const artigo = blogPosts.find(
+  const artigo = articlesData.find(
     (post) =>
       post.category === categoria &&
       post.subCategory === subcategoria &&
@@ -157,7 +157,7 @@ export default function ArtigoPage() {
     );
   }
 
-  const artigosRecomendados = blogPosts
+  const artigosRecomendados = articlesData
     .filter((post) => post.id !== artigo.id)
     .sort(() => 0.5 - Math.random())
     .slice(0, 3);

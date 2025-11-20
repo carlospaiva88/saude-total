@@ -2,7 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { recommend } from "../../utils/recommender"; 
+import { recommend } from "../utils/recommender"; 
 
 export default function ContinueExploring({ posts = [], receitas = [] }) {
   // Tentamos recomendações com fallback
@@ -16,46 +16,47 @@ export default function ContinueExploring({ posts = [], receitas = [] }) {
     <Wrapper>
       <Heading>Continue explorando</Heading>
 
-      <Grid>
-        <Column>
-          <SmallHeading>Artigos recomendados</SmallHeading>
-          {articles.map(a => (
-            <Card key={a.slug || a.id} to={`/blog/${a.category || a.categoria || "geral"}/${a.slug || a.friendlySlug || a.id}`}>
-              <img src={a.image || a.imagem} alt={a.title || a.titulo} />
-              <div>
-                <strong>{a.title || a.titulo}</strong>
-                <p>{(a.excerpt || a.description || a.descricao || "").slice(0, 90)}...</p>
-              </div>
-            </Card>
-          ))}
-        </Column>
-
-        <Column>
-          <SmallHeading>Receitas sugeridas</SmallHeading>
-          {recipes.map(r => (
-            <Card key={r.slug} to={`/receitas/${r.slug}`}>
-              <img src={r.imagem || r.image} alt={r.titulo || r.title} />
-              <div>
-                <strong>{r.titulo}</strong>
-                <p>{(r.descricaoCurta || r.descricao || "").slice(0, 90)}...</p>
-              </div>
-            </Card>
-          ))}
-        </Column>
-
-        <Column>
-          <SmallHeading>Produtos</SmallHeading>
-          {products.length ? products.map(p => (
-            <ProductCard key={p.id} href={p.affiliateLink} target="_blank" rel="noopener noreferrer">
-              <img src={p.image} alt={p.name} />
-              <div>
-                <strong>{p.name}</strong>
-                <p>{p.description?.slice(0, 90)}</p>
-              </div>
-            </ProductCard>
-          )) : <Empty>No momento, sem produtos recomendados</Empty>}
-        </Column>
-      </Grid>
+          <Grid>
+          {/* Artigos Recomendados */}
+            <Column>
+              <SmallHeading>Artigos recomendados</SmallHeading>
+              {articles.map(a => (
+                <Card key={a.slug || a.id} to={`/blog/${a.category || a.categoria || "geral"}/${a.slug || a.friendlySlug || a.id}`}>
+                  <img src={a.image || a.imagem} alt={a.title || a.titulo} />
+                  <div>
+                    <strong>{a.title || a.titulo}</strong>
+                    <p>{(a.excerpt || a.description || a.descricao || "").slice(0, 90)}...</p>
+                  </div>
+                </Card>
+              ))}
+            </Column>
+          {/* Receitas Sugeridas*/}
+            <Column>
+              <SmallHeading>Receitas sugeridas</SmallHeading>
+              {recipes.map(r => (
+                <Card key={r.slug} to={`/receitas/${r.slug}`}>
+                  <img src={r.imagem || r.image} alt={r.titulo || r.title} />
+                  <div>
+                    <strong>{r.titulo}</strong>
+                    <p>{(r.descricaoCurta || r.descricao || "").slice(0, 90)}...</p>
+                  </div>
+                </Card>
+              ))}
+            </Column>
+          {/* Produtos*/}
+            <Column>
+              <SmallHeading>Produtos</SmallHeading>
+              {products.length ? products.map(p => (
+                <ProductCard key={p.id} href={p.affiliateLink} target="_blank" rel="noopener noreferrer">
+                  <img src={p.image} alt={p.name} />
+                  <div>
+                    <strong>{p.name}</strong>
+                    <p>{p.description?.slice(0, 90)}</p>
+                  </div>
+                </ProductCard>
+              )) : <Empty>No momento, sem produtos recomendados</Empty>}
+            </Column>
+          </Grid>
     </Wrapper>
   );
 }

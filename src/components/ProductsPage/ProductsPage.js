@@ -128,7 +128,7 @@ const HeroOverlay = styled.div`
       rgba(0, 0, 0, 0.45),
       rgba(0, 0, 0, 0.7)
     ),
-    url("https://images.pexels.com/photos/3328582/pexels-photo-3328582.jpeg");
+    url("https://www.pexels.com/download/video/6388396/");
   background-size: cover;
   background-position: center;
   z-index: 0;

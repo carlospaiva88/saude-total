@@ -3,8 +3,9 @@ import { useParams, Link } from "react-router-dom";
 import articlesData from "../../data/articles/index";
 
 // Calculadoras
-import CalculadoraIMC from "../../components/Calculadora/IMC/CalculadoraIMC";
-import CalculadoraCalorica from "../../components/Calculadora/Calorias/CalculadoraCalorica";
+
+import MiniCalculadoras from "../Calculadora/MiniCalculadoras";
+
 
 // Utilidades
 import { parseDatePtBr, formatDatePtBr } from "./utils";
@@ -20,7 +21,6 @@ import {
   ToolsSection,
   ToolsTitle,
   ToolsSubtitle,
-  CalculatorsWrapper,
   NotFound
 } from "./BlogPage.styles";
 
@@ -59,7 +59,8 @@ export default function BlogPage() {
         <span className="sep">/</span>
         <span>{post.title}</span>
       </Breadcrumbs>
-
+<MiniCalculadoras />
+    
       {/* Conteúdo principal */}
       <Title>{post.title}</Title>
       <Meta>
@@ -81,10 +82,7 @@ export default function BlogPage() {
         <ToolsSubtitle>
           Calcule seu IMC ou suas necessidades calóricas e acompanhe sua saúde!
         </ToolsSubtitle>
-        <CalculatorsWrapper>
-          <CalculadoraIMC />
-          <CalculadoraCalorica />
-        </CalculatorsWrapper>
+    
       </ToolsSection>
     </Page>
   );

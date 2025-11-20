@@ -27,7 +27,7 @@ export default function Footer() {
             <li><a href="/blog">Blog</a></li>
             <li><a href="/receitas">Receitas</a></li>
             <li><a href="/viagens">Viagens</a></li>
-            <li><a href="/calculadora-imc">Calculadora IMC</a></li>
+            <li><a href="/calculadora/imc">Calculadora IMC</a></li>
             <li><a href="/sobre">Sobre Nós</a></li>
           </ul>
         </FooterColumn>
