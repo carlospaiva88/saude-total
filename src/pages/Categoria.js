@@ -90,7 +90,7 @@ mental: [
     id: "entendendo-ansiedade",
     name: "Ansiedade",
     description: "Aprenda a lidar com o nervosismo e preocupações no dia a dia.",
-    image: "https://images.pexels.com/photos/887352/pexels-photo-887352.jpeg",
+    image: "https://images.pexels.com/photos/3760790/pexels-photo-3760790.jpeg",
   },
   {
     id: "compreendendo-depressao",
@@ -114,13 +114,13 @@ mental: [
     id: "disturbios-do-sono",
     name: "Distúrbios do Sono",
     description: "Saiba como identificar e tratar insônia, apneia e outros problemas do sono.",
-    image: "https://images.pexels.com/photos/4197545/pexels-photo-4197545.jpeg",
+    image: "https://images.pexels.com/photos/1560424/pexels-photo-1560424.jpeg",
   },
   {
     id: "mindfulness-para-saude-mental",
     name: "Mindfulness",
     description: "Mindfulness é uma prática de atenção plena que ajuda a focar no momento presente.",
-    image: "https://images.pexels.com/photos/4197545/pexels-photo-4197545.jpeg",
+    image: "https://images.pexels.com/photos/235990/pexels-photo-235990.jpeg",
   },
 ],
 

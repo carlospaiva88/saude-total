@@ -1,7 +1,7 @@
 const article  = {
     "slug": "sintomas-ansiedade",
     "title": "Como saber se estou em uma crise de ansiedade?",
-    "image": "https://images.pexels.com/photos/887352/pexels-photo-887352.jpeg",
+    "image": "https://images.pexels.com/photos/2868257/pexels-photo-2868257.jpeg",
     "date": "22/10/2025",
     "readingTime": "6 min",
     "category": "mental",

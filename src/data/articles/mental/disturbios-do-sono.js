@@ -1,7 +1,7 @@
 const article = {
   slug: "disturbios-do-sono",
   title: "Distúrbios do Sono: Identificação, Causas e Tratamento",
-  image: "https://images.pexels.com/photos/4197545/pexels-photo-4197545.jpeg",
+  image: "https://images.pexels.com/photos/1327403/pexels-photo-1327403.jpeg",
   date: "22/10/2025",
   readingTime: "5 min",
   category: "mental",

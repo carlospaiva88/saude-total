@@ -1,7 +1,7 @@
 const article = {
   slug: "entendendo-ansiedade",
   title: "Entenda o que é e como gerenciar",
-  image: "https://images.pexels.com/photos/887352/pexels-photo-887352.jpeg",
+  image: "https://images.pexels.com/photos/3656855/pexels-photo-3656855.jpeg",
   date: "22/10/2025",
   readingTime: "6 min",
   category: "mental",
@@ -40,7 +40,7 @@ const article = {
   name: "Aparelho de Biofeedback para Ansiedade",
   description: "Auxilia no controle da ansiedade por meio de exercícios guiados de respiração e relaxamento.",
   link: "https://amzn.to/3VB7CkR",
-  image: "https://m.media-amazon.com/images/I/61wD4mWl3xL._AC_SX425_.jpg",
+  image: "https://m.media-amazon.com/images/I/610qkjE12gL._AC_UL320_.jpg",
 },
 
 };

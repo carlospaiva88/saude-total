@@ -1,7 +1,7 @@
 // src/pages/BlogHome.jsx
 import React, { useMemo } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import NavbarSpacer from "../../components/Navbar/NavbarSpacer";
 import Footer from "../../components/Footer/Footer";
@@ -16,10 +16,13 @@ import viagensData from "../../data/viagens/index"
 import productsData from "../../data/products";
 import CarouselFinal from "../../components/BlogPage/CarouselFinal";
 
+import MiniQuizSaude from "../../components/BlogPage/MiniQuizSaude";
+import FraseDoDia from "./FraseDoDia";
+
 
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper";
+import { Navigation, Autoplay } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -31,7 +34,6 @@ const categories = [
 ];
 
 export default function BlogHome() {
-  const navigate = useNavigate();
 
   // Flatten articles (works whether user exports array or object)
   const postsArray = useMemo(() => {
@@ -76,7 +78,7 @@ const carouselItems = useMemo(() => {
       link: `/receitas/${r.slug}`
     }));
 
-  // viagens – usando a estrutura correta que você me mostrou
+  // viagens
   const viagens = Object.values(viagensData || {})
     .flat()
     .map(v => ({
@@ -99,34 +101,51 @@ const carouselItems = useMemo(() => {
           <HeroText>
             <h1>Como está a sua saúde hoje?</h1>
             <p>Conteúdo confiável sobre corpo, mente e hábitos para uma vida com mais energia e bem-estar.</p>
-            <PrimaryCta onClick={() => navigate("/blog")}>Explorar o Blog</PrimaryCta>
           </HeroText>
-          <HeroImg src="https://images.pexels.com/photos/28061/pexels-photo.jpg" alt="Saúde e bem-estar" />
+          <HeroImg src="https://images.pexels.com/photos/3791134/pexels-photo-3791134.jpeg" alt="Saúde e bem-estar" />
         </Hero>
 
         <SectionTitle>Categorias</SectionTitle>
-        <Swiper
-          modules={[Navigation]}
-          navigation
-          spaceBetween={20}
-          slidesPerView={3}
-          breakpoints={{ 640: { slidesPerView: 1 }, 768: { slidesPerView: 2 }, 1024: { slidesPerView: 3 } }}
-          style={{ paddingBottom: "1.25rem", marginBottom: "1.5rem" }}
-        >
-          {categories.map(c => (
-            <SwiperSlide key={c.id}>
-              <CatCard to={`/blog/${c.id}`}>
-                <CatThumb style={{ backgroundImage: `url(${c.image})` }} />
-                <CatBody>
-                  <h4>{c.name}</h4>
-                  <p>Conteúdos sobre {c.name.toLowerCase()} para seu bem-estar.</p>
-                </CatBody>
-              </CatCard>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+      <Swiper
+        modules={[Navigation, Autoplay]}
+        navigation
+        loop={true}
+        freeMode={true}                // permite movimento livre, sem "snap" rígido
+        freeModeMomentum={false}       // remove momentum exagerado
+        autoplay={{
+          delay: 1,                    // pequeno delay para manter movimento contínuo
+          disableOnInteraction: false,
+          waitForTransition: false
+        }}
+        speed={4500}                   // controla a velocidade do deslize
+        spaceBetween={20}
+        slidesPerView={3}
+        grabCursor={true}
+        breakpoints={{
+          320: { slidesPerView: 1.1 },
+          640: { slidesPerView: 1.2 },
+          768: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 }
+        }}
+        style={{ paddingBottom: "1.25rem", marginBottom: "1.5rem" }}
+      >
+      {categories.map(c => (
+        <SwiperSlide key={c.id}>
+          <CatCard to={`/blog/${c.id}`}>
+            <CatThumb style={{ backgroundImage: `url(${c.image})` }} />
+            <CatBody>
+              <h4>{c.name}</h4>
+              <p>Conteúdos sobre {c.name.toLowerCase()} para seu bem-estar.</p>
+            </CatBody>
+          </CatCard>
+        </SwiperSlide>
+      ))}
+      </Swiper>
+
 
         <TwoColumnRow>
+
+          {/* Artigos Recentes */}
           <Column flex="2">
             <SectionTitle>Artigos Recentes</SectionTitle>
             <Grid>
@@ -139,23 +158,12 @@ const carouselItems = useMemo(() => {
               ))}
             </Grid>
 
-            {/* final: continue exploring + tags + newsletter */}
-            <ContinueSection>
-            <ContinueExploring
-              posts={postsArray}
-              receitas={Object.values(receitas || {}).flat()}
-              products={productsData.products}
-              trips={viagensData}
-            />              
-                <TagsNewsletterRow>
-                <TagsCloud articles={postsArray} />
-                <NewsletterCTA />
-              </TagsNewsletterRow>
-            </ContinueSection>
           </Column>
 
           <Column flex="1">
             <SideBox>
+              <FraseDoDia />
+
               <h3>Populares</h3>
               <PopularList>
                 {popular.length ? popular.map(p => (
@@ -188,10 +196,29 @@ const carouselItems = useMemo(() => {
                   </MiniRecipe>
                 ))}
               </MiniRecipes>
+
+              <Divider />
+
+            <MiniQuizSaude />
             </SideBox>
           </Column>
+
+          
         </TwoColumnRow>
           <CarouselFinal items={carouselItems} />
+
+        <ContinueSection>
+          <ContinueExploring
+              posts={postsArray}
+              receitas={Object.values(receitas || {}).flat()}
+              products={productsData.products}
+              trips={viagensData}
+            />              
+              <TagsNewsletterRow>
+              <TagsCloud articles={postsArray} />
+              <NewsletterCTA />
+            </TagsNewsletterRow>
+          </ContinueSection>
 
       </Wrapper>
 
@@ -232,21 +259,6 @@ const HeroText = styled.div`
   }
 `;
 
-const PrimaryCta = styled.button`
-  background: ${({ theme }) => theme.colors.primary};
-  color: white;
-  padding: 0.7rem 1.25rem;
-  border-radius: ${({ theme }) => theme.radius.pill};
-  font-weight: 700;
-  cursor: pointer;
-  border: none;
-  box-shadow: ${({ theme }) => theme.shadow.xs};
-  
-  &:hover { 
-    opacity: 0.95; 
-    transform: translateY(-2px); 
-  }
-`;
 
 const HeroImg = styled.img`
   width: 100%;

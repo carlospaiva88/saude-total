@@ -1,7 +1,7 @@
 const article = {
   slug: "mindfulness-para-saude-mental",
   title: "Mindfulness: Prática e Benefícios para a Saúde Mental",
-  image: "https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg",
+  image: "https://images.pexels.com/photos/235990/pexels-photo-235990.jpeg",
   date: "23/10/2025",
   readingTime: "5 min",
   category: "mental",

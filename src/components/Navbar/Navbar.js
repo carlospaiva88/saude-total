@@ -109,6 +109,8 @@ export default function Navbar() {
           <MenuItem><StyledNavLink to="/produtos">Produtos</StyledNavLink></MenuItem>
           <MenuItem><StyledNavLink to="/viagens">Viagens</StyledNavLink></MenuItem>
           <MenuItem><StyledNavLink to="/sobre">Sobre nós</StyledNavLink></MenuItem>
+          <MenuItem><StyledNavLink to="/calculadora">Ferramentas</StyledNavLink></MenuItem>
+
         </Menu>
 
         {/* Ícones à direita */}

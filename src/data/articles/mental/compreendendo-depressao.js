@@ -36,7 +36,7 @@ const article = {
   name: "Livro 'Vencendo a Depressão'",
   description: "Guia prático para entender e lidar com a depressão, com dicas de psicólogos renomados.",
   link: "https://amzn.to/3Xwg7y0",
-  image: "https://m.media-amazon.com/images/I/51A7kZDvV+L._SX331_BO1,204,203,200_.jpg",
+  image: "https://m.media-amazon.com/images/I/81lWd0CyzfL._UF1000,1000_QL80_.jpg"
 },
 
 };

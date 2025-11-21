@@ -13,7 +13,7 @@ const destaques = [
   },
   {
     title: "Serra Gaúcha, Brasil",
-    image: "https://images.pexels.com/photos/22809319/pexels-photo-22809319.jpeg",
+    image: "https://images.pexels.com/photos/15241362/pexels-photo-15241362.jpeg",
     slug: "serra-gaucha",
     type: "nacionais",
   },
