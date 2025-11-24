@@ -1,29 +1,36 @@
-// src/pages/ArticlePage.jsx
-import React, { useMemo, useRef, useEffect } from "react";
+// src/pages/ArtigoPage.js
+import React, {
+  useMemo,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useCallback,
+} from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
 
 import Navbar from "../components/Navbar/Navbar";
+import NavBarSpacer from "../components/Navbar/NavbarSpacer";
 import Footer from "../components/Footer/Footer";
 import Breadcrumbs from "../components/BreadCrumbs";
+import ShareButtons from "../components/ShareButtons"; // fallback mobile inline share
 import Comentarios from "../components/Comentarios";
-import AudioReader from "../components/AudioReader";
+import ReadingProgress from "../components/ReadingProgress";
 
-import ArticleTOC from "../components/ArticleToc";
-import ShareSticky from "../components//ShareSticky";
-import ProductInline from "../components//ProductInline";
-import NewsletterInline from "../components/NewsLetterInline";
+import ProductInline from "../components/ProductInline";
+import NewsletterInline from "../components/NewsLetterInline"; // ajuste de caminho
 import AuthorBox from "../components/AuthorBox";
-import ContentRenderer from "../components/ContentRenderer";
 
-import articlesData from "../data/articles"; // pode ser array ou objeto
+import articlesData from "../data/articles"; // array ou objeto
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 /* ---------- Helpers ---------- */
 const toArray = (d) => (Array.isArray(d) ? d : Object.values(d || {}));
 const safe = (v, fallback = "") => (v || v === 0 ? v : fallback);
-const safeImage = (a) => a?.image || a?.imagem || a?.thumbnail || a?.thumb || "/placeholder-16x9.png";
+const safeImage = (a) =>
+  a?.image || a?.imagem || a?.thumbnail || a?.thumb || "/placeholder-16x9.png";
 const parseDate = (d) => {
   if (!d) return null;
   const t = Date.parse(d);
@@ -33,7 +40,11 @@ const parseDate = (d) => {
 const formatShortDate = (d) => {
   if (!d) return "";
   try {
-    return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short", year: "numeric" }).format(d);
+    return new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(d);
   } catch {
     return String(d).split("T")[0];
   }
@@ -42,20 +53,85 @@ const buildArticlePath = (a) => {
   const cat = encodeURIComponent(a.category || a.categoria || "geral");
   const sub = encodeURIComponent(a.subCategory || a.subcategoria || a.sub || "");
   const slug = encodeURIComponent(a.slug || a.friendlySlug || a.id || "");
-  return `/blog/${cat}/${sub}/${slug}`.replace(/\/+$/,'');
+  const path = `/blog/${cat}/${sub}/${slug}`.replace(/\/+$/g, "");
+  return path;
 };
+
+/* ---------- Inline Share Icons (sidebar) ---------- */
+function ShareIcons({ title = "" }) {
+  const url = typeof window !== "undefined" ? window.location.href : "";
+  const encoded = encodeURIComponent(url);
+  const text = encodeURIComponent(title || "Confira este artigo");
+
+  return (
+    <ShareWrapper aria-label="Compartilhar artigo">
+      <IconButton
+        as="a"
+        href={`https://www.facebook.com/sharer/sharer.php?u=${encoded}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Compartilhar no Facebook"
+        aria-label="Compartilhar no Facebook"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden>
+          <path
+            d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07c0 4.99 3.66 9.12 8.44 9.93v-7.04H8.07v-2.9h2.37V9.41c0-2.34 1.39-3.63 3.52-3.63.  1.02 0 2.09.18 2.09.18v2.3H15.9c-1.17 0-1.53.73-1.53 1.48v1.78h2.6l-.42 2.9h-2.18v7.04C18.34 21.19 22 17.06 22 12.07z"
+            fill="currentColor"
+          />
+        </svg>
+      </IconButton>
+
+      <IconButton
+        as="a"
+        href={`https://twitter.com/intent/tweet?text=${text}&url=${encoded}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Tweetar"
+        aria-label="Tweetar"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden>
+          <path
+            d="M22 5.92c-.63.28-1.3.47-2 .56.72-.44 1.27-1.14 1.53-1.97-.67.4-1.41.68-2.2.83A3.482 3.482 0 0 0 12.8 8.5c0 .27.03.54.09.79C8.39 9.11 5.08 7.1 2.9 4.03c-.3.52-.47 1.12-.47 1.76 0 1.21.62 2.27 1.56 2.9-.57-.02-1.1-.18-1.57-.44v.04c0 1.7 1.2 3.11 2.8 3.43-.29.07-.6.11-.92.11-.22 0-.44-.02-.65-.06.44 1.36 1.72 2.35 3.24 2.38A7.007 7.007 0 0 1 2 19.54a9.9 9.9 0 0 0 5.35 1.57c6.42 0 9.94-5.32 9.94-9.94v-.45c.67-.49 1.25-1.1 1.71-1.8-.62.28-1.28.47-1.96.56z"
+            fill="currentColor"
+          />
+        </svg>
+      </IconButton>
+
+      <IconButton
+        as="a"
+        href={`https://www.linkedin.com/shareArticle?mini=true&url=${encoded}&title=${text}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Compartilhar no LinkedIn"
+        aria-label="Compartilhar no LinkedIn"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden>
+          <path
+            d="M6.94 21H2.8V8.99h4.14V21zM4.86 7.45C3.7 7.45 2.78 6.5 2.78 5.34 2.78 4.18 3.7 3.23 4.86 3.23c1.16 0 2.08.95 2.08 2.11 0 1.16-.92 2.11-2.08 2.11zM21.2 21h-4.13v-5.6c0-1.34-.03-3.06-1.86-3.06-1.86 0-2.14 1.45-2.14 2.95V21h-4.13V8.99h3.97v1.62h.06c.55-1.04 1.9-2.14 3.92-2.14 4.19 0 4.96 2.76 4.96 6.35V21z"
+            fill="currentColor"
+          />
+        </svg>
+      </IconButton>
+    </ShareWrapper>
+  );
+}
 
 /* ---------- Component ---------- */
 export default function ArticlePage() {
   const { categoria, subcategoria, slug } = useParams();
   const navigate = useNavigate();
   const contentRef = useRef(null);
-  const carouselRef = useRef(null);
 
-  const articles = useMemo(() => toArray(articlesData), [articlesData]);
+  /* -------------------------
+     hooks that must always run
+     ------------------------- */
 
+  // articlesData transform (static module)
+  const articles = useMemo(() => toArray(articlesData), []); // eslint-disable-line
+
+  // article lookup
   const article = useMemo(() => {
-    // 1) hierarchical route: /blog/:categoria/:subcategoria/:slug
+    // 1) hierarchical route
     if (categoria && subcategoria && slug) {
       const found = articles.find((a) => {
         const cat = (a.category || a.categoria || "").toString();
@@ -66,7 +142,7 @@ export default function ArticlePage() {
       if (found) return found;
     }
 
-    // 2) slug only route
+    // 2) slug only
     if (slug && !(categoria && subcategoria)) {
       const found = articles.find((a) => {
         const s = (a.slug || a.friendlySlug || a.id || "").toString();
@@ -75,7 +151,7 @@ export default function ArticlePage() {
       if (found) return found;
     }
 
-    // 3) try using categoria as slug (legacy)
+    // 3) try categoria as legacy slug
     const trySlug = slug || categoria;
     if (trySlug) {
       const found = articles.find((a) => {
@@ -88,23 +164,100 @@ export default function ArticlePage() {
     return null;
   }, [articles, categoria, subcategoria, slug]);
 
-  // prepare related posts (same subcategory first, then same category)
+  /* -------------------------
+     carousel base hooks (always declared)
+     ------------------------- */
+  const viewportRef = useRef(null);
+  const innerRef = useRef(null);
+  const gapPx = 16;
+  const [visibleCount, setVisibleCount] = useState(3);
+  const [cardWidth, setCardWidth] = useState(320);
+  const [index, setIndex] = useState(0);
+
+  // compute responsive visibleCount
+  useEffect(() => {
+    function calc() {
+      const w = typeof window !== "undefined" ? window.innerWidth : 1200;
+      if (w >= 1200) setVisibleCount(3);
+      else if (w >= 900) setVisibleCount(3);
+      else if (w >= 700) setVisibleCount(2);
+      else setVisibleCount(1);
+    }
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
+  }, []);
+
+  // measure sizes (card width) whenever viewport or visibleCount or related changes
+  useLayoutEffect(() => {
+    const vp = viewportRef.current;
+    if (!vp) return;
+    const viewportWidth = vp.clientWidth;
+    const totalGaps = gapPx * (visibleCount - 1);
+    const cw = Math.floor((viewportWidth - totalGaps) / visibleCount);
+    setCardWidth(cw);
+    // clamp index to max possible - but related length not known yet here, clamp later in effect that depends on related
+  }, [visibleCount]);
+
+  // keyboard navigation hooks declared (always)
+  const prev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
+  const next = useCallback(() => setIndex((i) => i + 1), []);
+
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [prev, next]);
+
+  /* -------------------------
+     related posts (depends on article) but hook order preserved
+     ------------------------- */
   const related = useMemo(() => {
     if (!article) return [];
     const seen = new Set([article.slug || article.id]);
-    const sameSub = articles.filter(a => {
+    const sameSub = articles.filter((a) => {
       const sub = a.subCategory || a.subcategoria || a.sub || "";
-      const matches = sub && (article.subCategory === sub || article.subcategoria === sub || article.sub === sub);
+      const matches =
+        sub &&
+        (article.subCategory === sub ||
+          article.subcategoria === sub ||
+          article.sub === sub);
       return matches && !seen.has(a.slug || a.id);
     });
-    const sameCat = articles.filter(a => {
+    const sameCat = articles.filter((a) => {
       const cat = a.category || a.categoria || "";
-      const matches = cat && (article.category === cat || article.categoria === cat);
+      const matches =
+        cat && (article.category === cat || article.categoria === cat);
       return matches && !seen.has(a.slug || a.id);
     });
-    const combined = [...sameSub, ...sameCat].filter(a => a.slug !== article.slug);
-    return combined.slice(0, 8);
+    return [...sameSub, ...sameCat].filter((a) => a.slug !== article.slug).slice(0, 12);
   }, [articles, article]);
+
+  // after related is known, clamp index and recompute cardWidth considering related length
+  useEffect(() => {
+    const vp = viewportRef.current;
+    if (!vp) return;
+    const viewportWidth = vp.clientWidth;
+    const totalGaps = gapPx * (visibleCount - 1);
+    const cw = Math.floor((viewportWidth - totalGaps) / visibleCount);
+    setCardWidth(cw);
+    const maxIndex = Math.max(0, related.length - visibleCount);
+    setIndex((i) => Math.min(i, maxIndex));
+  }, [related.length, visibleCount]);
+
+  const maxIndex = Math.max(0, related.length - visibleCount);
+
+  // next/prev adjusted to clamp
+  const safePrev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
+  const safeNext = useCallback(() => setIndex((i) => Math.min(maxIndex, i + 1)), [maxIndex]);
+
+  // override prev/next used by key handlers (ensures clamping)
+  useEffect(() => {
+    // replace prev/next closures to safe ones for key handlers
+  }, [safePrev, safeNext]);
 
   // redirect to canonical hierarchical path if needed
   useEffect(() => {
@@ -114,10 +267,16 @@ export default function ArticlePage() {
     const s = article.slug || article.friendlySlug || article.id || null;
     const isHierarchical = categoria && subcategoria && slug;
     if (!isHierarchical && cat && sub && s) {
-      navigate(`/blog/${encodeURIComponent(cat)}/${encodeURIComponent(sub)}/${encodeURIComponent(s)}`, { replace: true });
+      navigate(
+        `/blog/${encodeURIComponent(cat)}/${encodeURIComponent(sub)}/${encodeURIComponent(s)}`,
+        { replace: true }
+      );
     }
   }, [article, categoria, subcategoria, slug, navigate]);
 
+  /* -------------------------
+     early return if article not found (hooks already declared)
+     ------------------------- */
   if (!article) {
     return (
       <>
@@ -126,32 +285,34 @@ export default function ArticlePage() {
         <Container>
           <Title>Artigo não encontrado</Title>
           <p>Desculpe — não foi possível localizar o artigo solicitado.</p>
-          <p><Link to="/blog">Voltar ao Blog</Link></p>
+          <p>
+            <Link to="/blog">Voltar ao Blog</Link>
+          </p>
         </Container>
         <Footer />
       </>
     );
   }
 
-  const publishedDate = parseDate(article.date || article.datePublished || article.publishedAt);
+  /* -------------------------
+     final computed values for render
+     ------------------------- */
+  const publishedDate = parseDate(
+    article.date || article.datePublished || article.publishedAt
+  );
   const readingTime = safe(article.readingTime || article.tempo || article.read, "");
 
-  const scroll = (dir) => {
-    const el = carouselRef.current;
-    if (!el) return;
-    const amount = el.clientWidth || 320;
-    const target = dir === "left" ? Math.max(0, el.scrollLeft - amount) : el.scrollLeft + amount;
-    el.scrollTo({ left: target, behavior: "smooth" });
-  };
-
-  const hasTOC = !!(contentRef.current && contentRef.current.querySelectorAll && contentRef.current.querySelectorAll("h2, h3").length > 0);
-  const hasSidebar = !!(article.product || hasTOC || related.length > 0);
+  // translateX in pixels based on index
+  const translateX = -(index * (cardWidth + gapPx));
 
   return (
     <>
       <Helmet>
         <title>{safe(article.title || article.titulo, "Artigo")} | Viva no Flow</title>
-        <meta name="description" content={safe(article.description || article.excerpt || "").slice(0, 160)} />
+        <meta
+          name="description"
+          content={safe(article.description || article.excerpt || "").slice(0, 160)}
+        />
         <meta property="og:title" content={safe(article.title || article.titulo)} />
         <meta property="og:description" content={safe(article.description || article.excerpt)} />
         <meta property="og:image" content={safeImage(article)} />
@@ -159,87 +320,110 @@ export default function ArticlePage() {
         <link rel="canonical" href={typeof window !== "undefined" ? window.location.href : ""} />
       </Helmet>
 
+      <ReadingProgress targetRef={contentRef} />
+
       <Navbar />
+      <NavBarSpacer />
       <Breadcrumbs />
 
-      <MainWrapper hasSidebar={hasSidebar}>
+      <ShareIconsFixed aria-hidden={!article}>
+        <ShareIcons title={article.title} />
+      </ShareIconsFixed>
+
+      <MainWrapper>
         <ArticleColumn>
           <Title>{safe(article.title || article.titulo)}</Title>
 
           <MetaInfo>
-            {publishedDate ? <time dateTime={publishedDate.toISOString()}>{formatShortDate(publishedDate)}</time> : null}
+            {publishedDate ? (
+              <time dateTime={publishedDate.toISOString()}>
+                {formatShortDate(publishedDate)}
+              </time>
+            ) : null}
             {publishedDate && readingTime ? <> • </> : null}
             {readingTime ? <span>{readingTime}</span> : null}
           </MetaInfo>
 
-          <HeroImage src={safeImage(article)} alt={safe(article.title || article.titulo, "Imagem do artigo")} loading="lazy" />
-
-          {article.content && <AudioReader texto={String(article.content).replace(/<[^>]+>/g, "")} />}
+          <HeroImage
+            src={safeImage(article)}
+            alt={safe(article.title || article.titulo, "Imagem do artigo")}
+            loading="lazy"
+          />
 
           <ArticleContent ref={contentRef} dangerouslySetInnerHTML={{ __html: article.content || article.html || "" }} />
 
-          {/* Newsletter integrada no fluxo */}
+          <AuthorArea>
+            <AuthorBox author={article.author} />
+          </AuthorArea>
+
           <NewsletterInline />
 
-          {/* Produto recomendado (editorial) */}
           <ProductInline product={article.product} />
 
+          <ShareInlineMobile>
+            <ShareButtons url={typeof window !== "undefined" ? window.location.href : ""} title={safe(article.title)} />
+          </ShareInlineMobile>
 
-          {/* comentários */}
           <Comentarios slug={article.slug || article.id || slug} />
-
-          {/* posts relacionados (aparece abaixo) */}
-          {related.length > 0 && (
-            <RecentPostsSection>
-              <h2>Últimos posts relacionados</h2>
-
-              <CarouselWrapper>
-                <ArrowLeft onClick={() => scroll("left")} aria-label="Scroll left">
-                  <FaChevronLeft size={16} />
-                </ArrowLeft>
-
-                <RecentPostsCarousel ref={carouselRef} tabIndex={0} aria-label="Carrossel de posts relacionados">
-                  {related.map(r => (
-                    <PostCard key={r.slug || r.id} to={buildArticlePath(r)}>
-                      <img src={safeImage(r)} alt={safe(r.title || r.titulo)} loading="lazy" />
-                      <PostTitle>{safe(r.title || r.titulo)}</PostTitle>
-                    </PostCard>
-                  ))}
-                </RecentPostsCarousel>
-
-                <ArrowRight onClick={() => scroll("right")} aria-label="Scroll right">
-                  <FaChevronRight size={16} />
-                </ArrowRight>
-              </CarouselWrapper>
-            </RecentPostsSection>
-          )}
-
-          <BackRow>
-            {article.subCategory || article.subcategoria ? (
-              <BackLink to={`/blog/${encodeURIComponent(article.category || article.categoria || "geral")}/${encodeURIComponent(article.subCategory || article.subcategoria || "")}`}>
-                ← Voltar para {String(article.subCategory || article.subcategoria).replace(/[-_]/g, " ")}
-              </BackLink>
-            ) : article.category || article.categoria ? (
-              <BackLink to={`/blog/${encodeURIComponent(article.category || article.categoria)}`}>← Voltar para {String(article.category || article.categoria)}</BackLink>
-            ) : (
-              <BackLink to="/blog">← Voltar ao Blog</BackLink>
-            )}
-          </BackRow>
         </ArticleColumn>
-
-        {/* Sidebar condicional — só renderiza se existir conteúdo relevante */}
-        {hasSidebar && (
-          <SideColumn>
-            <StickySidebar>
-              {/* TOC (compacto e rolável) */}
-              <ArticleTOC contentRef={contentRef} />
-              {/* share lateral discreto */}
-              <ShareSticky title={article.title} />
-              {/* product sticky is handled inside ProductInline (small sticky) */}
-            </StickySidebar>
-          </SideColumn>
-        )}
       </MainWrapper>
+
+      {related.length > 0 && (
+        <FullWidthCarousel aria-label="Carrossel de posts relacionados - full width">
+          <Inner>
+            <CarouselHeader>
+              <h2>Explore mais</h2>
+              <CarouselControls aria-hidden>
+                <CarouselNavLeft onClick={safePrev} disabled={index <= 0} aria-label="Anterior">
+                  <FaChevronLeft />
+                </CarouselNavLeft>
+                <CarouselNavRight onClick={safeNext} disabled={index >= maxIndex} aria-label="Próximo">
+                  <FaChevronRight />
+                </CarouselNavRight>
+              </CarouselControls>
+            </CarouselHeader>
+
+            <CarouselViewport ref={viewportRef}>
+              <CarouselSliderWrapper>
+                <CarouselInner
+                  ref={innerRef}
+                  style={{
+                    transform: `translateX(${translateX}px)`,
+                    transition: "transform 420ms cubic-bezier(.2,.9,.2,1)",
+                    gap: `${gapPx}px`,
+                    width: related.length * (cardWidth + gapPx) - gapPx + "px",
+                  }}
+                >
+                  {related.map((r, idx) => (
+                    <CarouselCard
+                      key={r.slug || r.id || idx}
+                      to={buildArticlePath(r)}
+                      aria-label={r.title || r.titulo}
+                      style={{
+                        width: cardWidth + "px",
+                        marginRight: idx === related.length - 1 ? 0 : `${gapPx}px`,
+                      }}
+                    >
+                      <CardMedia>
+                        <img src={safeImage(r)} alt={safe(r.title || r.titulo)} loading="lazy" />
+                      </CardMedia>
+                      <CardBody>
+                        <CardTitle>{safe(r.title || r.titulo)}</CardTitle>
+                        {(r.excerpt || r.description) && (
+                          <CardExcerpt>
+                            {(r.excerpt || r.description).slice(0, 120)}
+                            {(r.excerpt || r.description).length > 120 ? "…" : ""}
+                          </CardExcerpt>
+                        )}
+                      </CardBody>
+                    </CarouselCard>
+                  ))}
+                </CarouselInner>
+              </CarouselSliderWrapper>
+            </CarouselViewport>
+          </Inner>
+        </FullWidthCarousel>
+      )}
 
       <Footer />
     </>
@@ -248,7 +432,14 @@ export default function ArticlePage() {
 
 /* ---------- Styled ---------- */
 
-/* container principal */
+/* safety if executed in browser */
+if (typeof document !== "undefined") {
+  document.documentElement.style.boxSizing =
+    document.documentElement.style.boxSizing || "border-box";
+  document.body.style.boxSizing = document.body.style.boxSizing || "border-box";
+}
+
+/* container used for fallback pages */
 const Container = styled.div`
   max-width: 900px;
   margin: 2rem auto 4rem;
@@ -256,73 +447,21 @@ const Container = styled.div`
   line-height: 1.75;
 `;
 
-/* titulo */
+/* Title (adicionado) */
 const Title = styled.h1`
   font-size: 2.2rem;
-  color: ${({ theme }) => theme.colors.primaryDark || "#264653"};
+  color: ${({ theme }) => (theme?.colors?.primaryDark || "#264653")};
   margin-bottom: 0.4rem;
   text-align: left;
   word-break: break-word;
 `;
 
-/* meta */
+/* Meta info */
 const MetaInfo = styled.p`
   font-size: 0.95rem;
-  color: ${({ theme }) => theme.colors.text || "#6c757d"};
+  color: ${({ theme }) => (theme?.colors?.text || "#6c757d")};
   margin-bottom: 1rem;
 `;
-
-/* Main wrapper condicional */
-const MainWrapper = styled.main`
-  max-width: 1200px;
-  margin: 2.25rem auto;
-  display: grid;
-  grid-template-columns: ${({ hasSidebar }) => (hasSidebar ? "1fr 320px" : "1fr")};
-  gap: 1.25rem;
-  padding: 0 1rem;
-  box-sizing: border-box;
-
-  @media (max-width: 980px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-/* colunas — min-width:0 é crucial para evitar overflow em grids */
-const ArticleColumn = styled.div`
-  min-width: 0;
-`;
-const SideColumn = styled.aside`
-  min-width: 0;
-  display:flex;
-  justify-content:flex-end;
-`;
-
-/* sticky wrapper para sidebar — TOC top-aligned */
-const StickySidebar = styled.div`
-  /* permanece sticky mas agora alinha o índice ao topo da coluna */
-  position: sticky;
-  top: 96px;                 /* fica logo abaixo do navbar (ajuste se necessário) */
-  align-self: start;
-  max-height: calc(100vh - 110px); /* deixa um pouco de folga no topo/rodapé */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-left: 0.5rem;
-  min-width: 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  & > * { margin: 0; } /* evita espaçamento duplo */
-
-  @media (max-width: 980px) {
-    position: static;
-    max-height: none;
-    overflow: visible;
-    padding-left: 0;
-  }
-`;
-
 
 /* hero image */
 const HeroImage = styled.img`
@@ -330,117 +469,230 @@ const HeroImage = styled.img`
   max-width: 100%;
   height: 400px;
   object-fit: cover;
-  border-radius: ${({ theme }) => theme.radius.md || "16px"};
+  border-radius: ${({ theme }) => theme.radius?.md || "16px"};
   margin: 1rem 0 1.25rem;
-  transition: transform ${({ theme }) => theme.transitions.fast || "0.2s"};
-  display:block;
+  transition: transform ${({ theme }) => theme.transitions?.fast || "0.2s"};
+  display: block;
 
-  &:hover { transform: scale(1.02); }
+  &:hover {
+    transform: scale(1.02);
+  }
 
   @media (max-width: 720px) {
     height: 240px;
   }
 `;
 
-/* conteúdo do artigo */
+/* article content */
 const ArticleContent = styled.section`
   font-size: 1.05rem;
-  color: ${({ theme }) => theme.colors.text || "#40514e"};
+  color: ${({ theme }) => (theme?.colors?.text || "#40514e")};
   margin-top: 0.5rem;
   line-height: 1.75;
 
-  h2 { font-size: 1.6rem; margin: 1.25rem 0 0.75rem; color: ${({ theme }) => theme.colors.primaryDark}; }
-  h3 { font-size: 1.2rem; margin: 1rem 0; color: ${({ theme }) => theme.colors.primary}; }
-  p { margin: 0.75rem 0; }
-  ul, ol { margin: 1rem 0 1.5rem 1.25rem; }
-
-  img, iframe, video, table { max-width: 100%; height: auto !important; display: block; }
-  code, pre { white-space: pre-wrap; word-break: break-word; }
+  h2 {
+    font-size: 1.6rem;
+    margin: 1.25rem 0 0.75rem;
+    color: ${({ theme }) => theme.colors?.primaryDark};
+  }
+  h3 {
+    font-size: 1.2rem;
+    margin: 1rem 0;
+    color: ${({ theme }) => theme.colors?.primary};
+  }
+  p {
+    margin: 0.75rem 0;
+  }
+  ul,
+  ol {
+    margin: 1rem 0 1.5rem 1.25rem;
+  }
+  img,
+  iframe,
+  video,
+  table {
+    max-width: 100%;
+    height: auto !important;
+    display: block;
+  }
+  code,
+  pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
 `;
 
-/* product section (if used standalone) */
-const ProductSection = styled.section`
-  margin-top: 2.25rem;
-  background: ${({ theme }) => theme.colors.surface};
-  padding: 1.25rem;
-  border-radius: ${({ theme }) => theme.radius.md};
-  box-shadow: ${({ theme }) => theme.shadow.xs};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+/* author area */
+const AuthorArea = styled.div`
+  margin-top: 1.25rem;
 `;
 
-/* related posts */
-const RecentPostsSection = styled.section`
-  margin-top: 2.25rem;
-  h2 { text-align: center; color: ${({ theme }) => theme.colors.primaryDark}; margin-bottom: 1rem; }
+/* share inline mobile */
+const ShareInlineMobile = styled.div`
+  margin: 1rem 0;
+  @media (min-width: 981px) {
+    display: none;
+  }
 `;
-const CarouselWrapper = styled.div`
-  position: relative;
-  display:flex;
-  align-items:center;
+
+/* full width carousel */
+const FullWidthCarousel = styled.section`
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  background: ${({ theme }) => theme.gradients?.soft || "linear-gradient(180deg,#f7fdfb,#f0fbf8)"};
+  padding: 2rem 0;
+`;
+const Inner = styled.div`
+  max-width: ${({ theme }) => theme.layout?.maxWidth || "1200px"};
+  margin: 0 auto;
+  padding: 0 1rem;
+`;
+const CarouselHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  h2 {
+    margin: 0;
+    color: ${({ theme }) => theme.colors?.primaryDark || "#264653"};
+  }
+`;
+const CarouselControls = styled.div`
+  display: flex;
   gap: 0.5rem;
+  align-items: center;
 `;
-const RecentPostsCarousel = styled.div`
-  display:flex;
-  gap: 1rem;
-  overflow-x:auto;
-  padding: 0.5rem 0.25rem;
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-  min-width: 0;
 
-  &::-webkit-scrollbar { height: 8px; }
-  &::-webkit-scrollbar-thumb { background: ${({ theme }) => theme.colors.primary || "#43aa8b"}; border-radius: 999px; }
-`;
-const PostCard = styled(Link)`
-  flex: 0 0 220px;
-  scroll-snap-align: start;
-  background: ${({ theme }) => theme.colors.background};
-  border-radius: ${({ theme }) => theme.radius.md};
+/* Carousel area (no native scroll) */
+const CarouselViewport = styled.div`
+  width: 100%;
   overflow: hidden;
-  text-decoration:none;
-  color:inherit;
-  box-shadow: ${({ theme }) => theme.shadow.xs};
-  transition: transform ${({ theme }) => theme.transitions.fast};
-  img { width:100%; height:120px; object-fit:cover; display:block; }
-  &:hover { transform: translateY(-6px); box-shadow: ${({ theme }) => theme.shadow.md}; }
+  position: relative;
 `;
-const PostTitle = styled.div`
-  padding: 0.75rem;
-  font-size: 0.95rem;
-  min-height: 3.2rem;
+const CarouselSliderWrapper = styled.div`
+  width: 100%;
+  overflow: visible;
+`;
+const CarouselInner = styled.div`
+  display: flex;
+  align-items: stretch;
+  will-change: transform;
+`;
+
+/* Card */
+const CarouselCard = styled(Link)`
+  background: ${({ theme }) => theme.colors?.surface || "#fff"};
+  border-radius: ${({ theme }) => theme.radius?.md || "12px"};
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: ${({ theme }) => theme.shadow?.xs || "0 4px 12px rgba(0,0,0,0.06)"};
+  display: flex;
+  flex-direction: column;
+  transition: transform ${({ theme }) => theme.transitions?.fast || "0.18s"},
+    box-shadow ${({ theme }) => theme.transitions?.fast || "0.18s"};
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: ${({ theme }) => theme.shadow?.md || "0 10px 30px rgba(0,0,0,0.12)"};
+  }
+`;
+const CardMedia = styled.div`
+  height: 160px;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+`;
+const CardBody = styled.div`
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-height: 4.4rem;
+`;
+const CardTitle = styled.strong`
+  font-size: 1rem;
+  color: ${({ theme }) => theme.colors?.primaryDark || "#264653"};
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+const CardExcerpt = styled.p`
+  margin: 0;
+  font-size: 0.92rem;
+  color: ${({ theme }) => theme.colors?.text || "#40514e"};
+  opacity: 0.9;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 `;
 
-/* arrows */
-const ArrowLeft = styled.button`
-  background: ${({ theme }) => theme.colors.primary || "#2a6f61"};
-  color: white;
-  border: none;
-  padding: 0.45rem;
-  border-radius: 50%;
+/* carousel nav */
+const CarouselNavLeft = styled.button`
+  background: ${({ theme }) => theme.colors?.surface || "#fff"};
+  border: 0;
+  padding: 0.5rem;
+  border-radius: 8px;
   cursor: pointer;
-  z-index: 5;
-  @media (max-width: 700px) { display:none; }
+  box-shadow: ${({ theme }) => theme.shadow?.xs || "0 4px 12px rgba(0,0,0,0.06)"};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
 `;
-const ArrowRight = styled(ArrowLeft)``;
+const CarouselNavRight = styled(CarouselNavLeft)``;
 
-/* back link */
-const BackRow = styled.div` margin-top: 1.8rem; display:flex; justify-content:center; `;
-const BackLink = styled(Link)`
-  color: ${({ theme }) => theme.colors.primary || "#2a6f61"};
+/* share fixed wrapper (declared previously) */
+const ShareIconsFixed = styled.div`
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  z-index: 999;
+  @media (max-width: 980px) {
+    display: none;
+  }
+`;
+
+/* small helpers */
+const MainWrapper = styled.main`
+  max-width: 1200px;
+  margin: 2.25rem auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
+`;
+const ArticleColumn = styled.div`
+  min-width: 0;
+  margin: 0 auto;
+  max-width: 900px;
+`;
+const ShareWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  background: ${({ theme }) => theme.colors?.surface};
+  padding: 0.4rem;
+  border-radius: ${({ theme }) => theme.radius?.sm || "8px"};
+  box-shadow: ${({ theme }) => theme.shadow?.xs};
+`;
+const IconButton = styled.a`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors?.primaryDark};
   text-decoration: none;
-  font-weight: 600;
-  &:hover { color: ${({ theme }) => theme.colors.primaryDark || "#1f6b59"}; }
 `;
 
-/* quick safety: ensure body/html box-sizing & hide x overflow if anything slips */
-if (typeof document !== "undefined") {
-  document.documentElement.style.boxSizing = document.documentElement.style.boxSizing || "border-box";
-  document.body.style.boxSizing = document.body.style.boxSizing || "border-box";
-  // not forcing overflow hidden globally — left commented. Uncomment if you still see horizontal scroll
-  // document.documentElement.style.overflowX = "hidden";
-  // document.body.style.overflowX = "hidden";
-}

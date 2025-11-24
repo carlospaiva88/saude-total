@@ -1,11 +1,13 @@
 // src/components/Article/AuthorBox.jsx
 import React from "react";
 import styled from "styled-components";
+import logoImg from "../components/Navbar/viva.png";
+
 
 export default function AuthorBox({ author = {} }) {
   const name = author.name || "Viva no Flow";
   const bio = author.bio || "Conteúdo criado por especialistas em saúde e bem-estar. Siga para mais conteúdos práticos.";
-  const avatar = author.avatar || "/author-placeholder.png";
+  const avatar = author.avatar || logoImg;
 
   return (
     <Wrapper>
