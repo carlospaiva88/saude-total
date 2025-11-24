@@ -1,153 +1,199 @@
 import styled, { keyframes, css } from "styled-components";
 
-// animações
+/* animações */
 const fadeInUp = keyframes`
-  from { opacity: 0; transform: translateY(25px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 `;
 
 const floatImage = keyframes`
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-10px); }
   100% { transform: translateY(0); }
 `;
 
+/* respeitar preferências do usuário por reduzir movimento */
+const prefersReducedMotion = `@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+}`;
+
+/* Container do hero */
 export const HeroSection = styled.section`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4rem 2rem;
-  background: ${({ theme }) => theme.gradients.hero};
-  color: ${({ theme }) => theme.colors.white};
-  min-height: 500px;
   gap: 2rem;
-  overflow: hidden;
+  padding: 3.5rem 2rem;
+  background: ${({ theme }) => theme?.gradients?.hero || "linear-gradient(180deg,#e6f9f0,#f7fff9)"};
+  color: ${({ theme }) => theme?.colors?.white || "#fff"};
+  min-height: 520px;
   position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 
-  @media (max-width: 768px) {
+  @media (max-width: 980px) {
     flex-direction: column;
     text-align: center;
-    min-height: 600px;
+    min-height: 560px;
+    padding: 2.25rem 1.25rem;
+  }
+
+  ${prefersReducedMotion}
+`;
+
+/* Conteúdo textual */
+export const HeroContent = styled.div`
+  max-width: 640px;
+  z-index: 3;
+  animation: ${fadeInUp} 850ms cubic-bezier(.2,.9,.2,1) both;
+  @media (max-width: 980px) {
+    order: 2;
+    width: 100%;
+    margin-top: 1rem;
   }
 `;
 
-export const HeroContent = styled.div`
-  max-width: 600px;
-  animation: ${fadeInUp} 1s ease forwards;
-  z-index: 2;
-`;
-
+/* Títulos e textos */
 export const HeroHeadline = styled.h1`
-  font-size: 2.8rem;
-  margin-bottom: 1rem;
-  font-weight: 900;
-  line-height: 1.1;
+  font-size: clamp(1.6rem, 3.8vw, 3rem);
+  line-height: 1.05;
+  margin: 0 0 0.75rem 0;
+  font-weight: 800;
+  color: ${({ theme }) => theme?.colors?.surface || "#04332a"};
+  text-wrap: balance; /* se suportado */
 `;
 
 export const HeroSubheadline = styled.p`
-  font-size: 1.25rem;
-  margin-bottom: 2rem;
-  font-weight: 500;
-  color: ${({ theme }) => theme.colors.light};
+  margin: 0 0 1.25rem 0;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: ${({ theme }) => theme?.colors?.light || "rgba(0,0,0,0.65)"};
+  max-width: 56ch;
 `;
 
+/* CTA */
 export const HeroButton = styled.a`
   display: inline-block;
-  padding: 0.9rem 2rem;
-  background: ${({ theme }) => theme.gradients.button};
-  color: ${({ theme }) => theme.colors.white};
-  border-radius: ${({ theme }) => theme.radius.button};
+  padding: 0.9rem 1.6rem;
+  background: ${({ theme }) => theme?.gradients?.button || "linear-gradient(90deg,#2fa57a,#1f7f5f)"};
+  color: ${({ theme }) => theme?.colors?.surface || "#fff"};
+  border-radius: ${({ theme }) => theme?.radius?.pill || "999px"};
   font-weight: 700;
   text-decoration: none;
-  transition: 0.3s ease;
-  box-shadow: ${({ theme }) => theme.shadow.light};
+  box-shadow: ${({ theme }) => theme?.shadow?.sm || "0 6px 18px rgba(39,174,96,0.12)"};
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+  -webkit-tap-highlight-color: transparent;
 
-  &:hover {
-    background: ${({ theme }) => theme.gradients.buttonHover};
-    transform: translateY(-3px);
-    box-shadow: ${({ theme }) => theme.shadow.medium};
+  &:hover,
+  &:focus {
+    transform: translateY(-4px);
+    box-shadow: ${({ theme }) => theme?.shadow?.md || "0 12px 28px rgba(39,174,96,0.16)"};
+    outline: none;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 4px rgba(66, 153, 129, 0.16);
   }
 `;
 
+/* Imagem e wrapper */
 export const HeroImageWrapper = styled.div`
   position: relative;
   flex: 1;
   display: flex;
-  justify-content: center;
   align-items: center;
-  animation: ${fadeInUp} 1.2s ease forwards;
-  z-index: 1;
-`;
+  justify-content: center;
+  z-index: 2;
+  min-width: 320px;
+  max-width: 640px;
 
-export const HeroImage = styled.img`
-  max-width: 350px;
-  width: 100%;
-  border-radius: 20px;
-  object-fit: cover;
-  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.2));
-  animation: ${floatImage} 6s ease-in-out infinite alternate;
-
-  @media (max-width: 768px) {
-    max-width: 80%;
-    margin-top: 2rem;
+  @media (max-width: 980px) {
+    order: 1;
+    width: 100%;
+    max-width: 520px;
   }
 `;
 
-export const FloatingImage = styled.img`
+/* Imagem central (use picture if quiser versions) */
+export const HeroImage = styled.img`
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  border-radius: ${({ theme }) => theme?.radius?.lg || "18px"};
+  object-fit: cover;
+  filter: drop-shadow(0 12px 24px rgba(6, 53, 42, 0.12));
+  animation: ${floatImage} 6.5s ease-in-out infinite alternate;
+  will-change: transform;
+
+  @media (max-width: 980px) {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  ${prefersReducedMotion}
+`;
+
+/* Floating decorative images */
+export const FloatingImage = styled.img.attrs((p) => ({
+  role: p.decorative ? undefined : "img",
+}))`
   position: absolute;
   width: 140px;
   height: 140px;
   object-fit: cover;
-  border-radius: 16px;
-  opacity: 0.9;
-  animation: ${floatImage} 5s ease-in-out infinite alternate;
+  border-radius: 14px;
+  opacity: 0.95;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,0.12));
+  animation: ${floatImage} 5.8s ease-in-out infinite alternate;
   animation-delay: ${({ delay }) => delay || "0s"};
-  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.15));
+  transition: transform 220ms ease, opacity 220ms ease;
 
   ${({ position }) =>
     position === "top-left" &&
     css`
-      top: -90px;
-      left: -40px;
+      top: -68px;
+      left: -36px;
       transform: rotate(-8deg);
     `}
   ${({ position }) =>
     position === "top-right" &&
     css`
-      top: -50px;
-      right: -25px;
+      top: -40px;
+      right: -26px;
       transform: rotate(6deg);
     `}
   ${({ position }) =>
     position === "bottom-right" &&
     css`
-      bottom: -50px;
+      bottom: -52px;
       right: -30px;
       transform: rotate(-5deg);
     `}
   ${({ position }) =>
     position === "bottom-left" &&
     css`
-      bottom: -90px;
-      left: 0;
+      bottom: -72px;
+      left: -12px;
       transform: rotate(8deg);
     `}
   ${({ position }) =>
     position === "middle-left" &&
     css`
       top: 220px;
-      left: -180px;
+      left: -140px;
       transform: rotate(-4deg);
     `}
   ${({ position }) =>
     position === "middle-right" &&
     css`
-      top: 180px;
-      right: -18px;
+      top: 170px;
+      right: -14px;
       transform: rotate(5deg);
     `}
 
+  /* hide floats on small screens */
   @media (max-width: 768px) {
     display: none;
   }
+
+  ${prefersReducedMotion}
 `;

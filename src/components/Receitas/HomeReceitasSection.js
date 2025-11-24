@@ -1,107 +1,160 @@
+// src/components/Receitas/HomeReceitasSection.jsx
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import receitas from "../../data/receitas";
 
+// CardBase compartilhado
+import {
+  CardBase,
+  CardImage,
+  CardBody,
+  CardTitle,
+  CardDescription,
+  CardButton,
+  CardSticker,
+} from "../CardBase/cardBase";
+
 export default function HomeReceitasSection() {
-  // Concatenar todas as receitas
   const todasReceitas = [
-    ...receitas.fitness,
-    ...receitas.salgadas,
-    ...receitas.doces,
+    ...(receitas.fitness || []),
+    ...(receitas.salgadas || []),
+    ...(receitas.doces || []),
   ];
 
-  // Filtrar apenas receitas em destaque
-  const receitasDestaque = todasReceitas.filter(r => r.destaque);
+  // apenas destaque (mas sem sticker "destaque")
+  const receitasDestaque = todasReceitas.filter((r) => r.destaque);
 
   return (
-    <SectionContainer>
-      <SectionTitle>Receitas em Destaque</SectionTitle>
-      <RecipesGrid>
-        {receitasDestaque.map((receita) => (
-        <RecipeCard key={receita.slug}>
-          <Link to={`/receitas/${receita.slug}`}>
-            <ImageWrapper>
-              <img src={receita.imagem} alt={receita.titulo} />
-            </ImageWrapper>
-            <CardContent>
-              <h3>{receita.titulo}</h3>
-              <p>{receita.descricaoCurta}</p>
-            </CardContent>
-          </Link>
-        </RecipeCard>
-        ))}
+    <SectionContainer aria-labelledby="receitas-destaque-title">
+      <SectionHeader>
+        <SectionTitle id="receitas-destaque-title">Receitas em destaque</SectionTitle>
+        <HeaderActions>
+          <ViewAll to="/receitas">Ver todas</ViewAll>
+        </HeaderActions>
+      </SectionHeader>
 
-      </RecipesGrid>
+      {receitasDestaque.length === 0 ? (
+        <EmptyBox>
+          <p>Não encontramos receitas em destaque no momento.</p>
+          <SmallNote>Confira a seção completa de receitas.</SmallNote>
+        </EmptyBox>
+      ) : (
+        <RecipesGrid>
+          {receitasDestaque.map((receita) => {
+            const alt = receita.titulo || receita.nome || "Receita";
+            const imgSrc = receita.imagem || receita.image || "/placeholder-4x3.png";
+            const excerpt = receita.descricaoCurta || receita.description || "";
+
+            return (
+              <RecipeCard as={CardBase} key={receita.slug}>
+                
+                {/* ÚNICO STICKER DO CARD — categoria */}
+                {receita.categoria && (
+                  <CardSticker>
+                    {String(receita.categoria).charAt(0).toUpperCase() + String(receita.categoria).slice(1)}
+                  </CardSticker>
+                )}
+
+                <CardImage
+                  src={imgSrc}
+                  alt={alt}
+                  loading="lazy"
+                  onError={(e) => { e.currentTarget.src = "/placeholder-4x3.png"; }}
+                />
+
+                <CardBodyStyled>
+                  <CardTitle>{receita.titulo}</CardTitle>
+
+                  <CardDescription>
+                    {excerpt}
+                  </CardDescription>
+
+                  <FooterRow>
+                    <CardButton as={Link} to={`/receitas/${encodeURIComponent(receita.slug)}`}>
+                      Ver receita
+                    </CardButton>
+
+                    {receita.tempo && <TimeNote>{receita.tempo}</TimeNote>}
+                  </FooterRow>
+                </CardBodyStyled>
+              </RecipeCard>
+            );
+          })}
+        </RecipesGrid>
+      )}
     </SectionContainer>
   );
 }
 
-// Styled Components
+/* ---------------- Styled ---------------- */
+
 const SectionContainer = styled.section`
-  max-width: 1200px;
+  max-width: ${({ theme }) => theme.layout?.maxWidth || "1200px"};
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2.25rem 1rem;
+`;
+
+const SectionHeader = styled.div`
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:1.25rem;
 `;
 
 const SectionTitle = styled.h2`
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #264653;
-  font-size: 2rem;
+  margin:0;
+  color: ${({ theme }) => theme.colors?.primaryDark};
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+`;
+
+const HeaderActions = styled.div``;
+
+const ViewAll = styled(Link)`
+  font-weight:700;
+  color: ${({ theme }) => theme.colors?.primary};
+  text-decoration:none;
+  &:hover { opacity:0.7; }
+`;
+
+const EmptyBox = styled.div`
+  padding:2rem;
+  text-align:center;
+  background: ${({ theme }) => theme.colors?.surface};
+  border-radius:12px;
+`;
+
+const SmallNote = styled.p`
+  margin-top:.25rem;
+  color:#666;
 `;
 
 const RecipesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  display:grid;
+  gap:1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 `;
 
-const RecipeCard = styled.div`
-  background: #ffffff;
-  border-radius: 1rem;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-
-  &:hover {
-    transform: translateY(-6px);
-  }
-
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
+const RecipeCard = styled(CardBase)`
+  position:relative;
+  overflow:hidden;
 `;
 
-const ImageWrapper = styled.div`
-  width: 100%;
-  height: 220px;
-  overflow: hidden;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-
-  ${RecipeCard}:hover & {
-    transform: scale(1.05);
-  }
+const CardBodyStyled = styled(CardBody)`
+  display:flex;
+  flex-direction:column;
+  gap:0.5rem;
+  flex:1;
 `;
 
-const CardContent = styled.div`
-  padding: 1rem;
+const FooterRow = styled.div`
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:auto;
+`;
 
-  h3 {
-    font-size: 1.2rem;
-    color: #2a9d8f;
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    font-size: 0.9rem;
-    color: #555;
-  }
+const TimeNote = styled.span`
+  font-size:0.85rem;
+  color:#666;
 `;

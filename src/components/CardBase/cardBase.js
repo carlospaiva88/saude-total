@@ -125,7 +125,7 @@ export const CardSticker = styled.div`
   background: rgba(108,188,163,0.14);
   color: ${({ theme }) => theme.colors.surface};
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.8rem;
   padding: 0.2rem 0.6rem;
   border-radius: 999px;
   box-shadow: none;

@@ -73,9 +73,9 @@ function App() {
                     <Navbar />
                     <NavbarSpacer />
 
-                    <SectionWrapper>
+                  
                       <Hero />
-                    </SectionWrapper>
+                    
 
                     <SectionWrapper>
                       <HealthTips />
