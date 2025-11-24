@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { CardBase, CardImage, CardBody } from "../CardBase/cardBase";
+
 
 const destaques = [
   {
@@ -67,135 +69,76 @@ const destaques = [
   },
 ];
 
+
+
 export default function DestinosDestaque() {
   const scrollRef = useRef();
   const navigate = useNavigate();
-
   const scroll = (direction) => {
-    const { current } = scrollRef;
-    if (direction === "left") current.scrollBy({ left: -400, behavior: "smooth" });
-    else current.scrollBy({ left: 400, behavior: "smooth" });
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: direction === "left" ? -400 : 400, behavior: "smooth" });
   };
 
   return (
     <Wrapper>
       <h2>🌎 Destinos em Destaque</h2>
       <CarouselContainer>
-        <ArrowButtonLeft onClick={() => scroll("left")}><FiChevronLeft /></ArrowButtonLeft>
+        <ArrowButtonLeft onClick={() => scroll("left")} aria-label="Scroll left"><FiChevronLeft /></ArrowButtonLeft>
         <Carousel ref={scrollRef}>
           {destaques.map((destino) => (
-            <Card
-              key={destino.slug}
-              onClick={() => navigate(`/viagens/${destino.type}/${destino.slug}`)}
-            >
-              <img src={destino.image} alt={destino.title} />
-              <CardOverlay>
-                <h3>{destino.title}</h3>
-              </CardOverlay>
-            </Card>
+            <ThumbCard key={destino.slug} onClick={() => navigate(`/viagens/${destino.type}/${destino.slug}`)} role="button" tabIndex={0}>
+              <CardBase>
+                <CardImage src={destino.image} alt={destino.title} loading="lazy" />
+                <CardBody style={{ padding: 0 }}>
+                  <Overlay>
+                    <h3>{destino.title}</h3>
+                  </Overlay>
+                </CardBody>
+              </CardBase>
+            </ThumbCard>
           ))}
         </Carousel>
-        <ArrowButtonRight onClick={() => scroll("right")}><FiChevronRight /></ArrowButtonRight>
+        <ArrowButtonRight onClick={() => scroll("right")} aria-label="Scroll right"><FiChevronRight /></ArrowButtonRight>
       </CarouselContainer>
     </Wrapper>
   );
 }
 
+/* styled (apenas os trechos relevantes) */
 const Wrapper = styled.section`
   background: ${({ theme }) => theme.colors.background};
   padding: 4rem 2rem 2rem;
   position: relative;
   text-align: center;
-
-  h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: ${({ theme }) => theme.colors.primary};
-    margin-bottom: 2rem;
-  }
+  h2 { font-size: 2rem; font-weight:700; color: ${({ theme }) => theme.colors.primary}; margin-bottom: 2rem; }
 `;
 
-const CarouselContainer = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-`;
-
+const CarouselContainer = styled.div` position: relative; display:flex; align-items:center; `;
 const Carousel = styled.div`
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  gap: 1.5rem;
-  padding: 0 2rem;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  display:flex;
+  overflow-x:auto;
+  scroll-behavior:smooth;
+  gap:1.5rem;
+  padding: 0 1rem;
+  scrollbar-width:none;
+  &::-webkit-scrollbar{display:none;}
 `;
-
-const Card = styled.div`
-  position: relative;
+const ThumbCard = styled.div`
   min-width: 260px;
-  height: 180px;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
+  height: 220px;
   flex-shrink: 0;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-
-  &:hover {
-    transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: filter 0.5s ease;
-  }
-
-  &:hover img {
-    filter: brightness(80%);
-  }
-`;
-
-const CardOverlay = styled.div`
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 1rem;
-  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-  color: white;
-  text-align: left;
-
-  h3 {
-    font-size: 1.1rem;
-    margin: 0;
-    font-weight: 600;
-  }
-`;
-
-const ArrowButtonLeft = styled.button`
-  position: absolute;
-  left: 0;
-  z-index: 5;
-  background: rgba(255,255,255,0.8);
-  border: none;
-  border-radius: 50%;
-  font-size: 1.8rem;
   cursor: pointer;
-  height: 45px;
-  width: 45px;
-  transition: 0.3s;
-  &:hover {
-    background: ${({ theme }) => theme.colors.primary};
-    color: white;
-  }
+  display:block;
+  outline: none;
 `;
-
-const ArrowButtonRight = styled(ArrowButtonLeft)`
-  right: 0;
-  left: auto;
+const Overlay = styled.div`
+  position: absolute;
+  left:0; right:0; bottom:0;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+  color: white;
+  h3 { margin:0; font-size:1.1rem; font-weight:600; }
 `;
+const ArrowButtonLeft = styled.button` position:absolute; left:0; z-index:5; /* ... */ `;
+const ArrowButtonRight = styled(ArrowButtonLeft)` right:0; left:auto; `;

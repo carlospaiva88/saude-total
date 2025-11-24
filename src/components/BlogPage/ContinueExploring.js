@@ -77,13 +77,20 @@ const Heading = styled.h3`
 
 const Grid = styled.div`
   display: grid;
+  gap: 1rem;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.9rem;
+  margin-top: 0.6rem;
+  grid-auto-rows: 1fr;
 
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+  /* garante que cada filho preencha a célula */
+  & > a, & > article, & > div {
+    height: 100%;
   }
+
+  @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 720px) { grid-template-columns: 1fr; }
 `;
+
 
 const Column = styled.div`
 `;

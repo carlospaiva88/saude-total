@@ -23,8 +23,7 @@ import HealthTips from "./components/HealthTips/HealthTips";
 import HomeReceitasSection from "./components/Receitas/HomeReceitasSection";
 import TravelHighlights from "./components/TravelHighlights/TravelHighlights";
 import FinalCTA from "./components/FinalCTA/FinalCTA";
-import BlogPage from "./components/BlogPage/BlogPage";
-
+import ArticlePage from "./pages/ArtigoPage";
 import viagensData from "./data/viagens";
 
 // Páginas Receitas
@@ -52,7 +51,6 @@ import Sobre from "./components/Sobre/Sobre";
 const BlogHome = lazy(() => import("./components/BlogPage/BlogHome"));
 const Categoria = lazy(() => import("./pages/Categoria"));
 const Subcategoria = lazy(() => import("./pages/SubCategoria"));
-const Artigo = lazy(() => import("./pages/Artigo"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ProductsPage = lazy(() => import("./components/ProductsPage/ProductsPage"));
 
@@ -108,8 +106,8 @@ function App() {
               <Route path="/blog" element={<BlogHome />} />
               <Route path="/blog/:categoria" element={<Categoria />} />
               <Route path="/blog/:categoria/:subcategoria" element={<Subcategoria />} />
-              <Route path="/blog/:categoria/:subcategoria/:slug" element={<Artigo />} />
-              <Route path="/blog/:categoria/:subcategoria/:slug" element={<BlogPage />} />
+              <Route path="/blog/:categoria/:subcategoria/:slug" element={<ArticlePage />} />
+
 
 
            {/* CALCULADORAS */}

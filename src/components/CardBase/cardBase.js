@@ -1,19 +1,30 @@
+// src/components/ui/CardBase.jsx
 import styled from "styled-components";
 
+/*
+  CardBase central — usado por ArticleCard, ProductCard, TravelCard, etc.
+  Exporta: CardBase, CardImage (tag <img>), CardBody, CardTitle, CardSubtitle,
+          CardDescription, CardPrice, CardScience, CardButton, CardSticker
+*/
+
 export const CardBase = styled.article`
-  position: relative; 
+  position: relative;
   border-radius: ${({ theme }) => theme.radius.lg};
   overflow: hidden;
   background: ${({ theme }) => theme.colors.surface};
   box-shadow: ${({ theme }) => theme.shadow.sm};
-  transition: ${({ theme }) => theme.transitions.normal};
+  transition: transform ${({ theme }) => theme.transitions.normal}, box-shadow ${({ theme }) => theme.transitions.normal};
   display: flex;
   flex-direction: column;
   cursor: pointer;
+  height: 100%;
+  min-height: 0;
 
-  &:hover {
+  &:hover,
+  &:focus {
     transform: translateY(-5px);
     box-shadow: ${({ theme }) => theme.shadow.md};
+    outline: none;
   }
 `;
 
@@ -21,8 +32,10 @@ export const CardImage = styled.img`
   width: 100%;
   height: 220px;
   object-fit: cover;
+  flex-shrink: 0;
   user-select: none;
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  display: block;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
     height: 160px;
@@ -33,29 +46,36 @@ export const CardBody = styled.div`
   padding: 1rem 1.2rem;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 `;
 
 export const CardTitle = styled.h3`
-  font-size: 1.32rem;
+  font-size: 1.18rem;
   font-family: ${({ theme }) => theme.fonts.heading};
-  margin-bottom: 0.4rem;
+  margin: 0 0 0.4rem 0;
   font-weight: 600;
   color: ${({ theme }) => theme.colors.primaryDark};
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 `;
 
 export const CardSubtitle = styled.p`
   color: ${({ theme }) => theme.colors.secondaryDark};
   font-size: 0.95rem;
-  margin-bottom: 0.4rem;
+  margin: 0 0 0.5rem 0;
   font-style: italic;
 `;
 
 export const CardDescription = styled.p`
   font-size: 0.97rem;
   color: ${({ theme }) => theme.colors.text};
-  margin-bottom: 1rem;
-  flex-grow: 1;
-  min-height: 65px;
+  margin: 0 0 1rem 0;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -67,51 +87,51 @@ export const CardPrice = styled.p`
   font-size: 1.08rem;
   color: ${({ theme }) => theme.colors.primary};
   font-weight: 700;
-  margin-bottom: 0.4rem;
+  margin: 0 0 0.6rem 0;
 `;
 
 export const CardScience = styled.p`
   font-size: 0.89rem;
   color: ${({ theme }) => theme.colors.secondary};
   font-style: italic;
-  margin-bottom: 0.7rem;
+  margin: 0 0 0.7rem 0;
 `;
 
 export const CardButton = styled.a`
   display: inline-block;
   font-weight: 600;
   background: ${({ theme }) => theme.colors.primary};
-  color: #fff;
+  color: ${({ theme }) => theme.colors.surface};
   text-decoration: none;
   border-radius: ${({ theme }) => theme.radius.pill};
-  padding: 0.6rem 1.25rem;
-  text-align: center;
+  padding: 0.5rem 1rem;
   font-size: 1rem;
-  margin-top: 0.5rem;
+  margin-top: auto;
   transition: background ${({ theme }) => theme.transitions.fast};
   box-shadow: ${({ theme }) => theme.shadow.xs};
+  align-self: flex-start;
 
   &:hover,
   &:focus {
     background: ${({ theme }) => theme.colors.primaryDark};
+    outline: none;
   }
 `;
 
-
-// Sticker fixo no canto superior esquerdo do CardBase
 export const CardSticker = styled.div`
   position: absolute;
-  top: 12px;
-  left: 12px;
-  background: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.surface};
+  top: 10px;
+  left: 10px;
+  background: rgba(108,188,163,0.14);
+  color: ${({ theme }) => theme.colors.primary};
   font-weight: 700;
-  font-size: 0.85rem;
-  padding: 0.25rem 0.8rem;
-  border-radius: ${({ theme }) => theme.radius.pill};
-  box-shadow: ${({ theme }) => theme.shadow.xs};
-  text-transform: uppercase;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  box-shadow: none;
   pointer-events: none;
   user-select: none;
   z-index: 5;
+  text-transform: none;
 `;
+

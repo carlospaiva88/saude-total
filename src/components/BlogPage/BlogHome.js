@@ -1,4 +1,3 @@
-// src/pages/BlogHome.jsx
 import React, { useMemo } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
@@ -6,23 +5,20 @@ import Navbar from "../../components/Navbar/Navbar";
 import NavbarSpacer from "../../components/Navbar/NavbarSpacer";
 import Footer from "../../components/Footer/Footer";
 import ArticleCard from "../../components/ArticleCard/ArticleCard";
-import articlesData from "../../data/articles/index"; 
-import receitas from "../../data/receitas/index"; 
+import articlesData from "../../data/articles/index";
+import receitas from "../../data/receitas/index";
 import CalculadoraPreview from "../../components/Calculadora/CalculadoraPreview";
 import ContinueExploring from "./ContinueExploring";
 import TagsCloud from "../../components/BlogPage/TagsCloud";
 import NewsletterCTA from "../../components/BlogPage/NewsletterCTA";
-import viagensData from "../../data/viagens/index"
+import viagensData from "../../data/viagens/index";
 import productsData from "../../data/products";
 import CarouselFinal from "../../components/BlogPage/CarouselFinal";
-
 import MiniQuizSaude from "../../components/BlogPage/MiniQuizSaude";
 import FraseDoDia from "./FraseDoDia";
 
-
-
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay } from "swiper";
+import { Navigation, Autoplay, A11y } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -33,145 +29,146 @@ const categories = [
   { id: "espiritual", name: "Espiritual", image: "https://images.pexels.com/photos/999309/pexels-photo-999309.jpeg" },
 ];
 
+function safeArray(input) {
+  if (!input) return [];
+  return Array.isArray(input) ? input : Object.values(input);
+}
+
+function safeDate(d) {
+  const t = d || d === 0 ? d : null;
+  const parsed = Date.parse(t);
+  return isNaN(parsed) ? 0 : parsed;
+}
+
+function safeImage(item) {
+  return item?.image || item?.imagem || item?.thumb || "/placeholder-16x9.png";
+}
+
+function buildPostLink(post) {
+  const categoria = encodeURIComponent(post.category || post.categoria || "geral");
+  const slug = encodeURIComponent(post.slug || post.friendlySlug || post.id || "");
+  return `/blog/${categoria}/${slug}`;
+}
+
 export default function BlogHome() {
+  const postsArray = useMemo(() => safeArray(articlesData), [articlesData]);
 
-  // Flatten articles (works whether user exports array or object)
-  const postsArray = useMemo(() => {
-    if (!articlesData) return [];
-    return Array.isArray(articlesData) ? articlesData : Object.values(articlesData);
-  }, []);
-
-  // Ordena por data (mais recentes primeiro)
   const recent = useMemo(() => {
     return postsArray
       .slice()
-      .sort((a, b) => {
-        const da = new Date(a.date || a.datePublished || 0).getTime();
-        const db = new Date(b.date || b.datePublished || 0).getTime();
-        return db - da;
-      })
+      .sort((a, b) => safeDate(b.date || b.datePublished) - safeDate(a.date || a.datePublished))
       .slice(0, 9);
   }, [postsArray]);
 
   const popular = useMemo(() => {
-    return postsArray
-      .filter(p => p.featured || p.destaque || p.popular)
-      .slice(0, 6);
+    return postsArray.filter(p => p.featured || p.destaque || p.popular).slice(0, 6);
   }, [postsArray]);
 
-
-const carouselItems = useMemo(() => {
-  
-  // produtos
-  const produtos = (productsData.products || []).map(p => ({
-    title: p.name,
-    image: p.image,
-    link: `/produtos/${p.slug || p.id}`
-  }));
-
-  // receitas (vem agrupadas por categoria dentro de um objeto)
-  const recs = Object.values(receitas || {})
-    .flat()
-    .map(r => ({
-      title: r.titulo,
-      image: r.imagem,
-      link: `/receitas/${r.slug}`
+  const carouselItems = useMemo(() => {
+    const produtos = safeArray(productsData?.products).map(p => ({
+      title: p.name,
+      image: p.image || "/placeholder-16x9.png",
+      link: `/produtos/${encodeURIComponent(p.slug || p.id)}`,
     }));
 
-  // viagens
-  const viagens = Object.values(viagensData || {})
-    .flat()
-    .map(v => ({
-      title: v.title,
-      image: v.image,
-      link: `/viagens/${v.slug}`
-    }));
+    const recs = safeArray(receitas)
+      .flat()
+      .map(r => ({ title: r.titulo, image: r.imagem || r.image || "/placeholder-16x9.png", link: `/receitas/${encodeURIComponent(r.slug)}` }));
 
-  // combina tudo
-  return [...produtos, ...recs, ...viagens];
+    const viagens = safeArray(viagensData)
+      .flat()
+      .map(v => ({ title: v.title, image: v.image || "/placeholder-16x9.png", link: `/viagens/${encodeURIComponent(v.slug)}` }));
 
-}, []);
+    return [...produtos, ...recs, ...viagens].slice(0, 18);
+  }, []);
 
   return (
     <>
       <Navbar />
       <NavbarSpacer />
       <Wrapper>
-        <Hero>
+        <Hero aria-labelledby="hero-title" role="region">
           <HeroText>
-            <h1>Como está a sua saúde hoje?</h1>
+            <h1 id="hero-title">Como está a sua saúde hoje?</h1>
             <p>Conteúdo confiável sobre corpo, mente e hábitos para uma vida com mais energia e bem-estar.</p>
           </HeroText>
-          <HeroImg src="https://images.pexels.com/photos/3791134/pexels-photo-3791134.jpeg" alt="Saúde e bem-estar" />
+
+          {/* Use <img loading="lazy"> e alt fallback */}
+          <HeroImg
+            src="https://images.pexels.com/photos/3791134/pexels-photo-3791134.jpeg"
+            alt="Pessoa praticando exercício ao ar livre — saúde e bem-estar"
+            loading="lazy"
+          />
         </Hero>
 
         <SectionTitle>Categorias</SectionTitle>
-      <Swiper
-        modules={[Navigation, Autoplay]}
-        navigation
-        loop={true}
-        freeMode={true}                // permite movimento livre, sem "snap" rígido
-        freeModeMomentum={false}       // remove momentum exagerado
-        autoplay={{
-          delay: 1,                    // pequeno delay para manter movimento contínuo
-          disableOnInteraction: false,
-          waitForTransition: false
-        }}
-        speed={4500}                   // controla a velocidade do deslize
-        spaceBetween={20}
-        slidesPerView={3}
-        grabCursor={true}
-        breakpoints={{
-          320: { slidesPerView: 1.1 },
-          640: { slidesPerView: 1.2 },
-          768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 }
-        }}
-        style={{ paddingBottom: "1.25rem", marginBottom: "1.5rem" }}
-      >
-      {categories.map(c => (
-        <SwiperSlide key={c.id}>
-          <CatCard to={`/blog/${c.id}`}>
-            <CatThumb style={{ backgroundImage: `url(${c.image})` }} />
-            <CatBody>
-              <h4>{c.name}</h4>
-              <p>Conteúdos sobre {c.name.toLowerCase()} para seu bem-estar.</p>
-            </CatBody>
-          </CatCard>
-        </SwiperSlide>
-      ))}
-      </Swiper>
-
+        <Swiper
+          modules={[Navigation, Autoplay, A11y]}
+          navigation
+          loop
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          speed={800}
+          spaceBetween={20}
+          slidesPerView={3}
+          a11y={{ prevSlideMessage: 'Anterior', nextSlideMessage: 'Próximo' }}
+          breakpoints={{
+            320: { slidesPerView: 1.05 },
+            640: { slidesPerView: 1.2 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 }
+          }}
+          style={{ paddingBottom: "1.25rem", marginBottom: "1.5rem" }}
+          aria-label="Carrossel de categorias"
+        >
+          {categories.map(c => (
+            <SwiperSlide key={c.id}>
+              <CatCard to={`/blog/${encodeURIComponent(c.id)}`} aria-label={`Categoria ${c.name}`}>
+                <CatThumb style={{ backgroundImage: `url(${c.image})` }} role="img" aria-label={`${c.name} imagem`} />
+                <CatBody>
+                  <h4>{c.name}</h4>
+                  <p>Conteúdos sobre {c.name.toLowerCase()} para seu bem-estar.</p>
+                </CatBody>
+              </CatCard>
+            </SwiperSlide>
+          ))}
+        </Swiper>
 
         <TwoColumnRow>
-
-          {/* Artigos Recentes */}
-          <Column flex="2">
-            <SectionTitle>Artigos Recentes</SectionTitle>
+          <Column flex="2" as="section" aria-labelledby="recent-title">
+            <SectionTitle id="recent-title">Artigos Recentes</SectionTitle>
             <Grid>
               {recent.map((post) => (
                 <ArticleCard
                   key={post.slug || post.id}
                   item={post}
-                  to={`/blog/${post.category || post.categoria || "geral"}/${post.slug || post.friendlySlug || post.id}`}
+                  to={buildPostLink(post)}
                 />
               ))}
             </Grid>
-
           </Column>
 
-          <Column flex="1">
+          <Column flex="1" as="aside" aria-labelledby="side-title">
             <SideBox>
               <FraseDoDia />
 
-              <h3>Populares</h3>
+              <h3 id="side-title">Populares</h3>
               <PopularList>
                 {popular.length ? popular.map(p => (
-                  <SmallPopular key={p.slug || p.id} to={`/blog/${p.category || p.categoria || "geral"}/${p.slug || p.friendlySlug || p.id}`}>
-                    <img src={p.image || p.imagem} alt={p.title || p.titulo} />
+                  <SmallPopular
+                    key={p.slug || p.id}
+                    to={buildPostLink(p)}
+                    aria-label={`Abrir artigo ${p.title || p.titulo}`}
+                  >
+                    <img
+                      src={safeImage(p)}
+                      alt={p.title || p.titulo || "Artigo popular"}
+                      loading="lazy"
+                      width={72}
+                      height={60}
+                    />
                     <div>
                       <strong>{p.title || p.titulo}</strong>
-                      <span>{(p.excerpt || p.descricao || p.description || "").slice(0, 90)}...</span>
+                      <span>{(p.excerpt || p.descricao || p.description || "").slice(0, 90)}{(p.excerpt || p.descricao || p.description || "").length > 90 ? "…" : ""}</span>
                     </div>
                   </SmallPopular>
                 )) : <Empty>Sem artigos em destaque</Empty>}
@@ -186,9 +183,9 @@ const carouselItems = useMemo(() => {
 
               <h3>Receitas recomendadas</h3>
               <MiniRecipes>
-                {Object.values(receitas || {}).flat().slice(0, 3).map(r => (
-                  <MiniRecipe key={r.slug} to={`/receitas/${r.slug}`}>
-                    <img src={r.imagem || r.image} alt={r.titulo || r.title} />
+                {safeArray(receitas).flat().slice(0, 3).map(r => (
+                  <MiniRecipe key={r.slug} to={`/receitas/${encodeURIComponent(r.slug)}`}>
+                    <img src={r.imagem || r.image || "/placeholder-1x1.png"} alt={r.titulo || r.title} loading="lazy" />
                     <div>
                       <strong>{r.titulo}</strong>
                       <small>{r.tempo || ""}</small>
@@ -199,34 +196,31 @@ const carouselItems = useMemo(() => {
 
               <Divider />
 
-            <MiniQuizSaude />
+              <MiniQuizSaude />
             </SideBox>
           </Column>
-
-          
         </TwoColumnRow>
-          <CarouselFinal items={carouselItems} />
+
+        <CarouselFinal items={carouselItems} />
 
         <ContinueSection>
           <ContinueExploring
-              posts={postsArray}
-              receitas={Object.values(receitas || {}).flat()}
-              products={productsData.products}
-              trips={viagensData}
-            />              
-              <TagsNewsletterRow>
-              <TagsCloud articles={postsArray} />
-              <NewsletterCTA />
-            </TagsNewsletterRow>
-          </ContinueSection>
-
+            posts={postsArray}
+            receitas={safeArray(receitas).flat()}
+            products={safeArray(productsData?.products)}
+            trips={safeArray(viagensData)}
+          />
+          <TagsNewsletterRow>
+            <TagsCloud articles={postsArray} />
+            <NewsletterCTA />
+          </TagsNewsletterRow>
+        </ContinueSection>
       </Wrapper>
 
       <Footer />
     </>
   );
 }
-
 /* ---------------- Styled ---------------- */
 
 const Hero = styled.section`
@@ -238,7 +232,6 @@ const Hero = styled.section`
   padding: 1.6rem;
   background: ${({ theme }) => theme.gradients.soft};
   border-radius: ${({ theme }) => theme.radius.lg};
-  
   @media (max-width: 980px) {
     grid-template-columns: 1fr;
     text-align: center;
@@ -246,30 +239,30 @@ const Hero = styled.section`
 `;
 
 const HeroText = styled.div`
-  h1 { 
-    font-size: 2.4rem; 
-    margin-bottom: 0.6rem; 
-    color: ${({ theme }) => theme.colors.primaryDark}; 
-    font-family: ${({ theme }) => theme.fonts.heading}; 
+  h1 {
+    font-size: 2.4rem;
+    margin-bottom: 0.6rem;
+    color: ${({ theme }) => theme.colors.primaryDark};
+    font-family: ${({ theme }) => theme.fonts.heading};
   }
-  p { 
-    font-size: 1.05rem; 
-    color: ${({ theme }) => theme.colors.text}; 
-    margin-bottom: 1rem; 
+  p {
+    font-size: 1.05rem;
+    color: ${({ theme }) => theme.colors.text};
+    margin-bottom: 1rem;
   }
 `;
 
-
 const HeroImg = styled.img`
   width: 100%;
-  height: 260px;
+  max-height: 320px;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
   border-radius: ${({ theme }) => theme.radius.md};
   box-shadow: ${({ theme }) => theme.shadow.sm};
-  
-  @media (max-width: 980px) { 
-    margin-top: 1rem; 
-    height: 220px; 
+  @media (max-width: 980px) {
+    margin-top: 1rem;
+    max-height: 220px;
   }
 `;
 
@@ -336,13 +329,15 @@ const Grid = styled.div`
   gap: 1rem;
   grid-template-columns: repeat(3, 1fr);
   margin-top: 0.6rem;
+  grid-auto-rows: 1fr;
 
-  @media (max-width: 1100px) { 
-    grid-template-columns: repeat(2, 1fr); 
+  /* garante que cada filho preencha a célula */
+  & > a, & > article, & > div {
+    height: 100%;
   }
-  @media (max-width: 720px) { 
-    grid-template-columns: 1fr; 
-  }
+
+  @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 720px) { grid-template-columns: 1fr; }
 `;
 
 const SideBox = styled.aside`
