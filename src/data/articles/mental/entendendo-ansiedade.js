@@ -7,62 +7,89 @@ const article = {
   category: "mental",
   subcategory: "entendendo-ansiedade",
   content: `
-    <p>Ansiedade faz parte da vida moderna. Sentir ansiedade diante do novo, do incerto ou do desconhecido é natural e não significa fraqueza.</p>
-    <p>O problema surge quando ela se torna constante, intensa ou aparece sem motivo claro. Nesses casos, a emoção pode interferir no sono, no foco, no humor e no bem-estar.</p>
-    <p>Entender o que sentimos é essencial para recuperar a leveza. Informação traz clareza. Clareza traz calma.</p>
-    <p>Se deseja aprofundar, este <a href="https://amzn.to/3Kj8LoW" target="_blank">livro sobre ansiedade</a> pode ajudar a identificar padrões e gatilhos emocionais.</p>
-    
+   <p>A ansiedade faz parte da vida moderna, e sentir isso não significa fraqueza. Ela surge diante do novo, do incerto e de qualquer situação que exija energia emocional. O problema aparece quando ela se torna frequente, intensa ou sem motivo aparente, afetando sono, foco, humor e bem-estar.</p>
+
+    <p>Entender o que sentimos é um passo poderoso para recuperar a leveza. A informação traz clareza, e a clareza traz calma. Se você deseja aprofundar esse processo, este <a href="https://amzn.to/3Kj8LoW" target="_blank">livro sobre ansiedade</a> pode ajudar a reconhecer padrões, gatilhos emocionais e formas saudáveis de acolher suas emoções.</p>
+
     <h2>O que é ansiedade?</h2>
-    <p>Ansiedade é uma resposta natural do corpo diante de algo percebido como ameaça. Ajuda você a agir, reagir ou se defender, porém, se acontece sem necessidade ou é exagerada, pode prejudicar a saúde e a rotina.</p>
-    <p>A diferença entre ansiedade normal e excessiva é fundamental para interpretar seus próprios sinais.</p>
+    <p>A ansiedade é uma resposta natural do corpo a situações que ele interpreta como ameaça. É um mecanismo de proteção que prepara você para agir, reagir ou se defender. No entanto, quando essa resposta aparece sem necessidade ou de forma exagerada, ela deixa de proteger e passa a prejudicar.</p>
 
-    <h2>Sintomas comuns de ansiedade</h2>
+    <p>Compreender a diferença entre ansiedade normal e ansiedade excessiva é essencial para identificar seus próprios sinais e buscar o autocuidado adequado.</p>
+
+    <h2>Sintomas comuns da ansiedade</h2>
+    <p>A ansiedade não se manifesta apenas nos pensamentos — o corpo também envia sinais claros, que muitas vezes passam despercebidos.</p>
+
     <ul>
-      <li>Nervosismo ou inquietação</li>
-      <li>Falta de concentração</li>
-      <li>Sensação persistente de algo ruim</li>
-      <li>Cansaço sem explicação, músculos rígidos</li>
+      <li>Inquietação e tensão muscular</li>
+      <li>Dificuldade para manter o foco</li>
+      <li>Sensação persistente de que algo ruim vai acontecer</li>
+      <li>Cansaço sem explicação e dores no corpo</li>
       <li>Noites mal dormidas</li>
-      <li>Palpitações, sudorese, respiração acelerada</li>
-      <li>Irritabilidade e pensamentos rápidos</li>
-      <li>Alterações no intestino ou estômago</li>
+      <li>Palpitações, sudorese e respiração acelerada</li>
+      <li>Irritabilidade e pensamentos acelerados</li>
+      <li>Alterações no intestino e no estômago</li>
     </ul>
-    <p>Esses sintomas podem surgir isoladamente ou durante uma crise de ansiedade. Observar em quais situações aparecem ajuda no autocuidado.</p>
 
-    <h2>Como identificar uma crise de ansiedade</h2>
+    <p>Observar quando esses sintomas surgem ajuda a criar consciência corporal e é uma prática essencial no processo de autocuidado.</p>
+
+    <h2>Como uma crise de ansiedade se manifesta</h2>
+    <p>A crise de ansiedade é um pico de tensão física e emocional. Mesmo sem perigo real, o corpo libera adrenalina e entra em “modo de sobrevivência”. Isso gera sintomas intensos que assustam, mas não representam risco real.</p>
+
     <ul>
       <li>Coração acelerado</li>
       <li>Respiração curta</li>
       <li>Tremores</li>
       <li>Sensação de sufocamento</li>
-      <li>Calor ou formigamento</li>
+      <li>Formigamento ou calor</li>
       <li>Pensamentos catastróficos</li>
       <li>Sensação de perda de controle</li>
     </ul>
-    <p>Nesses momentos, o corpo entra em modo de sobrevivência devido à liberação de adrenalina, mesmo sem perigo real. É assustador, mas não é perigoso.</p>
-    <p>Reconhecer isso reduz o medo do sintoma. Um <a href="https://amzn.to/3KoM033" target="_blank">diário emocional</a> pode ajudar a identificar gatilhos e padrões.</p>
-    
-    <h2>Como controlar e cuidar da ansiedade</h2>
-    <ol>
-      <li>Pratique respiração profunda e consciente para acalmar o sistema nervoso.</li>
-      <li>Inclua movimento na rotina: caminhadas, alongamentos ou qualquer atividade física ajudam a liberar bem-estar.</li>
-      <li>Insira rituais de presença, como velas aromáticas ou sprays calmantes. <a href="https://amzn.to/3K7moYu" target="_blank">Kit de aromaterapia</a> pode transformar momentos em refúgio emocional.</li>
-      <li>Terapia cognitivo-comportamental é eficaz. <a href="https://amzn.to/48x9MTE" target="_blank">Livro sobre TCC aplicada à ansiedade</a> explica como pensamentos influenciam emoções.</li>
-      <li>Consulte psicólogo ou psiquiatra caso os sintomas afetem sua rotina. Em algumas situações, medicação pode ser necessária, sempre com orientação médica.</li>
-    </ol>
-    <p>Outras ferramentas para o autocuidado incluem: <a href="https://amzn.to/3Kj8LoW" target="_blank">livros</a>, <a href="https://amzn.to/3XOvQmE" target="_blank">mindfulness</a>, <a href="https://amzn.to/49CQAVN" target="_blank">spray de aromaterapia</a> e <a href="https://amzn.to/480DEb1" target="_blank">velas para o lar</a>.</p>
-    
-    <blockquote>
-      <p><em>Gerenciar a ansiedade não é eliminar a emoção, mas aprender a lidar com ela de forma gentil, consciente e equilibrada.</em></p>
-    </blockquote>
-    <p>Com informação, prática e apoio, é possível viver com mais leveza e presença. Você não está sozinho: cada passo já é um avanço importante.</p>
-    <p>Este conteúdo é informativo e não substitui acompanhamento médico. Procure um profissional caso os sintomas dificultem sua rotina, sono, trabalho ou relacionamentos.</p>
+
+    <p>Apesar de desconfortável, a crise tem começo, meio e fim. Entender isso ajuda a diminuir o medo e a lidar melhor com o momento. Para acompanhar seus sinais, um <a href="https://amzn.to/3KoM033" target="_blank">diário emocional</a> pode ser muito útil.</p>
+
+    <h2>Como acalmar a mente e cuidar do corpo</h2>
+    <p>Algumas práticas simples ajudam a reduzir os níveis de ansiedade e trazer mais equilíbrio ao dia a dia.</p>
+
+    <h3>1. Respiração consciente</h3>
+    <p>A respiração profunda regula o sistema nervoso e reduz o cortisol em poucos minutos. Se você não sabe por onde começar, este <a href="https://amzn.to/3XOvQmE" target="_blank">livro de mindfulness para iniciantes</a> traz exercícios simples e eficazes.</p>
+
+    <h3>2. Movimento diário</h3>
+    <p>Exercícios leves como caminhadas ou alongamentos liberam serotonina e ajudam a estabilizar o humor. Não é sobre intensidade, mas consistência.</p>
+
+    <h3>3. Rituais de presença</h3>
+    <p>Pequenos rituais ao longo do dia criam pausas mentais. Um <a href="https://amzn.to/3K7moYu" target="_blank">kit de aromaterapia</a>, <a href="https://amzn.to/49CQAVN" target="_blank">spray calmante</a> ou <a href="https://amzn.to/480DEb1" target="_blank">velas aromáticas</a> podem transformar minutos em bem-estar.</p>
+
+    <h3>4. Terapia e apoio profissional</h3>
+    <p>A Terapia Cognitivo-Comportamental (TCC) é uma das abordagens mais eficazes para a ansiedade. Para entender melhor como ela funciona, este <a href="https://amzn.to/48x9MTE" target="_blank">livro de TCC aplicada à ansiedade</a> explica, de forma clara, como os pensamentos influenciam emoções e comportamentos.</p>
+
+    <p>Em alguns casos, medicamentos podem ser necessários — sempre com orientação profissional.</p>
+
+    <h2>Ferramentas úteis para autocuidado</h2>
+    <ul>
+      <li><a href="https://amzn.to/3KoM033" target="_blank">Diário emocional para identificar gatilhos</a></li>
+      <li><a href="https://amzn.to/3Kj8LoW" target="_blank">Livro sobre ansiedade com técnicas práticas</a></li>
+      <li><a href="https://amzn.to/3XOvQmE" target="_blank">Mindfulness para iniciantes</a></li>
+      <li><a href="https://amzn.to/3K7moYu" target="_blank">Kit de aromaterapia</a></li>
+      <li><a href="https://amzn.to/49CQAVN" target="_blank">Spray calmante</a></li>
+      <li><a href="https://amzn.to/480DEb1" target="_blank">Velas aromáticas</a></li>
+      <li><a href="https://amzn.to/48x9MTE" target="_blank">Livro de TCC para reorganizar pensamentos</a></li>
+    </ul>
+
+    <h2>Conclusão</h2>
+    <p>Gerenciar a ansiedade não significa eliminá-la, mas aprender a lidar com ela de forma gentil e consciente. Com informação, práticas constantes e apoio quando necessário, é totalmente possível viver com mais leveza e presença.</p>
+
+    <p>Lembre-se: você não está sozinho. E cada pequeno passo importa.</p>
+
+    <h3>Nota de responsabilidade</h3>
+    <p>Este conteúdo é informativo e não substitui acompanhamento psicológico ou médico. Procure um profissional se os sintomas estiverem afetando sua rotina.</p>
   `,
+
   product: {
     name: "Aparelho de Biofeedback para Ansiedade",
-    description: "Auxilia no controle da ansiedade por meio de exercícios guiados de respiração e relaxamento.",
+    description: "Auxilia no controle da ansiedade com exercícios guiados de respiração e relaxamento.",
     link: "https://amzn.to/3VB7CkR",
     image: "https://m.media-amazon.com/images/I/610qkjE12gL._AC_UL320_.jpg",
   },
 };
+
 export default article;
