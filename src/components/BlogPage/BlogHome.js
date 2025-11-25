@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
+// src/pages/BlogHome.jsx
+import React, { useMemo, useRef } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import NavbarSpacer from "../../components/Navbar/NavbarSpacer";
 import Footer from "../../components/Footer/Footer";
@@ -13,7 +14,6 @@ import TagsCloud from "../../components/BlogPage/TagsCloud";
 import NewsletterCTA from "../../components/BlogPage/NewsletterCTA";
 import viagensData from "../../data/viagens/index";
 import productsData from "../../data/products";
-import CarouselFinal from "../../components/BlogPage/CarouselFinal";
 import MiniQuizSaude from "../../components/BlogPage/MiniQuizSaude";
 import FraseDoDia from "./FraseDoDia";
 
@@ -21,6 +21,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay, A11y } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
+
+/* ---------------- helpers ---------------- */
 
 const categories = [
   { id: "fisica", name: "Física", image: "https://images.pexels.com/photos/1552249/pexels-photo-1552249.jpeg" },
@@ -41,7 +43,7 @@ function safeDate(d) {
 }
 
 function safeImage(item) {
-  return item?.image || item?.imagem || item?.thumb || "/placeholder-16x9.png";
+  return item?.image || item?.imagem || item?.thumb || item?.imagem || "/placeholder-16x9.png";
 }
 
 function buildPostLink(post) {
@@ -49,6 +51,74 @@ function buildPostLink(post) {
   const slug = encodeURIComponent(post.slug || post.friendlySlug || post.id || "");
   return `/blog/${categoria}/${slug}`;
 }
+
+/* ---------------- UnifiedCarousel (novo, premium) ----------------
+   Recebe items com forma:
+   { type: 'article' | 'receita' | 'product' | 'trip', title, image, link, excerpt?, badge? , meta? }
+*/
+function UnifiedCarousel({ items = [] }) {
+  const navigate = useNavigate();
+  const swiperRef = useRef(null);
+
+  if (!items || items.length === 0) return null;
+
+  const slidePrev = () => { if (swiperRef.current) swiperRef.current.slidePrev(); };
+  const slideNext = () => { if (swiperRef.current) swiperRef.current.slideNext(); };
+
+  return (
+    <UnifiedWrapper aria-label="Carrossel de conteúdos recomendados">
+      <UnifiedHeader>
+        <h2>Em destaque</h2>
+        <p>Conteúdos, receitas e produtos selecionados para você.</p>
+      </UnifiedHeader>
+
+      <Swiper
+        modules={[Navigation, Autoplay, A11y]}
+        // NÃO passar `navigation` para evitar setas default do Swiper
+        loop
+        autoplay={{ delay: 3500, disableOnInteraction: false }}
+        speed={600}
+        spaceBetween={18}
+        slidesPerView={3}
+        onSwiper={(s) => (swiperRef.current = s)}
+        breakpoints={{
+          320: { slidesPerView: 1.05 },
+          640: { slidesPerView: 1.35 },
+          900: { slidesPerView: 2 },
+          1200: { slidesPerView: 3 }
+        }}
+        a11y={{ prevSlideMessage: "Anterior", nextSlideMessage: "Próximo" }}
+        style={{ paddingBottom: 12, position: "relative" }}
+      >
+        {items.map((it, i) => (
+          <SwiperSlide key={`${it.type}-${it.title}-${i}`}>
+            <CardLink to={it.link} aria-label={`${it.type} - ${it.title}`} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+              <Card>
+                <Thumb role="img" aria-label={it.title} style={{ backgroundImage: `url(${safeImage(it)})` }} />
+                <CardBody>
+                  <Badge type={it.type}>{it.badge || (it.type === "article" ? "Artigo" : it.type === "receita" ? "Receita" : it.type === "product" ? "Produto" : "Viagem")}</Badge>
+                  <CardTitle>{it.title}</CardTitle>
+                  {it.excerpt ? <CardExcerpt>{it.excerpt}</CardExcerpt> : (it.meta ? <CardMeta>{it.meta}</CardMeta> : null)}
+                  <CardFooter>
+                    <ReadMore>Ver conteúdo →</ReadMore>
+                    {it.type === "product" && it.price ? <Price>{it.price}</Price> : null}
+                  </CardFooter>
+                </CardBody>
+              </Card>
+            </CardLink>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      {/* setas customizadas */}
+      <NavButtonLeft onClick={slidePrev} aria-label="Anterior" />
+      <NavButtonRight onClick={slideNext} aria-label="Próximo" />
+    </UnifiedWrapper>
+  );
+}
+
+
+/* ---------------- main page component ---------------- */
 
 export default function BlogHome() {
   const postsArray = useMemo(() => safeArray(articlesData), [articlesData]);
@@ -64,23 +134,69 @@ export default function BlogHome() {
     return postsArray.filter(p => p.featured || p.destaque || p.popular).slice(0, 6);
   }, [postsArray]);
 
+  // build unified carousel items with type metadata
   const carouselItems = useMemo(() => {
     const produtos = safeArray(productsData?.products).map(p => ({
+      type: "product",
       title: p.name,
       image: p.image || "/placeholder-16x9.png",
       link: `/produtos/${encodeURIComponent(p.slug || p.id)}`,
+      excerpt: p.summary || p.description || "",
+      badge: "Produto",
+      price: p.price ? `R$ ${p.price}` : null,
     }));
 
-    const recs = safeArray(receitas)
-      .flat()
-      .map(r => ({ title: r.titulo, image: r.imagem || r.image || "/placeholder-16x9.png", link: `/receitas/${encodeURIComponent(r.slug)}` }));
+    const recs = (Array.isArray(receitas) ? receitas.flat() : [].concat(...Object.values(receitas || {})))
+      .map(r => ({
+        type: "receita",
+        title: r.titulo || r.title || "Receita",
+        image: r.imagem || r.image || "/placeholder-16x9.png",
+        link: `/receitas/${encodeURIComponent(r.slug)}`,
+        excerpt: (r.descricaoCurta || r.descricao || "").slice(0, 120),
+        badge: r.categoria || "Receita",
+        meta: r.tempo ? `${r.tempo}` : undefined,
+      }));
 
-    const viagens = safeArray(viagensData)
-      .flat()
-      .map(v => ({ title: v.title, image: v.image || "/placeholder-16x9.png", link: `/viagens/${encodeURIComponent(v.slug)}` }));
+    // <-- Aqui corrigido: garantimos que viagensData seja "achatado" caso seja objeto com arrays
+    const viagensArr = safeArray(viagensData).flat();
+    const viagens = viagensArr.map(v => ({
+      type: "trip",
+      title: v.title || v.nome || v.titulo,
+      image: v.image || v.imagem || "/placeholder-16x9.png",
+      link: `/viagens/${encodeURIComponent(v.slug || v.id || v.nome || "")}`,
+      excerpt: (v.description || v.excerpt || "").slice(0, 110),
+      badge: "Viagem",
+    }));
 
-    return [...produtos, ...recs, ...viagens].slice(0, 18);
-  }, []);
+    const artigos = safeArray(articlesData)
+      .slice()
+      .map(a => ({
+        type: "article",
+        title: a.title || a.titulo || "Artigo",
+        image: safeImage(a),
+        link: buildPostLink(a),
+        excerpt: (a.excerpt || a.descricao || a.description || "").slice(0, 120),
+        badge: a.category || a.categoria || "Artigo",
+      }));
+
+    const mixed = [
+      ...artigos.slice(0, 8),
+      ...recs.slice(0, 6),
+      ...produtos.slice(0, 4),
+      ...viagens.slice(0, 4)
+    ];
+
+    const seen = new Set();
+    const dedup = mixed.filter(it => {
+      const key = it.link || it.title;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    return dedup.slice(0, 18);
+  }, [articlesData, receitas, productsData, viagensData]);
+
 
   return (
     <>
@@ -93,7 +209,6 @@ export default function BlogHome() {
             <p>Conteúdo confiável sobre corpo, mente e hábitos para uma vida com mais energia e bem-estar.</p>
           </HeroText>
 
-          {/* Use <img loading="lazy"> e alt fallback */}
           <HeroImg
             src="https://images.pexels.com/photos/3791134/pexels-photo-3791134.jpeg"
             alt="Pessoa praticando exercício ao ar livre — saúde e bem-estar"
@@ -102,36 +217,36 @@ export default function BlogHome() {
         </Hero>
 
         <SectionTitle>Categorias</SectionTitle>
-        <Swiper
+                <Swiper
           modules={[Navigation, Autoplay, A11y]}
-          navigation
           loop
+          centeredSlides
           autoplay={{ delay: 3000, disableOnInteraction: false }}
-          speed={800}
-          spaceBetween={20}
-          slidesPerView={3}
-          a11y={{ prevSlideMessage: 'Anterior', nextSlideMessage: 'Próximo' }}
+          speed={700}
+          spaceBetween={18}
+          slidesPerView={"auto"}
           breakpoints={{
             320: { slidesPerView: 1.05 },
-            640: { slidesPerView: 1.2 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 }
+            640: { slidesPerView: 1.4 },
+            900: { slidesPerView: 2.2 },
+            1200: { slidesPerView: 3 }
           }}
           style={{ paddingBottom: "1.25rem", marginBottom: "1.5rem" }}
           aria-label="Carrossel de categorias"
         >
           {categories.map(c => (
-            <SwiperSlide key={c.id}>
+            <SwiperSlide key={c.id} style={{ width: 320 }}>
               <CatCard to={`/blog/${encodeURIComponent(c.id)}`} aria-label={`Categoria ${c.name}`}>
                 <CatThumb style={{ backgroundImage: `url(${c.image})` }} role="img" aria-label={`${c.name} imagem`} />
-                <CatBody>
+                <CatOverlay>
                   <h4>{c.name}</h4>
                   <p>Conteúdos sobre {c.name.toLowerCase()} para seu bem-estar.</p>
-                </CatBody>
+                </CatOverlay>
               </CatCard>
             </SwiperSlide>
           ))}
         </Swiper>
+
 
         <TwoColumnRow>
           <Column flex="2" as="section" aria-labelledby="recent-title">
@@ -201,7 +316,8 @@ export default function BlogHome() {
           </Column>
         </TwoColumnRow>
 
-        <CarouselFinal items={carouselItems} />
+        {/* ----- NOVO CAROUSEL UNIFICADO (substitui CarouselFinal) ----- */}
+        <UnifiedCarousel items={carouselItems} />
 
         <ContinueSection>
           <ContinueExploring
@@ -221,7 +337,8 @@ export default function BlogHome() {
     </>
   );
 }
-/* ---------------- Styled ---------------- */
+
+/* ---------------- Styled (mantive a maior parte do seu original + novos estilos pro unified carousel) ---------------- */
 
 const Hero = styled.section`
   display: grid;
@@ -273,6 +390,7 @@ const SectionTitle = styled.h2`
   text-align: center;
 `;
 
+/* Category cards (mantidos) */
 const CatCard = styled(Link)`
   display: flex;
   flex-direction: column;
@@ -287,13 +405,6 @@ const CatCard = styled(Link)`
   height: 100%;
 `;
 
-const CatThumb = styled.div`
-  width: 100%;
-  height: 140px;
-  background-size: cover;
-  background-position: center;
-  border-radius: 10px;
-`;
 
 const CatBody = styled.div`
   h4 { 
@@ -309,6 +420,7 @@ const CatBody = styled.div`
   }
 `;
 
+/* Layout columns (mantidos) */
 const TwoColumnRow = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -331,10 +443,7 @@ const Grid = styled.div`
   margin-top: 0.6rem;
   grid-auto-rows: 1fr;
 
-  /* garante que cada filho preencha a célula */
-  & > a, & > article, & > div {
-    height: 100%;
-  }
+  & > a, & > article, & > div { height: 100%; }
 
   @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
   @media (max-width: 720px) { grid-template-columns: 1fr; }
@@ -366,19 +475,9 @@ const SmallPopular = styled(Link)`
     border-radius: 8px; 
     flex-shrink: 0; 
   }
-  div { 
-    display: flex; 
-    flex-direction: column; 
-  }
-  strong { 
-    font-size: 0.95rem; 
-    color: ${({ theme }) => theme.colors.primaryDark}; 
-  }
-  span { 
-    font-size: 0.85rem; 
-    color: ${({ theme }) => theme.colors.text}; 
-    opacity: 0.9; 
-  }
+  div { display: flex; flex-direction: column; }
+  strong { font-size: 0.95rem; color: ${({ theme }) => theme.colors.primaryDark}; }
+  span { font-size: 0.85rem; color: ${({ theme }) => theme.colors.text}; opacity: 0.9; }
 `;
 
 const MiniRecipes = styled.div`
@@ -394,20 +493,9 @@ const MiniRecipe = styled(Link)`
   align-items: center;
   text-decoration: none;
   color: inherit;
-  img { 
-    width: 64px; 
-    height: 56px; 
-    object-fit: cover; 
-    border-radius: 8px; 
-  }
-  strong { 
-    font-size: 0.95rem; 
-    color: ${({ theme }) => theme.colors.primaryDark}; 
-  }
-  small { 
-    font-size: 0.8rem; 
-    color: ${({ theme }) => theme.colors.text}; 
-  }
+  img { width: 64px; height: 56px; object-fit: cover; border-radius: 8px; }
+  strong { font-size: 0.95rem; color: ${({ theme }) => theme.colors.primaryDark}; }
+  small { font-size: 0.8rem; color: ${({ theme }) => theme.colors.text}; }
 `;
 
 const Empty = styled.div`
@@ -433,9 +521,7 @@ const TagsNewsletterRow = styled.div`
   gap: 1rem;
   margin-top: 1.25rem;
 
-  @media (max-width: 980px) { 
-    grid-template-columns: 1fr; 
-  }
+  @media (max-width: 980px) { grid-template-columns: 1fr; }
 `;
 
 const Wrapper = styled.main`
@@ -444,3 +530,171 @@ const Wrapper = styled.main`
   padding: 0 1rem;
 `;
 
+/* ---------------- Styles do UnifiedCarousel (cards) ---------------- */
+
+const UnifiedWrapper = styled.section`
+  margin: 2rem 0;
+`;
+
+const UnifiedHeader = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom: 1rem;
+  h2 { margin: 0; color: ${({ theme }) => theme.colors.primaryDark}; }
+  p { margin: 0; color: ${({ theme }) => theme.colors.secondaryDark}; font-size: .95rem; }
+`;
+
+const CardLink = styled(Link)`
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+`;
+
+const Card = styled.article`
+  background: ${({ theme }) => theme.colors.surface};
+  border-radius: 12px;
+  box-shadow: ${({ theme }) => theme.shadow.sm};
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  transition: transform .18s ease, box-shadow .18s ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: ${({ theme }) => theme.shadow.lg};
+  }
+`;
+
+const Thumb = styled.div`
+  width: 100%;
+  height: 140px;
+  background-size: cover;
+  background-position: center;
+`;
+
+const CardBody = styled.div`
+  padding: 0.9rem 0.9rem 1rem;
+  display:flex;
+  flex-direction:column;
+  gap: 0.5rem;
+`;
+
+const Badge = styled.span`
+  display:inline-block;
+  font-size: 0.75rem;
+  padding: .28rem .5rem;
+  border-radius: 999px;
+  background: ${({ theme, type }) =>
+    type === "product" ? "#FFF3E0" :
+    type === "receita" ? "#E8F6EF" :
+    type === "trip" ? "#E8F0FF" :
+    "#F4F4F4"};
+  color: ${({ theme }) => theme.colors.primaryDark};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  width: fit-content;
+`;
+
+const CardTitle = styled.h4`
+  margin: 0;
+  font-size: 1.02rem;
+  color: ${({ theme }) => theme.colors.primaryDark};
+  line-height: 1.2;
+  min-height: 2.2rem;
+`;
+
+const CardExcerpt = styled.p`
+  margin: 0;
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 0.9rem;
+  opacity: .95;
+  flex: 1 1 auto;
+`;
+
+const CardMeta = styled.div`
+  font-size: 0.85rem;
+  color: ${({ theme }) => theme.colors.secondaryDark};
+`;
+
+const CardFooter = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: .6rem;
+  margin-top: .25rem;
+`;
+
+const ReadMore = styled.span`
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight:600;
+`;
+
+const Price = styled.span`
+  background: ${({ theme }) => theme.colors.surfaceAlt || "#f5f5f5"};
+  padding: .25rem .5rem;
+  border-radius: 6px;
+  font-weight:700;
+  color: ${({ theme }) => theme.colors.primaryDark};
+`;
+
+/* ---------------- end file ---------------- */
+/* ---------- Botões customizados do UnifiedCarousel ---------- */
+const NavButtonBase = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 12;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.primaryDark};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: transform .14s ease, background .14s ease;
+
+  &:hover {
+    transform: translateY(-50%) scale(1.06);
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.surface};
+  }
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;
+
+const NavButtonLeft = styled(NavButtonBase)`
+  left: 6px;
+  &::after { content: "‹"; }
+`;
+
+const NavButtonRight = styled(NavButtonBase)`
+  right: 6px;
+  &::after { content: "›"; }
+`;
+const CatOverlay = styled.div`
+  margin-top: 0.6rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.03) 100%);
+  padding: .6rem;
+  border-radius: 8px;
+  h4 { margin:0; color: ${({ theme }) => theme.colors.primaryDark}; }
+  p { margin:0; font-size:0.9rem; color: ${({ theme }) => theme.colors.secondaryDark}; opacity:0.95; }
+`;
+
+/* melhora visual do CatThumb: adiciona radius e subtle shadow */
+const CatThumb = styled.div`
+  width: 100%;
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  box-shadow: ${({ theme }) => theme.shadow.sm};
+`;

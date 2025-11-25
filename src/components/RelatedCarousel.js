@@ -1,125 +1,155 @@
-import { useState } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import RecipeCard from "./Receitas/RecipeCard";
 
-export default function RelatedCarousel({ viagens, categoria }) {
-  const [index, setIndex] = useState(0);
+export default function RelatedCarousel({ items = [], renderCard }) {
   const navigate = useNavigate();
+  const scrollRef = useRef(null);
 
-  const next = () => setIndex((prev) => (prev + 1) % viagens.length);
-  const prev = () =>
-    setIndex((prev) => (prev - 1 + viagens.length) % viagens.length);
+  if (!items || items.length === 0) return null;
+
+  const scroll = (dir) => {
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const amount = container.clientWidth * 0.8;
+    container.scrollBy({ left: dir === "left" ? -amount : amount, behavior: "smooth" });
+  };
 
   return (
     <Wrapper>
-      <h3>🌍 Você também vai gostar de:</h3>
+      <Title>Você também pode gostar</Title>
 
-      <Carousel>
-        <ArrowButton left onClick={prev}>
-          <ChevronLeft size={28} />
-        </ArrowButton>
+      <CarouselArea>
+        <FadeLeft />
+        <FadeRight />
 
-        <AnimatePresence mode="wait">
-          <Card
-            as={motion.div}
-            key={viagens[index].slug}
-            initial={{ opacity: 0, x: 80 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -80 }}
-            transition={{ duration: 0.5 }}
-            onClick={() =>
-              navigate(`/viagens/${categoria}/${viagens[index].slug}`)
-            }
-          >
-            <img src={viagens[index].image} alt={viagens[index].title} />
-            <h4>{viagens[index].title}</h4>
-            <p>{viagens[index].shortDescription}</p>
-          </Card>
-        </AnimatePresence>
+        <ArrowLeft onClick={() => scroll("left")}>‹</ArrowLeft>
+        <ArrowRight onClick={() => scroll("right")}>›</ArrowRight>
 
-        <ArrowButton onClick={next}>
-          <ChevronRight size={28} />
-        </ArrowButton>
-      </Carousel>
+        <Inner ref={scrollRef}>
+          {items.map((item) => (
+            <Slide key={item.slug || item.id}>
+              <Clickable
+                onClick={() => navigate(`/receitas/${encodeURIComponent(item.slug)}`)}
+              >
+                {renderCard ? renderCard(item) : <RecipeCard recipe={item} />}
+              </Clickable>
+            </Slide>
+          ))}
+        </Inner>
+      </CarouselArea>
     </Wrapper>
   );
 }
 
-const Wrapper = styled.section`
-  margin-top: 3.5rem;
-  padding: 2rem;
+/* ---------------- STYLES ---------------- */
+
+const Wrapper = styled.div`
+  margin: 3rem 0 2rem;
+  position: relative;
+`;
+
+const Title = styled.h3`
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
   text-align: center;
-
-  h3 {
-    font-size: 1.6rem;
-    color: ${({ theme }) => theme.colors.primary};
-    margin-bottom: 1.5rem;
-    font-weight: 700;
-  }
+  color: ${({ theme }) => theme.colors.primaryDark};
 `;
 
-const Carousel = styled.div`
+const CarouselArea = styled.div`
+  position: relative;
+  padding: 0 2rem;
+`;
+
+const Inner = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  gap: 2rem;
-`;
+  gap: 1.2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+  scroll-behavior: smooth;
 
-const Card = styled.div`
-  background: white;
-  border-radius: 18px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  width: 300px;
-  cursor: pointer;
-  text-align: left;
-
-  img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-
-    &:hover {
-      transform: scale(1.05);
-    }
-  }
-
-  h4 {
-    margin: 1rem;
-    color: #222;
-    font-size: 1.1rem;
-  }
-
-  p {
-    margin: 0 1rem 1.5rem;
-    color: #555;
-    font-size: 0.9rem;
+  /* remove scrollbars visualmente */
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 `;
 
-const ArrowButton = styled.button`
-  position: relative;
-  background: ${({ theme }) => theme.colors.primary};
-  color: white;
+const Slide = styled.div`
+  min-width: 260px;
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+`;
+
+const Clickable = styled.button`
+  background: none;
   border: none;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
+  padding: 0;
+  width: 100%;
+  text-align: left;
   cursor: pointer;
+`;
+
+/* --- Fade nas laterais para "profissional" --- */
+const FadeLeft = styled.div`
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(to right, ${({ theme }) => theme.colors.background} 40%, transparent);
+`;
+
+const FadeRight = styled(FadeLeft)`
+  left: auto;
+  right: 0;
+  background: linear-gradient(to left, ${({ theme }) => theme.colors.background} 40%, transparent);
+`;
+
+/* --- Setas premium --- */
+const ArrowBase = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+
+  background: ${({ theme }) => theme.colors.surface};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  color: ${({ theme }) => theme.colors.primaryDark};
+
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.3s;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  backdrop-filter: blur(6px);
+
+  transition: all 0.2s ease;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.secondary};
-    transform: scale(1.05);
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.surface};
+    transform: translateY(-50%) scale(1.07);
   }
 
-  ${({ left }) => (left ? `order: -1;` : `order: 1;`)}
+  @media (max-width: 700px) {
+    display: none;
+  }
+`;
+
+const ArrowLeft = styled(ArrowBase)`
+  left: 0;
+`;
+
+const ArrowRight = styled(ArrowBase)`
+  right: 0;
 `;

@@ -1,13 +1,25 @@
+// src/components/Receitas/RecipeGrid.jsx
+import React from "react";
+import styled from "styled-components";
 import RecipeCard from "./RecipeCard";
 
-const RecipeGrid = ({ receitas }) => {
+export default function RecipeGrid({ receitas = [] }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 py-10 max-w-6xl">
+    <Grid role="list">
       {receitas.map((r) => (
-        <RecipeCard key={r.slug} receita={r} />
+        <Item key={r.slug} role="listitem">
+          <RecipeCard receita={r} />
+        </Item>
       ))}
-    </div>
+    </Grid>
   );
-};
+}
 
-export default RecipeGrid;
+const Grid = styled.div`
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-bottom: 2rem;
+`;
+
+const Item = styled.div``;

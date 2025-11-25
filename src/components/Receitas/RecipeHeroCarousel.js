@@ -8,7 +8,6 @@ const CarouselWrapper = styled.div`
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  border-radius: 32px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   margin-bottom: 80px;
 `;
