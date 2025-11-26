@@ -1,34 +1,75 @@
-import React, { useState } from "react";
+// src/pages/ProductsPage.jsx
+import React, { useMemo, useState } from "react";
 import styled, { keyframes, css } from "styled-components";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import ProductCard from "../ProductCard/ProductCard";
 import productsData from "../../data/products";
 
-// Animação fade-in para os cards
+// Fade in up animation for product cards
 const fadeInUp = keyframes`
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 `;
 
-// Wrapper animado para cada card
 const AnimatedCard = styled.div`
   opacity: 0;
-  animation: ${css`${fadeInUp} 0.5s forwards`};
+  animation: ${css`${fadeInUp} 420ms forwards`};
   animation-delay: ${props => props.delay || 0}s;
 `;
 
+/* ---------------- Page Component ---------------- */
+
 export default function ProductsPage() {
-  const todasCategorias = productsData.categories;
-  const todosProdutos = productsData.products;
+  const todasCategorias = productsData?.categories || [];
+  const todosProdutos = productsData?.products || [];
 
   const [categoriaAtiva, setCategoriaAtiva] = useState("todos");
+  const [query, setQuery] = useState("");
+  const [sortBy, setSortBy] = useState("featured"); // featured | price-asc | price-desc | newest
+  const [page, setPage] = useState(1);
+  const perPage = 12;
 
-  // Filtra produtos de acordo com a categoria
-  const produtosFiltrados =
-    categoriaAtiva === "todos"
-      ? todosProdutos
-      : todosProdutos.filter((p) => p.category === categoriaAtiva);
+  // filtered + search + sort
+  const produtosFiltrados = useMemo(() => {
+    let list = todosProdutos.slice();
+
+    if (categoriaAtiva && categoriaAtiva !== "todos") {
+      list = list.filter(p => String(p.category || p.categoryId || "").toLowerCase() === String(categoriaAtiva).toLowerCase());
+    }
+
+    if (query && query.trim().length > 0) {
+      const q = query.trim().toLowerCase();
+      list = list.filter(p =>
+        (p.name || p.title || "").toLowerCase().includes(q) ||
+        (p.description || p.desc || "").toLowerCase().includes(q) ||
+        (p.tags || []).join(" ").toLowerCase().includes(q)
+      );
+    }
+
+    // sort
+    if (sortBy === "price-asc") {
+      list.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+    } else if (sortBy === "price-desc") {
+      list.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
+    } else if (sortBy === "newest") {
+      list.sort((a, b) => (new Date(b.publishedAt || b.date || 0)) - (new Date(a.publishedAt || a.date || 0)));
+    } else {
+      // featured fallback: bring affiliate/featured first
+      list.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    }
+
+    return list;
+  }, [todosProdutos, categoriaAtiva, query, sortBy]);
+
+  const total = produtosFiltrados.length;
+  const pages = Math.max(1, Math.ceil(total / perPage));
+  const paginated = produtosFiltrados.slice((page - 1) * perPage, page * perPage);
+
+  function gotoPage(n) {
+    setPage(Math.max(1, Math.min(pages, n)));
+    window.scrollTo({ top: 380, behavior: "smooth" });
+  }
 
   return (
     <>
@@ -36,52 +77,99 @@ export default function ProductsPage() {
       <NavbarSpacer />
 
       <PageContainer>
-        {/* Hero premium */}
-        <HeroSection>
-          <HeroOverlay />
-          <HeroContent>
-            <h1>Eleve Seu Jogo com Produtos Premium</h1>
-            <p>Suplementos, acessórios e vitaminas para melhorar seu desempenho.</p>
-            <HeroCTA onClick={() => window.scrollTo({ top: 600, behavior: "smooth" })}>
-              Compre Agora
-            </HeroCTA>
-          </HeroContent>
-        </HeroSection>
+       <HeroSection role="banner" aria-labelledby="prod-hero-title">
+      <HeroContent>
+        <h1 id="prod-hero-title">Eleve seu desempenho com equipamentos e suplementos selecionados</h1>
+        <p>Escolhas profissionais, testadas por atletas e especialistas — entregues com segurança.</p>
+        <HeroCTA onClick={() => document.getElementById("products-grid")?.scrollIntoView({ behavior: "smooth" })}>
+          Ver Produtos
+        </HeroCTA>
+      </HeroContent>
 
-        {/* Menu de categorias centralizado */}
-        <CategoryMenu role="tablist" aria-label="Seleção de categorias">
-          <CategoryButton
-            role="tab"
-            aria-selected={categoriaAtiva === "todos"}
-            onClick={() => setCategoriaAtiva("todos")}
-            aria-current={categoriaAtiva === "todos" ? "true" : "false"}
-          >
-            Todos
-          </CategoryButton>
-          {todasCategorias.map((cat) => (
-            <CategoryButton
-              key={cat.id}
-              role="tab"
-              aria-selected={categoriaAtiva === cat.id}
-              onClick={() => setCategoriaAtiva(cat.id)}
-              aria-current={categoriaAtiva === cat.id ? "true" : "false"}
-            >
-              {cat.name}
-            </CategoryButton>
-          ))}
-        </CategoryMenu>
+      <HeroVideoWrap aria-hidden>
+        <HeroVideo
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster={productsData?.heroPoster || "/hero-poster.jpg"}
+          src={
+            productsData?.heroVideo ||
+            "https://www.pexels.com/download/video/856132/" /* fallback - substitua pelo seu MP4 */
+          }
+        />
+        <HeroOverlayTop />
+      </HeroVideoWrap>
+    </HeroSection>
 
-        {/* Grid de produtos filtrados */}
-        <ProductsGrid>
-          {produtosFiltrados.map((product, index) => (
-            <AnimatedCard key={product.id} delay={index * 0.1}>
+
+        <ControlsRow>
+          <LeftControls>
+            <CategoryMenu role="tablist" aria-label="Filtrar por categoria">
+              <CategoryButton
+                aria-current={categoriaAtiva === "todos" ? "true" : "false"}
+                onClick={() => { setCategoriaAtiva("todos"); setPage(1); }}
+              >
+                Todos
+              </CategoryButton>
+
+              {todasCategorias.map(cat => (
+                <CategoryButton
+                  key={cat.id}
+                  aria-current={categoriaAtiva === cat.id ? "true" : "false"}
+                  onClick={() => { setCategoriaAtiva(cat.id); setPage(1); }}
+                >
+                  {cat.name}
+                </CategoryButton>
+              ))}
+            </CategoryMenu>
+          </LeftControls>
+
+          <RightControls>
+            <SearchInput
+              type="search"
+              placeholder="Buscar por nome, benefício ou marca..."
+              value={query}
+              onChange={(e) => { setQuery(e.target.value); setPage(1); }}
+              aria-label="Pesquisar produtos"
+            />
+
+            <SortSelect value={sortBy} onChange={(e) => { setSortBy(e.target.value); setPage(1); }} aria-label="Ordenar produtos">
+              <option value="featured">Em destaque</option>
+              <option value="newest">Mais recentes</option>
+              <option value="price-asc">Preço: crescente</option>
+              <option value="price-desc">Preço: decrescente</option>
+            </SortSelect>
+          </RightControls>
+        </ControlsRow>
+
+        <CountRow>
+          <div><strong>{total}</strong> produtos encontrados</div>
+          <div>Página {page} de {pages}</div>
+        </CountRow>
+
+        <ProductsGrid id="products-grid" role="list">
+          {paginated.length === 0 ? (
+            <EmptyState>Nenhum produto encontrado — tente outro filtro.</EmptyState>
+          ) : paginated.map((product, idx) => (
+            <AnimatedCard key={product.id || product.sku || idx} delay={0.06 * (idx % 8)}>
               <ProductCard
                 product={product}
-                onBuy={() => window.open(product.affiliateLink, "_blank")}
+                onBuy={() => {
+                  if (product.affiliateLink) window.open(product.affiliateLink, "_blank", "noopener noreferrer");
+                  else if (product.link) window.open(product.link, "_blank", "noopener noreferrer");
+                  // could add tracking/event here
+                }}
               />
             </AnimatedCard>
           ))}
         </ProductsGrid>
+
+        <Pagination aria-label="Navegação entre páginas" role="navigation">
+          <PageButton onClick={() => gotoPage(page - 1)} disabled={page <= 1}>Anterior</PageButton>
+          <PageInfo>{page} / {pages}</PageInfo>
+          <PageButton onClick={() => gotoPage(page + 1)} disabled={page >= pages}>Próximo</PageButton>
+        </Pagination>
       </PageContainer>
 
       <Footer />
@@ -89,129 +177,184 @@ export default function ProductsPage() {
   );
 }
 
-// Styled Components
-const NavbarSpacer = styled.div`
-  height: 80px;
-`;
+/* ---------------- Styled ---------------- */
 
-const PageContainer = styled.div`
+const NavbarSpacer = styled.div`height: 80px;`;
+
+const PageContainer = styled.main`
   padding: 2rem 4rem;
-  max-width: ${({ theme }) => theme.layout.maxWidth};
+  max-width: ${({ theme }) => theme.layout?.maxWidth || "1200px"};
   margin: 0 auto;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.laptop}) {
+  @media (max-width: ${({ theme }) => theme.breakpoints?.laptop || 1024}px) {
     padding: 1rem 2rem;
   }
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+  @media (max-width: ${({ theme }) => theme.breakpoints?.mobile || 480}px) {
     padding: 1rem;
   }
 `;
 
-const HeroSection = styled.section`
+/* Dentro do seu ProductsPage.jsx — substitua o bloco HeroSection/HeroImage/HeroContent */
+
+const HeroSection = styled.header`
   position: relative;
-  width: 100%;
-  height: 450px;
-  border-radius: ${({ theme }) => theme.radius.lg};
-  overflow: hidden;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 1.5rem;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin-bottom: 3rem;
+  padding: 1.6rem;
+  border-radius: ${({ theme }) => theme.radius?.lg || "12px"};
+  background: ${({ theme }) => theme.gradients?.soft || "linear-gradient(135deg,#f6fdf9,#e8fff4)"};
+  margin-bottom: 2rem;
+  overflow: hidden;
+  @media (max-width: 980px) { grid-template-columns: 1fr; text-align: center; padding: 1rem; }
 `;
 
-const HeroOverlay = styled.div`
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(
-      to bottom right,
-      rgba(0, 0, 0, 0.45),
-      rgba(0, 0, 0, 0.7)
-    ),
-    url("https://www.pexels.com/download/video/6388396/");
-  background-size: cover;
-  background-position: center;
-  z-index: 0;
+/* vídeo hero: toca em loop, muted, playsinline. Usa poster se provider não entregar video */
+const HeroVideoWrap = styled.div`
+  position: relative;
+  width: 100%;
+  height: 220px;
+  border-radius: ${({ theme }) => theme.radius?.md || "10px"};
+  overflow: hidden;
+  box-shadow: ${({ theme }) => theme.shadow?.sm || "0 6px 18px rgba(0,0,0,0.06)"};
+  @media (max-width: 980px) { height: 180px; margin-top: 1rem; }
+`;
+
+const HeroVideo = styled.video`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+`;
+
+/* overlay para legibilidade do texto */
+const HeroOverlayTop = styled.div`
+  position:absolute;
+  inset:0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.55));
+  z-index: 1;
 `;
 
 const HeroContent = styled.div`
   position: relative;
-  color: ${({ theme }) => theme.colors.surface};
-  max-width: 700px;
-  padding: 0 1rem;
+  z-index: 2;
+  color: ${({ theme }) => theme.colors?.primaryDark || "#002"};
+  max-width: 680px;
 
-  h1 {
-    font-family: ${({ theme }) => theme.fonts.heading};
-    font-weight: 900;
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    line-height: 1.1;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
-
-    @media (max-width: ${({ theme }) => theme.breakpoints.laptop}) {
-      font-size: 2.2rem;
-    }
-
-    @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-      font-size: 1.8rem;
-    }
-  }
-
-  p {
-    font-weight: 400;
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
-  }
+  h1 { font-size: clamp(1.6rem, 3.6vw, 2.6rem); margin: 0 0 0.6rem; font-family: ${({ theme }) => theme.fonts?.heading || "inherit"}; }
+  p { margin: 0 0 1rem; font-size: 1rem; color: ${({ theme }) => theme.colors?.text || "#444"}; }
 `;
 
 const HeroCTA = styled.button`
-  padding: 0.8rem 2rem;
-  font-size: 1rem;
-  font-weight: 700;
+  padding: 0.75rem 1.6rem;
+  border-radius: 999px;
   border: none;
-  border-radius: 50px;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.surface};
+  background: linear-gradient(90deg, ${({ theme }) => theme.colors?.primary || "#2a9d8f"}, ${({ theme }) => theme.colors?.primaryDark || "#1e7f6f"});
+  color: ${({ theme }) => theme.colors?.surface || "#fff"};
+  font-weight: 800;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.3s ease;
-
-  &:hover {
-    transform: scale(1.05);
-    background-color: ${({ theme }) => theme.colors.primaryDark};
-  }
+  box-shadow: 0 8px 24px rgba(42,157,143,0.12);
+  transition: transform .12s ease, filter .12s ease;
+  &:hover { transform: translateY(-3px); filter: brightness(.97); }
 `;
 
-const CategoryMenu = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+
+
+const HeroImage = styled.img`
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.radius?.md || "10px"};
+  box-shadow: ${({ theme }) => theme.shadow?.sm || "0 6px 18px rgba(0,0,0,0.06)"};
+  @media (max-width: 980px) { margin-top: 1rem; height: 180px; }
+`;
+
+
+
+/* controls */
+const ControlsRow = styled.div`
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   gap: 1rem;
-  margin-bottom: 2rem;
-  padding-bottom: 0.5rem;
+  margin: 1.25rem 0;
+  flex-wrap:wrap;
+`;
+
+const LeftControls = styled.div``;
+const RightControls = styled.div`
+  display:flex;
+  gap:0.75rem;
+  align-items:center;
+`;
+
+/* category menu */
+const CategoryMenu = styled.div`
+  display:flex;
+  gap:0.6rem;
+  flex-wrap:wrap;
 `;
 
 const CategoryButton = styled.button`
-  flex: 0 0 auto;
-  padding: 0.6rem 1.4rem;
-  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid ${({ theme }) => theme.colors?.border || "#e9e9e9"};
+  background: ${({ 'aria-current': current, theme }) => current === "true" ? theme.colors?.primary || "#2a9d8f" : theme.colors?.surface || "#fff"};
+  color: ${({ 'aria-current': current, theme }) => current === "true" ? theme.colors?.surface || "#fff" : theme.colors?.text || "#333"};
   font-weight: 600;
   cursor: pointer;
-  border: none;
-  background: ${({ theme, 'aria-current': current }) =>
-    current === "true" ? theme.colors.primary : theme.colors.secondary};
-  color: ${({ theme, 'aria-current': current }) =>
-    current === "true" ? theme.colors.surface : theme.colors.dark};
-  transition: background 0.3s ease, color 0.3s ease;
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.primaryDark};
-    color: ${({ theme }) => theme.colors.surface};
-  }
 `;
 
+/* search and sort */
+const SearchInput = styled.input`
+  padding: 0.55rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid ${({ theme }) => theme.colors?.border || "#e9e9e9"};
+  min-width: 220px;
+`;
+
+const SortSelect = styled.select`
+  padding: 0.5rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid ${({ theme }) => theme.colors?.border || "#e9e9e9"};
+  background: ${({ theme }) => theme.colors?.surface || "#fff"};
+`;
+
+/* count row */
+const CountRow = styled.div`
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color: ${({ theme }) => theme.colors?.secondaryDark || "#666"};
+  margin-bottom: 0.6rem;
+`;
+
+/* grid */
 const ProductsGrid = styled.div`
   display: grid;
+  gap: 1.25rem;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 2rem;
+  margin-bottom: 1.25rem;
 `;
+
+/* pagination */
+const Pagination = styled.div`
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:0.75rem;
+  margin: 1.25rem 0 3rem;
+`;
+
+const PageButton = styled.button`
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.colors?.border || "#e9e9e9"};
+  background: ${({ theme }) => theme.colors?.surface || "#fff"};
+  cursor: pointer;
+  &:disabled { opacity: .5; cursor: not-allowed; }
+`;
+
+const PageInfo = styled.div`color: ${({ theme }) => theme.colors?.secondaryDark || "#666"};`;
+
+const EmptyState = styled.div`padding: 2rem; text-align:center; color: ${({ theme }) => theme.colors?.secondaryDark || "#777"};`;

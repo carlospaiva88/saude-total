@@ -1,75 +1,70 @@
+// src/components/Viagens/ViagemCard.style.jsx
 import styled from "styled-components";
 
 export const ViagemCardBase = styled.article`
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
-  background: #fff;
-  box-shadow: 0 4px 15px rgba(42, 157, 143, 0.09);
-  transition: 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
+  background: ${({ theme }) => theme.colors?.surface || "#fff"};
+  box-shadow: 0 6px 24px rgba(16, 88, 71, 0.06);
+  transition: transform .22s ease, box-shadow .22s ease;
+  display:flex;
+  flex-direction:column;
+  cursor:pointer;
+  height:100%;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 28px rgba(42, 157, 143, 0.13);
+    transform: translateY(-6px);
+    box-shadow: 0 14px 46px rgba(16, 88, 71, 0.12);
   }
 `;
 
 export const ViagemCardImage = styled.img`
-  width: 100%;
-  height: 220px;
+  width:100%;
+  height: 180px;
   object-fit: cover;
-  user-select: none;
-  border-bottom: 1px solid #e9f5f2;
+  flex-shrink:0;
+  display:block;
 `;
 
 export const ViagemCardBody = styled.div`
-  padding: 1rem 1.2rem;
-  display: flex;
-  flex-direction: column;
+  padding: 0.9rem 1rem;
+  display:flex;
+  flex-direction:column;
+  gap: .4rem;
+  flex:1;
 `;
 
 export const ViagemCardTitle = styled.h3`
-  font-size: 1.25rem;
-  margin-bottom: 0.4rem;
-  color: #2a6f61;
-  font-weight: 600;
+  font-size:1.05rem;
+  margin:0;
+  color: ${({theme})=>theme.colors?.primaryDark || "#163d35"};
 `;
 
 export const ViagemCardSubtitle = styled.p`
-  color: #496c5f;
-  font-size: 0.85rem;
-  margin-bottom: 0.5rem;
-  font-style: italic;
+  color: ${({theme})=>theme.colors?.secondaryDark || "#6b8a7b"};
+  font-size:.9rem;
+  margin:0;
 `;
 
 export const ViagemCardDescription = styled.p`
-  font-size: 0.95rem;
-  color: #40514e;
-  margin-bottom: 1rem;
-  flex-grow: 1;
-  min-height: 60px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  margin-top:.4rem;
+  font-size:.95rem;
+  color: ${({theme})=>theme.colors?.text || "#333"};
+  flex:1;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 `;
 
+/* Produto recomendado pequeno usado na ViagemPage */
 export const ProductRecommendationCard = styled(ViagemCardBase)`
   flex-direction: row;
   align-items: center;
-  padding: 1rem;
-  img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-right: 1rem;
-  }
-  div {
-    flex: 1;
-    text-align: left;
-  }
+  padding: 0.8rem;
+  gap: 0.8rem;
+
+  img { width: 96px; height: 96px; object-fit: cover; border-radius: 8px; }
+  div { flex:1; }
 `;
+export default null;

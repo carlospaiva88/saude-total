@@ -1,7 +1,7 @@
-// src/pages/BlogHome.jsx
+// src/components/BlogPage/BlogHome.js
 import React, { useMemo, useRef } from "react";
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import NavbarSpacer from "../../components/Navbar/NavbarSpacer";
 import Footer from "../../components/Footer/Footer";
@@ -9,16 +9,16 @@ import ArticleCard from "../../components/ArticleCard/ArticleCard";
 import articlesData from "../../data/articles/index";
 import receitas from "../../data/receitas/index";
 import CalculadoraPreview from "../../components/Calculadora/CalculadoraPreview";
-import ContinueExploring from "./ContinueExploring";
+import ContinueExploring from "../BlogPage/ContinueExploring";
 import TagsCloud from "../../components/BlogPage/TagsCloud";
 import NewsletterCTA from "../../components/BlogPage/NewsletterCTA";
 import viagensData from "../../data/viagens/index";
 import productsData from "../../data/products";
 import MiniQuizSaude from "../../components/BlogPage/MiniQuizSaude";
-import FraseDoDia from "./FraseDoDia";
+import FraseDoDia from "../BlogPage/FraseDoDia";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay, A11y } from "swiper";
+import { Autoplay, A11y } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -52,12 +52,18 @@ function buildPostLink(post) {
   return `/blog/${categoria}/${slug}`;
 }
 
+function buildTripLink(v) {
+  // tenta identificar categoria/subcategoria legível para URL (com muitos fallbacks)
+  const cat = v.categorySlug || v.category || v.region || v.tipo || v.type || "nacional";
+  const slug = v.slug || v.id || v.nome || v.title || "";
+  return `/viagens/${encodeURIComponent(String(cat).toLowerCase())}/${encodeURIComponent(String(slug))}`;
+}
+
 /* ---------------- UnifiedCarousel (novo, premium) ----------------
    Recebe items com forma:
-   { type: 'article' | 'receita' | 'product' | 'trip', title, image, link, excerpt?, badge? , meta? }
+   { type: 'article' | 'receita' | 'product' | 'trip', title, image, link, excerpt?, badge? , meta?, price? }
 */
 function UnifiedCarousel({ items = [] }) {
-  const navigate = useNavigate();
   const swiperRef = useRef(null);
 
   if (!items || items.length === 0) return null;
@@ -68,60 +74,77 @@ function UnifiedCarousel({ items = [] }) {
   return (
     <UnifiedWrapper aria-label="Carrossel de conteúdos recomendados">
       <UnifiedHeader>
-        <h2>Em destaque</h2>
-        <p>Conteúdos, receitas e produtos selecionados para você.</p>
+        <div>
+          <h2>Em destaque</h2>
+          <p>Conteúdos, receitas e produtos selecionados para você.</p>
+        </div>
+
+        <Controls>
+          <NavButton onClick={slidePrev} aria-label="Anterior">‹</NavButton>
+          <NavButton onClick={slideNext} aria-label="Próximo">›</NavButton>
+        </Controls>
       </UnifiedHeader>
 
-      <Swiper
-        modules={[Navigation, Autoplay, A11y]}
-        // NÃO passar `navigation` para evitar setas default do Swiper
-        loop
-        autoplay={{ delay: 3500, disableOnInteraction: false }}
-        speed={600}
-        spaceBetween={18}
-        slidesPerView={3}
-        onSwiper={(s) => (swiperRef.current = s)}
-        breakpoints={{
-          320: { slidesPerView: 1.05 },
-          640: { slidesPerView: 1.35 },
-          900: { slidesPerView: 2 },
-          1200: { slidesPerView: 3 }
-        }}
-        a11y={{ prevSlideMessage: "Anterior", nextSlideMessage: "Próximo" }}
-        style={{ paddingBottom: 12, position: "relative" }}
-      >
-        {items.map((it, i) => (
-          <SwiperSlide key={`${it.type}-${it.title}-${i}`}>
-            <CardLink to={it.link} aria-label={`${it.type} - ${it.title}`} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
-              <Card>
-                <Thumb role="img" aria-label={it.title} style={{ backgroundImage: `url(${safeImage(it)})` }} />
-                <CardBody>
-                  <Badge type={it.type}>{it.badge || (it.type === "article" ? "Artigo" : it.type === "receita" ? "Receita" : it.type === "product" ? "Produto" : "Viagem")}</Badge>
-                  <CardTitle>{it.title}</CardTitle>
-                  {it.excerpt ? <CardExcerpt>{it.excerpt}</CardExcerpt> : (it.meta ? <CardMeta>{it.meta}</CardMeta> : null)}
-                  <CardFooter>
-                    <ReadMore>Ver conteúdo →</ReadMore>
-                    {it.type === "product" && it.price ? <Price>{it.price}</Price> : null}
-                  </CardFooter>
-                </CardBody>
-              </Card>
-            </CardLink>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <SwiperActiveStyles>
+        <Swiper
+          modules={[Autoplay, A11y]}
+          loop
+          autoplay={{ delay: 3500, disableOnInteraction: false }}
+          speed={600}
+          spaceBetween={18}
+          slidesPerView={3}
+          onSwiper={(s) => (swiperRef.current = s)}
+          breakpoints={{
+            320: { slidesPerView: 1.05 },
+            640: { slidesPerView: 1.35 },
+            900: { slidesPerView: 2 },
+            1200: { slidesPerView: 3 }
+          }}
+          a11y={{ prevSlideMessage: "Anterior", nextSlideMessage: "Próximo" }}
+          style={{ paddingBottom: 12, position: "relative" }}
+        >
+          {items.map((it, i) => (
+            <SwiperSlide key={`${it.type}-${i}`} style={{ height: "100%" }}>
+              <Slide>
+                <CardLink
+                  to={it.link}
+                  aria-label={`${it.type} - ${it.title}`}
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                >
+                  <Card>
+                    <Thumb role="img" aria-label={it.title} style={{ backgroundImage: `url(${safeImage(it)})` }} />
+                    <CardBody>
+                      <Badge type={it.type}>{it.badge || (it.type === "article" ? "Artigo" : it.type === "receita" ? "Receita" : it.type === "product" ? "Produto" : "Viagem")}</Badge>
+                      <CardTitle>{it.title}</CardTitle>
 
-      {/* setas customizadas */}
-      <NavButtonLeft onClick={slidePrev} aria-label="Anterior" />
-      <NavButtonRight onClick={slideNext} aria-label="Próximo" />
+                      {/* sempre renderiza o CardExcerpt (mesmo que placeholder) para manter layout estável */}
+                      {it.excerpt ? (
+                        <CardExcerpt>{it.excerpt}</CardExcerpt>
+                      ) : (
+                        <CardExcerpt aria-hidden dangerouslySetInnerHTML={{ __html: "&nbsp;" }} />
+                      )}
+
+                      <CardFooter>
+                        <ReadMore>Ver conteúdo →</ReadMore>
+                        {it.type === "product" && it.price ? <Price>{it.price}</Price> : null}
+                      </CardFooter>
+                    </CardBody>
+                  </Card>
+                </CardLink>
+              </Slide>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </SwiperActiveStyles>
     </UnifiedWrapper>
   );
 }
 
-
 /* ---------------- main page component ---------------- */
 
 export default function BlogHome() {
-  const postsArray = useMemo(() => safeArray(articlesData), [articlesData]);
+  // NOTE: articlesData / produtos / viagens são módulos estáticos — memo vazio é suficiente
+  const postsArray = useMemo(() => safeArray(articlesData), []);
 
   const recent = useMemo(() => {
     return postsArray
@@ -157,13 +180,13 @@ export default function BlogHome() {
         meta: r.tempo ? `${r.tempo}` : undefined,
       }));
 
-    // <-- Aqui corrigido: garantimos que viagensData seja "achatado" caso seja objeto com arrays
+    // garantir que viagensData seja achatado caso seja objeto com categorias
     const viagensArr = safeArray(viagensData).flat();
     const viagens = viagensArr.map(v => ({
       type: "trip",
-      title: v.title || v.nome || v.titulo,
+      title: v.title || v.nome || v.titulo || "Viagem",
       image: v.image || v.imagem || "/placeholder-16x9.png",
-      link: `/viagens/${encodeURIComponent(v.slug || v.id || v.nome || "")}`,
+      link: buildTripLink(v),
       excerpt: (v.description || v.excerpt || "").slice(0, 110),
       badge: "Viagem",
     }));
@@ -179,6 +202,7 @@ export default function BlogHome() {
         badge: a.category || a.categoria || "Artigo",
       }));
 
+    // Mix com prioridade: artigos recentes + receitas populares + produtos em destaque + viagens
     const mixed = [
       ...artigos.slice(0, 8),
       ...recs.slice(0, 6),
@@ -186,6 +210,7 @@ export default function BlogHome() {
       ...viagens.slice(0, 4)
     ];
 
+    // remover duplicatas por link/title simples
     const seen = new Set();
     const dedup = mixed.filter(it => {
       const key = it.link || it.title;
@@ -195,8 +220,7 @@ export default function BlogHome() {
     });
 
     return dedup.slice(0, 18);
-  }, [articlesData, receitas, productsData, viagensData]);
-
+  }, []); // dependências dos módulos estáticos omitidas intencionalmente (ok aqui)
 
   return (
     <>
@@ -217,8 +241,9 @@ export default function BlogHome() {
         </Hero>
 
         <SectionTitle>Categorias</SectionTitle>
-                <Swiper
-          modules={[Navigation, Autoplay, A11y]}
+
+        <Swiper
+          modules={[Autoplay, A11y]}
           loop
           centeredSlides
           autoplay={{ delay: 3000, disableOnInteraction: false }}
@@ -246,7 +271,6 @@ export default function BlogHome() {
             </SwiperSlide>
           ))}
         </Swiper>
-
 
         <TwoColumnRow>
           <Column flex="2" as="section" aria-labelledby="recent-title">
@@ -316,7 +340,7 @@ export default function BlogHome() {
           </Column>
         </TwoColumnRow>
 
-        {/* ----- NOVO CAROUSEL UNIFICADO (substitui CarouselFinal) ----- */}
+        {/* unified carousel */}
         <UnifiedCarousel items={carouselItems} />
 
         <ContinueSection>
@@ -338,7 +362,7 @@ export default function BlogHome() {
   );
 }
 
-/* ---------------- Styled (mantive a maior parte do seu original + novos estilos pro unified carousel) ---------------- */
+/* ---------------- Styled (mantive grande parte do seu original + novos estilos pro unified carousel) ---------------- */
 
 const Hero = styled.section`
   display: grid;
@@ -390,7 +414,7 @@ const SectionTitle = styled.h2`
   text-align: center;
 `;
 
-/* Category cards (mantidos) */
+/* Category cards (mantidos com overlay) */
 const CatCard = styled(Link)`
   display: flex;
   flex-direction: column;
@@ -405,19 +429,22 @@ const CatCard = styled(Link)`
   height: 100%;
 `;
 
+const CatThumb = styled.div`
+  width: 100%;
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  box-shadow: ${({ theme }) => theme.shadow.sm};
+`;
 
-const CatBody = styled.div`
-  h4 { 
-    margin: 0 0 0.25rem; 
-    color: ${({ theme }) => theme.colors.primaryDark}; 
-    font-size: 1.05rem; 
-  }
-  p { 
-    margin: 0; 
-    color: ${({ theme }) => theme.colors.text}; 
-    font-size: 0.95rem; 
-    opacity: 0.95; 
-  }
+const CatOverlay = styled.div`
+  margin-top: 0.6rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.03) 100%);
+  padding: .6rem;
+  border-radius: 8px;
+  h4 { margin:0; color: ${({ theme }) => theme.colors.primaryDark}; }
+  p { margin:0; font-size:0.9rem; color: ${({ theme }) => theme.colors.secondaryDark}; opacity:0.95; }
 `;
 
 /* Layout columns (mantidos) */
@@ -477,7 +504,7 @@ const SmallPopular = styled(Link)`
   }
   div { display: flex; flex-direction: column; }
   strong { font-size: 0.95rem; color: ${({ theme }) => theme.colors.primaryDark}; }
-  span { font-size: 0.85rem; color: ${({ theme }) => theme.colors.text}; opacity: 0.9; }
+  span { font-size: 0.85rem; color: ${({ theme }) => theme.colors.text}; opacity:0.9; }
 `;
 
 const MiniRecipes = styled.div`
@@ -541,51 +568,107 @@ const UnifiedHeader = styled.div`
   align-items:center;
   justify-content:space-between;
   margin-bottom: 1rem;
+  gap: 1rem;
   h2 { margin: 0; color: ${({ theme }) => theme.colors.primaryDark}; }
   p { margin: 0; color: ${({ theme }) => theme.colors.secondaryDark}; font-size: .95rem; }
 `;
 
+const Controls = styled.div`
+  display:flex;
+  gap: .5rem;
+`;
+
+/* custom nav buttons */
+const NavButton = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  background: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.primaryDark};
+  font-size: 1.2rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition: transform .12s ease, background .12s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.surface};
+  }
+
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;
+
+/* Slide wrapper: garante stretch */
+const Slide = styled.div`
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  min-height: 320px;
+  height: 100%;
+  box-sizing: border-box;
+`;
+
+/* garante que o Link/clickable ocupe 100% do slide */
 const CardLink = styled(Link)`
   display: block;
   text-decoration: none;
   color: inherit;
+  width: 100%;
   height: 100%;
 `;
 
-const Card = styled.article`
+/* card ocupa todo o espaço do slide e é um flex-column com footer fixo */
+const Card = styled.article.attrs(() => ({ className: "unified-card" }))`
   background: ${({ theme }) => theme.colors.surface};
   border-radius: 12px;
   box-shadow: ${({ theme }) => theme.shadow.sm};
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 220px;
-  transition: transform .18s ease, box-shadow .18s ease;
+  height: 100%;
+  min-height: 300px;
+  transition: transform .16s ease, box-shadow .16s ease;
+  width: 100%;
 
   &:hover {
     transform: translateY(-6px);
     box-shadow: ${({ theme }) => theme.shadow.lg};
   }
+
+  @media (max-width: 720px) {
+    min-height: 280px;
+  }
 `;
 
+/* Thumb fixo no topo - não influencia o restante do fluxo */
 const Thumb = styled.div`
   width: 100%;
-  height: 140px;
+  height: 150px;
   background-size: cover;
   background-position: center;
+  flex-shrink: 0;
 `;
 
+/* corpo flex que ocupa o espaço restante — empurra o footer para baixo */
 const CardBody = styled.div`
-  padding: 0.9rem 0.9rem 1rem;
-  display:flex;
-  flex-direction:column;
-  gap: 0.5rem;
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1 1 auto;
 `;
 
+/* Badge permanece compacto */
 const Badge = styled.span`
   display:inline-block;
   font-size: 0.75rem;
-  padding: .28rem .5rem;
+  padding: .24rem .48rem;
   border-radius: 999px;
   background: ${({ theme, type }) =>
     type === "product" ? "#FFF3E0" :
@@ -597,35 +680,52 @@ const Badge = styled.span`
   width: fit-content;
 `;
 
+/* Título com clamp de 2 linhas */
 const CardTitle = styled.h4`
   margin: 0;
   font-size: 1.02rem;
   color: ${({ theme }) => theme.colors.primaryDark};
-  line-height: 1.2;
-  min-height: 2.2rem;
+  line-height: 1.18;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: calc(1.02rem * 1.18 * 2);
 `;
 
+/* Excerpt ocupa espaço flex para criar uniformidade; clamp 3 linhas */
 const CardExcerpt = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.colors.text};
   font-size: 0.9rem;
   opacity: .95;
   flex: 1 1 auto;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.4rem;
 `;
 
+/* meta curto (ex: tempo) */
 const CardMeta = styled.div`
   font-size: 0.85rem;
   color: ${({ theme }) => theme.colors.secondaryDark};
 `;
 
+/* footer fixo no fundo do card */
 const CardFooter = styled.div`
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap: .6rem;
-  margin-top: .25rem;
+  margin-top: .4rem;
+  flex-shrink: 0;
 `;
 
+/* CTAs */
 const ReadMore = styled.span`
   font-size: 0.9rem;
   color: ${({ theme }) => theme.colors.primary};
@@ -640,61 +740,18 @@ const Price = styled.span`
   color: ${({ theme }) => theme.colors.primaryDark};
 `;
 
+/* estilo que aplica destaque no slide ativo (swiper adiciona .swiper-slide-active) */
+const SwiperActiveStyles = styled.div`
+  .swiper-slide,
+  .swiper-wrapper {
+    height: 100%;
+    align-items: stretch;
+  }
+
+  .swiper-slide-active .unified-card {
+    transform: scale(1.03);
+    box-shadow: ${({ theme }) => theme.shadow.xl};
+  }
+`;
+
 /* ---------------- end file ---------------- */
-/* ---------- Botões customizados do UnifiedCarousel ---------- */
-const NavButtonBase = styled.button`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 12;
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  background: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.primaryDark};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  cursor: pointer;
-  transition: transform .14s ease, background .14s ease;
-
-  &:hover {
-    transform: translateY(-50%) scale(1.06);
-    background: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.surface};
-  }
-
-  @media (max-width: 900px) {
-    display: none;
-  }
-`;
-
-const NavButtonLeft = styled(NavButtonBase)`
-  left: 6px;
-  &::after { content: "‹"; }
-`;
-
-const NavButtonRight = styled(NavButtonBase)`
-  right: 6px;
-  &::after { content: "›"; }
-`;
-const CatOverlay = styled.div`
-  margin-top: 0.6rem;
-  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.03) 100%);
-  padding: .6rem;
-  border-radius: 8px;
-  h4 { margin:0; color: ${({ theme }) => theme.colors.primaryDark}; }
-  p { margin:0; font-size:0.9rem; color: ${({ theme }) => theme.colors.secondaryDark}; opacity:0.95; }
-`;
-
-/* melhora visual do CatThumb: adiciona radius e subtle shadow */
-const CatThumb = styled.div`
-  width: 100%;
-  height: 160px;
-  background-size: cover;
-  background-position: center;
-  border-radius: 12px;
-  box-shadow: ${({ theme }) => theme.shadow.sm};
-`;
