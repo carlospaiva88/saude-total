@@ -31,6 +31,7 @@ import mindfulness from "./mental/mindfulness";
 import sintomasAnsiedade from "./mental/sintomas-ansiedade";
 import meditacaoBasica from "./mental/meditacao-basica";
 import meditacaoAvancada2 from "./mental/meditacao-avancada2";
+import sintomasDepressao from "./mental/sintomas-fisicos-depressao";
 
 
 import autoestimaEspiritual from "./espiritual/autoestima-espiritual";
@@ -110,6 +111,8 @@ const rawArticles = [
   { ...sintomasAnsiedade, friendlySlug: "sintomas-ansiedade" },
   { ...meditacaoBasica, friendlySlug: "meditacao-basica" },
   { ...meditacaoAvancada2, friendlySlug: "meditacao-avancada-praticas" },
+  { ...sintomasDepressao, friendlySlug: "sintomas-fisicos-depressao"},
+
 
   // espiritual
   { ...autoestimaEspiritual, friendlySlug: "autoestima-espiritual" },
