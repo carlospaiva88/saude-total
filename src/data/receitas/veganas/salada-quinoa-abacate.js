@@ -1,41 +1,46 @@
-const saladaQuinoaAbacate = {
-  slug: "salada-quinoa-abacate",
-  titulo: "Salada Vegana de Quinoa com Abacate",
-  imagem: "https://images.pexels.com/photos/1640775/pexels-photo-1640775.jpeg",
-  tempo: "10 min",
-  calorias: 290,
+// src/data/receitas/veganas/hamburguer-lentilha.js
+const hamburguerLentilha = {
+  slug: "hamburguer-lentilha",
+  titulo: "Hambúrguer Vegano de Lentilha",
+  imagem: "https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg",
+  tempo: "30 min",
+  calorias: 210,
   categoria: "Veganas",
-  descricaoCurta: "Refrescante, rica em fibras e perfeita para o almoço.",
+  descricaoCurta: "Textura incrível e ótimo para sanduíches.",
+  // resumo curto para cards / listagens
+  shortDescription: "Hambúrguer vegano de lentilha e aveia — saboroso, com boa textura e ideal para sanduíches caseiros.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Hambúrguer vegano de lentilha: combinação de lentilha e aveia para textura firme e sabor caseiro — ótimo em sanduíches.",
   ingredientes: [
-    "1 xícara de quinoa cozida",
-    "1/2 abacate em cubos",
-    "1/2 pepino picado",
-    "1 tomate pequeno picado",
-    "Suco de 1/2 limão",
-    "Sal e azeite"
+    "1 xícara de lentilha cozida",
+    "1/2 xícara de aveia em flocos",
+    "1/2 cebola picada",
+    "1 colher (sopa) de azeite",
+    "Sal e páprica a gosto"
   ],
   instrucoes: [
-    "Misture todos os ingredientes em uma tigela grande.",
-    "Tempere com suco de limão, azeite e sal.",
-    "Sirva fresca ou leve para refeição fria."
+    "Processe a lentilha até formar uma pasta grossa.",
+    "Misture a aveia e temperos até dar liga.",
+    "Modele hambúrgueres e grelhe em frigideira com azeite por 3-4 min cada lado.",
+    "Monte com pão integral e salada."
   ],
-  porcoes: 2,
-  dificuldade: "fácil",
+  porcoes: 4,
+  dificuldade: "médio",
   product: {
-    name: "Potes com separador para saladas",
-    image: "https://m.media-amazon.com/images/I/61example7.jpg",
-    price: "29.90",
+    name: "Processador de alimentos 600W",
+    image: "https://m.media-amazon.com/images/I/61example6.jpg",
+    price: "179.90",
     link: "https://amzn.to/exemplo",
-    rating: "4.3",
-    reviews: 84
+    rating: "4.5",
+    reviews: 640
   },
   seo: {
-    metaTitle: "Salada de Quinoa com Abacate — Receita Vegana",
-    metaDescription: "Salada vegana de quinoa com abacate e pepino: refeição leve, rica em fibras e ideal para almoço rápido."
+    metaTitle: "Hambúrguer Vegano de Lentilha — Receita Caseira",
+    metaDescription: "Hambúrguer vegano de lentilha com aveia: fácil de preparar, saboroso e ótimo para sanduíches."
   },
-  cta: "Leve essa salada na marmita para um almoço fresco!",
-  variacoes: ["Adicione grão-de-bico para mais proteína.", "Use vinagrete de limão e mostarda para mais sabor."],
-  nutritional: { calories: 290, protein: 9, carbs: 32, fat: 12 },
+  cta: "Faça em casa e compartilhe o resultado com a gente!",
+  variacoes: ["Tempere com cominho e coentro para perfil indiano.", "Forme mini-hambúrgueres para aperitivos."],
+  nutritional: { calories: 210, protein: 11, carbs: 28, fat: 6 },
 };
 
-export default saladaQuinoaAbacate;
+export default hamburguerLentilha;

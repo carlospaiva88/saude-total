@@ -6,14 +6,15 @@ const viagem = {
   readingTime: "6 min",
   category: "nacionais",
   subcategory: "gastronomia",
+  shortDescription: "Vinícolas, paisagens e gastronomia: destino romântico e aconchegante no sul do país.",
   content: `
     <h2>Um pedacinho da Europa no Brasil</h2>
     <p>A Serra Gaúcha encanta com seu clima europeu, vinícolas e cidades acolhedoras como Gramado e Bento Gonçalves. Ideal para casais e amantes de boa gastronomia.</p>
 
     <h3>O que fazer</h3>
     <ul>
-      <li><strong>Tour Uva e Vinho:</strong> passeio pelas vinícolas mais charmosas.</li>
-      <li><strong>Lago Negro:</strong> ponto romântico em Gramado.</li>
+      <li><strong>Tour Uva e Vinho:</strong> degustações e visitas a vinícolas locais.</li>
+      <li><strong>Lago Negro:</strong> passeio romântico em Gramado.</li>
       <li><strong>Parque do Caracol:</strong> natureza exuberante em Canela.</li>
     </ul>
 

@@ -6,6 +6,10 @@ const article = {
   readingTime: "6 min",
   category: "fisica",
   subcategory: "postura",
+
+  shortDescription: "Guia prático com exercícios e hábitos para corrigir a postura, reduzir dores e melhorar respiração e desempenho diário.",
+  excerpt: "Melhore sua postura com alongamentos, fortalecimento lombar e ajustes ergonômicos: dicas práticas para reduzir dores e aumentar bem-estar.",
+
   content: `
     <h2>Por que a postura correta é importante?</h2>
     <p>Manter uma postura correta é fundamental para prevenir dores, melhorar a respiração, e otimizar o funcionamento do corpo como um todo. Uma boa postura reduz o risco de lesões, especialmente na coluna, pescoço e ombros.</p>

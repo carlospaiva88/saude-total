@@ -6,6 +6,10 @@ const cookiesAveiaChocolate = {
   calorias: 145,
   categoria: "Sobremesas",
   descricaoCurta: "Crocrantes, fáceis e perfeitos para um snack saudável.",
+  // resumo curto para cards / listagens
+  shortDescription: "Cookies rápidos de aveia e banana com pedaços de chocolate 70% — snack prático e nutritivo.",
+  // excerpt para cards (máx ~140 chars)
+  excerpt: "Cookies de aveia com banana e chocolate 70%: receita simples, sem açúcar refinado, ideal para lanche saudável.",
   ingredientes: [
     "1 xícara de aveia em flocos",
     "1 banana madura amassada",

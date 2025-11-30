@@ -1,4 +1,3 @@
-// src/data/receitas/doces/cheesecake-framboesa.js
 const cheesecakeFramboesa = {
   slug: "cheesecake-framboesa",
   titulo: "Cheesecake de Framboesa Light",
@@ -7,6 +6,10 @@ const cheesecakeFramboesa = {
   calorias: 270,
   categoria: "Sobremesas",
   descricaoCurta: "Cremoso e frutado — o toque perfeito para fechar o dia.",
+  // resumo curto para cards / listagens
+  shortDescription: "Cheesecake leve com base integral e cobertura de framboesa sem açúcar — sobremesa elegante e mais leve.",
+  // excerpt para cards (máx ~140 chars)
+  excerpt: "Cheesecake light com cream cheese e geleia de framboesa sem açúcar — cremoso e perfeito para ocasiões especiais.",
   ingredientes: [
     "200g de cream cheese light",
     "1 pote de iogurte natural",

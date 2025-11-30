@@ -6,15 +6,23 @@ const viagem = {
   readingTime: "7 min",
   category: "internacionais",
   subcategory: "cultura",
+  shortDescription: "Alfama, pastéis, mirantes e fado — Lisboa mescla tradição com vida urbana descontraída.",
   content: `
     <h2>A cidade das sete colinas</h2>
     <p>Lisboa combina tradição e modernidade. Um destino que encanta pelo clima agradável, gastronomia deliciosa e povo acolhedor.</p>
 
     <h3>O que visitar</h3>
     <ul>
-      <li><strong>Torre de Belém:</strong> ícone histórico e Patrimônio Mundial.</li>
-      <li><strong>Alfama:</strong> o bairro mais antigo e cheio de charme.</li>
-      <li><strong>Elétrico 28:</strong> passeio clássico e nostálgico.</li>
+      <li><strong>Torre de Belém:</strong> história e pastelaria nas redondezas.</li>
+      <li><strong>Alfama:</strong> ruas estreitas, miradouros e fado ao entardecer.</li>
+      <li><strong>Chiado e Bairro Alto:</strong> cafés, lojas e vida noturna animada.</li>
+    </ul>
+
+    <h3>Dicas práticas</h3>
+    <ul>
+      <li>Use o elétrico 28 para um passeio clássico, mas espere filas na alta temporada.</li>
+      <li>Prove pastéis de nata em diferentes padarias e compare — sempre vale a pena.</li>
+      <li>Leve um calçado confortável para as ladeiras e calçadas de pedra.</li>
     </ul>
 
     <blockquote>
@@ -22,7 +30,7 @@ const viagem = {
     </blockquote>
 
     <h3>Produto Recomendado</h3>
-    <p>Use uma <strong>mochila antifurto</strong> para explorar a cidade com segurança.</p>
+    <p>Use uma <strong>mochila antifurto</strong> para explorar a cidade com segurança e praticidade.</p>
   `,
   product: {
     name: "Mochila Antifurto Tigernu",

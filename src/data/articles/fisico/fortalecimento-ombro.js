@@ -6,6 +6,10 @@ const article = {
   readingTime: "6 min",
   category: "fisica",
   subcategory: "ombro",
+
+  shortDescription: "Série de exercícios seguros para fortalecer ombros, prevenir lesões e melhorar postura e amplitude de movimento.",
+  excerpt: "Fortaleça ombro e manguito rotador com exercícios controlados: elevação lateral com elástico, rotações externas e pranchas com apoio alternado.",
+
   content: `
     <h2>Por que fortalecer o ombro?</h2>
     <p>O ombro é uma das articulações mais usadas no dia a dia e uma das mais suscetíveis a lesões. Fortalecê-lo promove estabilidade, melhora a postura e previne problemas comuns como tendinites, bursites e instabilidade articular.</p>

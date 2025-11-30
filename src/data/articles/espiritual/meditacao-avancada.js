@@ -6,24 +6,11 @@ const article = {
   readingTime: "5 min",
   category: "espiritual",
   subcategory: "meditacao-avancada",
-  content: `
-    <p>Meditar é escutar a alma. Quando essa prática evolui, torna-se uma poderosa ferramenta de autoconhecimento e expansão da consciência.</p>
 
-    <h2>Do Básico ao Profundo</h2>
-    <p>Depois de dominar técnicas de respiração e foco, é hora de explorar níveis mais sutis da mente. Essa jornada exige paciência e consistência — e traz recompensas que vão além da calma mental.</p>
+  shortDescription: "Aprenda técnicas avançadas de meditação para aprofundar sua consciência e fortalecer sua prática espiritual.",
+  excerpt: "Descubra como evoluir na meditação com técnicas avançadas: luz guiada, observação consciente e conexão energética.",
 
-    <h2>Técnicas de Meditação Avançada</h2>
-    <ul>
-      <li><strong>Meditação guiada de luz:</strong> Visualize uma luz percorrendo seu corpo, purificando pensamentos e emoções.</li>
-      <li><strong>Observação consciente:</strong> Observe sem julgamento os pensamentos que surgem e deixe-os partir naturalmente.</li>
-      <li><strong>Conexão energética:</strong> Traga atenção ao fluxo de energia interna, sentindo como tudo está conectado.</li>
-    </ul>
-
-    <p>Meditar é mais do que relaxar — é redescobrir a presença divina que habita em você.</p>
-
-    <h3>Insight Extra</h3>
-    <p>Reserve um espaço especial para meditar e mantenha-o com bons aromas, plantas e luz natural. Esse ambiente reforça a energia espiritual e eleva sua frequência pessoal.</p>
-  `,
+  content: `...`,
   product: {
     name: "Livro: Meditação para Pessoas Ocupadas (Osho)",
     description: "Aprenda a meditar com leveza e praticidade mesmo em meio a uma rotina acelerada.",

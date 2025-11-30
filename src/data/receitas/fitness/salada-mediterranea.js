@@ -7,6 +7,10 @@ const saladaMediterranea = {
   calorias: 190,
   categoria: "Almoço Fit",
   descricaoCurta: "Com azeite, azeitonas e tomate seco — um clássico leve e colorido.",
+  // resumo curto para cards / listagens
+  shortDescription: "Salada fresca com azeite, azeitonas e queijo feta — leve, saborosa e ótima como acompanhamento ou prato principal leve.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Salada mediterrânea com azeite, azeitonas e tomate seco — refeição leve, colorida e nutritiva.",
   ingredientes: [
     "Alface e rúcula",
     "Tomate seco",

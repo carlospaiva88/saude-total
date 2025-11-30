@@ -1,22 +1,21 @@
 // src/components/BlogPage/BlogHome.js
 import React, { useMemo, useRef } from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import NavbarSpacer from "../../components/Navbar/NavbarSpacer";
 import Footer from "../../components/Footer/Footer";
 import ArticleCard from "../../components/ArticleCard/ArticleCard";
 import articlesData from "../../data/articles/index";
 import receitas from "../../data/receitas/index";
-import CalculadoraPreview from "../../components/Calculadora/CalculadoraPreview";
-import ContinueExploring from "../BlogPage/ContinueExploring";
 import TagsCloud from "../../components/BlogPage/TagsCloud";
 import NewsletterCTA from "../../components/BlogPage/NewsletterCTA";
 import viagensData from "../../data/viagens/index";
 import productsData from "../../data/products";
 import MiniQuizSaude from "../../components/BlogPage/MiniQuizSaude";
 import FraseDoDia from "../BlogPage/FraseDoDia";
+import CategoryCarousel from "./CategoryCarousel";
+import * as S from "./BlogHome.styles";
 
+import styled from "styled-components";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, A11y } from "swiper";
 import "swiper/css";
@@ -53,42 +52,153 @@ function buildPostLink(post) {
 }
 
 function buildTripLink(v) {
-  // tenta identificar categoria/subcategoria legível para URL (com muitos fallbacks)
-  const cat = v.categorySlug || v.category || v.region || v.tipo || v.type || "nacional";
+  const cat = v.category || v.categorySlug || v.region || v.tipo || v.type || "nacionais";
   const slug = v.slug || v.id || v.nome || v.title || "";
   return `/viagens/${encodeURIComponent(String(cat).toLowerCase())}/${encodeURIComponent(String(slug))}`;
 }
 
-/* ---------------- UnifiedCarousel (novo, premium) ----------------
-   Recebe items com forma:
-   { type: 'article' | 'receita' | 'product' | 'trip', title, image, link, excerpt?, badge? , meta?, price? }
+/* ---------------- dedupe helpers ---------------- */
+
+// normaliza strings: remove acentos, trim, toLower, colapsa espaços
+function normalizeString(str = "") {
+  return String(str || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+// retorna chave única preferindo slug/id, senão title normalizado
+function keyForPost(p = {}) {
+  if (!p) return "";
+  if (p.slug && String(p.slug).trim()) return normalizeString(String(p.slug));
+  if (p.id && String(p.id).trim()) return normalizeString(String(p.id));
+  if (p.friendlySlug && String(p.friendlySlug).trim()) return normalizeString(String(p.friendlySlug));
+  if (p.link && String(p.link).trim()) return normalizeString(String(p.link));
+  return normalizeString(p.title || p.titulo || p.nome || "");
+}
+
+// regras de preferência para manter melhor versão do post
+function preferPost(existing, candidate) {
+  const getBool = (x) => !!(x && (x.featured || x.destaque || x.popular));
+  if (!existing) return candidate;
+  const eFeatured = getBool(existing);
+  const cFeatured = getBool(candidate);
+  if (cFeatured && !eFeatured) return candidate;
+  if (eFeatured && !cFeatured) return existing;
+
+  const eDate = safeDate(existing.date || existing.datePublished);
+  const cDate = safeDate(candidate.date || candidate.datePublished);
+  if (cDate > eDate) return candidate;
+  if (eDate > cDate) return existing;
+
+  const eLen = (existing.excerpt || existing.descricao || existing.description || "").length;
+  const cLen = (candidate.excerpt || candidate.descricao || candidate.description || "").length;
+  if (cLen > eLen) return candidate;
+
+  return existing;
+}
+
+// uniquePosts: retorna array deduplicado preservando prioridade
+function uniquePosts(posts = []) {
+  const map = new Map();
+  for (const p of posts || []) {
+    const key = keyForPost(p);
+    if (!key) {
+      const fallback = normalizeString(JSON.stringify(p)).slice(0, 40) || Math.random().toString(36).slice(2,8);
+      if (!map.has(fallback)) map.set(fallback, p);
+      continue;
+    }
+    if (!map.has(key)) {
+      map.set(key, p);
+    } else {
+      const kept = preferPost(map.get(key), p);
+      map.set(key, kept);
+    }
+  }
+  return Array.from(map.values());
+}
+
+/* ---------------- replace shortenTitle (safe) ---------------- */
+/* shortenTitle: reduz título em listagens quando apropriado
+   - remove subtítulos após ":" ou "—" ou "-" e limita comprimento
+   - robusto contra valores não-string
 */
+function shortenTitle(title = "", max = 36) {
+  try {
+    // garante string
+    const raw = title == null ? "" : String(title);
+    // corta por separadores comuns e mantem apenas partes não vazias
+    const parts = raw.split(/[:—\-–]/).map(p => String(p || "").trim()).filter(Boolean);
+    let base = parts.length ? parts[0] : raw.trim();
+    if (base.length <= max) return base;
+    // corta por palavra sem quebrar no meio
+    const words = base.split(/\s+/);
+    let out = "";
+    for (const w of words) {
+      if ((out + " " + w).trim().length > max) break;
+      out = (out + " " + w).trim();
+    }
+    return out + (out.length < base.length ? "…" : "");
+  } catch (err) {
+    // fallback seguro
+    const s = (title == null ? "" : String(title)).slice(0, max);
+    return s + (s.length < String(title || "").length ? "…" : "");
+  }
+}
+
+/* trunc helper */
+function trunc(str = "", n = 120) {
+  if (!str) return "";
+  const s = String(str).trim();
+  return s.length > n ? s.slice(0, n - 1).trim() + "…" : s;
+}
+
+/* ---------------- UnifiedCarousel (cards) ---------------- */
 function UnifiedCarousel({ items = [] }) {
   const swiperRef = useRef(null);
 
-  if (!items || items.length === 0) return null;
+  // garantir items únicos por link/title (não-condicional)
+  const effectiveItems = useMemo(() => {
+    const seen = new Set();
+    const out = [];
+    for (const it of items || []) {
+      const key = (it.link || it.title || JSON.stringify(it)).toString();
+      if (!seen.has(key)) {
+        seen.add(key);
+        out.push(it);
+      }
+    }
+    return out;
+  }, [items]);
+
+  if (!effectiveItems || effectiveItems.length === 0) return null;
 
   const slidePrev = () => { if (swiperRef.current) swiperRef.current.slidePrev(); };
   const slideNext = () => { if (swiperRef.current) swiperRef.current.slideNext(); };
 
+  const loopedSlides = Math.max(Math.min(effectiveItems.length, 12), 1);
+
   return (
-    <UnifiedWrapper aria-label="Carrossel de conteúdos recomendados">
-      <UnifiedHeader>
+    <S.UnifiedWrapper aria-label="Carrossel de conteúdos recomendados">
+      <S.UnifiedHeader>
         <div>
           <h2>Em destaque</h2>
           <p>Conteúdos, receitas e produtos selecionados para você.</p>
         </div>
 
-        <Controls>
-          <NavButton onClick={slidePrev} aria-label="Anterior">‹</NavButton>
-          <NavButton onClick={slideNext} aria-label="Próximo">›</NavButton>
-        </Controls>
-      </UnifiedHeader>
+        <S.Controls>
+          <S.NavButton onClick={slidePrev} aria-label="Anterior">‹</S.NavButton>
+          <S.NavButton onClick={slideNext} aria-label="Próximo">›</S.NavButton>
+        </S.Controls>
+      </S.UnifiedHeader>
 
-      <SwiperActiveStyles>
+      <S.SwiperActiveStyles>
         <Swiper
           modules={[Autoplay, A11y]}
-          loop
+          loop={effectiveItems.length > 1}
+          loopedSlides={loopedSlides}
           autoplay={{ delay: 3500, disableOnInteraction: false }}
           speed={600}
           spaceBetween={18}
@@ -103,47 +213,146 @@ function UnifiedCarousel({ items = [] }) {
           a11y={{ prevSlideMessage: "Anterior", nextSlideMessage: "Próximo" }}
           style={{ paddingBottom: 12, position: "relative" }}
         >
-          {items.map((it, i) => (
-            <SwiperSlide key={`${it.type}-${i}`} style={{ height: "100%" }}>
-              <Slide>
-                <CardLink
+          {effectiveItems.map((it, i) => (
+            <SwiperSlide key={`${(it.link||it.title)}-${i}`} style={{ height: "100%" }}>
+              <S.Slide>
+                <S.CardLink
                   to={it.link}
                   aria-label={`${it.type} - ${it.title}`}
                   onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 >
-                  <Card>
-                    <Thumb role="img" aria-label={it.title} style={{ backgroundImage: `url(${safeImage(it)})` }} />
-                    <CardBody>
-                      <Badge type={it.type}>{it.badge || (it.type === "article" ? "Artigo" : it.type === "receita" ? "Receita" : it.type === "product" ? "Produto" : "Viagem")}</Badge>
-                      <CardTitle>{it.title}</CardTitle>
+                  <S.Card>
+                    <S.Thumb role="img" aria-label={it.title} style={{ backgroundImage: `url(${safeImage(it)})` }} />
+                    <S.CardBody>
+                      <S.Badge type={it.type}>
+                        {it.badge || (it.type === "article" ? "Artigo" : it.type === "receita" ? "Receita" : it.type === "product" ? "Produto" : "Viagem")}
+                      </S.Badge>
+                      <S.CardTitle>{it.title}</S.CardTitle>
 
-                      {/* sempre renderiza o CardExcerpt (mesmo que placeholder) para manter layout estável */}
-                      {it.excerpt ? (
-                        <CardExcerpt>{it.excerpt}</CardExcerpt>
-                      ) : (
-                        <CardExcerpt aria-hidden dangerouslySetInnerHTML={{ __html: "&nbsp;" }} />
-                      )}
+                      <S.CardExcerpt
+                        dangerouslySetInnerHTML={{
+                          __html: (it.excerpt && it.excerpt.length > 0)
+                            ? (it.excerpt.length > 140 ? `${it.excerpt.slice(0, 137)}…` : it.excerpt)
+                            : '&nbsp;'
+                        }}
+                        aria-hidden={!(it.excerpt && it.excerpt.length > 0)}
+                      />
 
-                      <CardFooter>
-                        <ReadMore>Ver conteúdo →</ReadMore>
-                        {it.type === "product" && it.price ? <Price>{it.price}</Price> : null}
-                      </CardFooter>
-                    </CardBody>
-                  </Card>
-                </CardLink>
-              </Slide>
+                      <S.CardFooter>
+                        <S.ReadMore>Ver conteúdo →</S.ReadMore>
+                        {it.type === "product" && it.price ? <S.Price>{it.price}</S.Price> : null}
+                      </S.CardFooter>
+                    </S.CardBody>
+                  </S.Card>
+                </S.CardLink>
+              </S.Slide>
             </SwiperSlide>
           ))}
         </Swiper>
-      </SwiperActiveStyles>
-    </UnifiedWrapper>
+      </S.SwiperActiveStyles>
+    </S.UnifiedWrapper>
+  );
+}
+
+/* ---------------- LocalContinueExploring (4 col) ----------------
+   Columns:
+    - Artigos (lista compacta com título curto + meta)
+    - Receitas (mini recipes)
+    - Produtos (product mini card)
+    - Viagens (mini trip card)
+*/
+function LocalContinueExploring({ posts = [], receitas = [], products = [], trips = [] }) {
+  // dedupe posts again and keep top N
+  const uniqPosts = useMemo(() => uniquePosts(posts).slice(0, 6), [posts]);
+  const uniqRecipes = useMemo(() => (safeArray(receitas).flat().slice(0, 6)), [receitas]);
+  const uniqProducts = useMemo(() => safeArray(products).slice(0, 6), [products]);
+  const uniqTrips = useMemo(() => uniquePosts(trips).slice(0, 6), [trips]);
+
+  return (
+    <ContinueGrid>
+      <Column>
+        <h4>Artigos</h4>
+        <List>
+          {uniqPosts.map(p => (
+            <ListItem key={p.slug || p.id || p.title}>
+              <a href={buildPostLink(p)}>
+                <img src={safeImage(p)} alt={p.title} />
+                <div>
+                  <strong>{shortenTitle(p.title || p.titulo)}</strong>
+                  <small>{trunc(p.excerpt || p.descricao || "", 90)}</small>
+                </div>
+              </a>
+            </ListItem>
+          ))}
+        </List>
+      </Column>
+
+      <Column>
+        <h4>Receitas</h4>
+        <List>
+          {uniqRecipes.map(r => (
+            <ListItem key={r.slug}>
+              <a href={`/receitas/${encodeURIComponent(r.slug)}`}>
+                <img src={r.imagem || r.image ||"/placeholder-4x3.png"} alt={r.titulo} />
+                <div>
+                  <strong>{shortenTitle(r.titulo)}</strong>
+                  <small>
+                    {r.tempo ? r.tempo : ""}
+                    {r.calorias ? ` • ${r.calorias} kcal` : ""}
+                    <br/> 
+                    {r.shortDescription}</small>
+                </div>
+              </a>
+            </ListItem>
+          ))}
+        </List>
+      </Column>
+
+      <Column>
+        <h4>Produtos</h4>
+        <List>
+          {uniqProducts.map(p => (
+            <ListItem key={p.id || p.slug}>
+              <a href={p.affiliateLink || p.link} target="_blank" rel="noreferrer">
+                <img src={p.image || "/placeholder-4x3.png"} alt={p.name} />
+                <div>
+                  <strong>{shortenTitle(p.name)}</strong>
+                  <small>
+                    {p.price ? `${p.price}` : (p.brand || "")}
+                    <br/>
+                    {p.shortDescription}
+                    </small>
+                </div>
+              </a>
+            </ListItem>
+          ))}
+        </List>
+      </Column>
+
+      <Column>
+        <h4>Viagens</h4>
+        <List>
+          {uniqTrips.map(t => (
+            <ListItem key={t.slug || t.title}>
+              <a href={t.slug ? buildTripLink(t) : "/viagens"}>
+                <img src={t.image || t.imagem || "/placeholder-4x3.png"} alt={t.title} />
+                <div>
+                  <strong>{shortenTitle(t.title || t.titulo)}</strong>
+                  <small>{trunc(t.shortDescription || t.excerpt || "", 90)}</small>
+                </div>
+              </a>
+            </ListItem>
+          ))}
+        </List>
+      </Column>
+    </ContinueGrid>
   );
 }
 
 /* ---------------- main page component ---------------- */
 
 export default function BlogHome() {
-  // NOTE: articlesData / produtos / viagens são módulos estáticos — memo vazio é suficiente
+  // postsArray: fonte estática vindo dos módulos
   const postsArray = useMemo(() => safeArray(articlesData), []);
 
   const recent = useMemo(() => {
@@ -154,10 +363,21 @@ export default function BlogHome() {
   }, [postsArray]);
 
   const popular = useMemo(() => {
-    return postsArray.filter(p => p.featured || p.destaque || p.popular).slice(0, 6);
+    const raw = postsArray.filter(p => p.featured || p.destaque || p.popular);
+    const seen = new Set();
+    const dedup = [];
+    for (const p of raw) {
+      const key = (p.slug || p.id || p.title || p.titulo || "").toString();
+      if (!key) continue;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      dedup.push(p);
+      if (dedup.length >= 6) break;
+    }
+    return dedup;
   }, [postsArray]);
 
-  // build unified carousel items with type metadata
+  // carouselItems: monta mix de conteúdos (dependências vazias intencionais porque os módulos são estáticos)
   const carouselItems = useMemo(() => {
     const produtos = safeArray(productsData?.products).map(p => ({
       type: "product",
@@ -169,25 +389,27 @@ export default function BlogHome() {
       price: p.price ? `R$ ${p.price}` : null,
     }));
 
-    const recs = (Array.isArray(receitas) ? receitas.flat() : [].concat(...Object.values(receitas || {})))
-      .map(r => ({
-        type: "receita",
-        title: r.titulo || r.title || "Receita",
-        image: r.imagem || r.image || "/placeholder-16x9.png",
-        link: `/receitas/${encodeURIComponent(r.slug)}`,
-        excerpt: (r.descricaoCurta || r.descricao || "").slice(0, 120),
-        badge: r.categoria || "Receita",
-        meta: r.tempo ? `${r.tempo}` : undefined,
-      }));
+    const recs = safeArray(receitas).flat().map(r => ({
+      type: "receita",
+      title: r.titulo || r.title || "Receita",
+      image: r.imagem || r.image || "/placeholder-16x9.png",
+      link: `/receitas/${encodeURIComponent(r.slug)}`,
+      excerpt: (r.descricaoCurta || r.descricao || "").slice(0, 140),
+      badge: r.categoria || "Receita",
+      meta: r.tempo ? `${r.tempo}` : undefined,
+    }));
 
-    // garantir que viagensData seja achatado caso seja objeto com categorias
-    const viagensArr = safeArray(viagensData).flat();
-    const viagens = viagensArr.map(v => ({
+    // Flatten robusto de viagensData: aceita objeto com categorias
+    const viagensArr = Array.isArray(viagensData)
+      ? viagensData.flat(Infinity).filter(Boolean)
+      : Object.values(viagensData || {}).flat(Infinity).filter(Boolean);
+
+    const viagens = safeArray(viagensArr).map(v => ({
       type: "trip",
-      title: v.title || v.nome || v.titulo || "Viagem",
+      title: v.title || v.titulo || v.nome || "Viagem",
       image: v.image || v.imagem || "/placeholder-16x9.png",
-      link: buildTripLink(v),
-      excerpt: (v.description || v.excerpt || "").slice(0, 110),
+      link: v.slug ? buildTripLink(v) : (v.link || "/viagens"),
+      excerpt: (v.shortDescription || v.excerpt || v.description || "").slice(0, 140),
       badge: "Viagem",
     }));
 
@@ -198,84 +420,60 @@ export default function BlogHome() {
         title: a.title || a.titulo || "Artigo",
         image: safeImage(a),
         link: buildPostLink(a),
-        excerpt: (a.excerpt || a.descricao || a.description || "").slice(0, 120),
+        excerpt: (a.excerpt || a.descricao || a.description || a.shortDescription || "").slice(0, 140),
         badge: a.category || a.categoria || "Artigo",
       }));
 
-    // Mix com prioridade: artigos recentes + receitas populares + produtos em destaque + viagens
     const mixed = [
       ...artigos.slice(0, 8),
       ...recs.slice(0, 6),
       ...produtos.slice(0, 4),
-      ...viagens.slice(0, 4)
+      ...viagens.slice(0, 8)
     ];
 
-    // remover duplicatas por link/title simples
-    const seen = new Set();
-    const dedup = mixed.filter(it => {
-      const key = it.link || it.title;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
+    // dedup robusto por posts (aplica preferências já definidas)
+    const dedup = uniquePosts(mixed).slice(0, 18);
+    return dedup;
+  }, []);
 
-    return dedup.slice(0, 18);
-  }, []); // dependências dos módulos estáticos omitidas intencionalmente (ok aqui)
+  // dedup de artigos antes de enviar para ContinueExploring (evita repetir posts recomendados)
+  const dedupPosts = useMemo(() => uniquePosts(postsArray), [postsArray]);
+
+  // prepare small arrays for continue exploring
+  // <-- removi useMemo aqui porque receitas e productsData são módulos estáticos (evita warnings eslint sobre depender de variáveis de módulo)
+  const receitasFlat = safeArray(receitas).flat();
+  const productsFlat = safeArray(productsData?.products);
+
+  const viagensFlat = useMemo(() => {
+    const arr = Array.isArray(viagensData) ? viagensData.flat(Infinity) : Object.values(viagensData || {}).flat(Infinity);
+    return safeArray(arr).filter(Boolean);
+  }, []);
 
   return (
     <>
       <Navbar />
       <NavbarSpacer />
-      <Wrapper>
-        <Hero aria-labelledby="hero-title" role="region">
-          <HeroText>
+      <S.Wrapper>
+        <S.Hero aria-labelledby="hero-title" role="region">
+          <S.HeroText>
             <h1 id="hero-title">Como está a sua saúde hoje?</h1>
             <p>Conteúdo confiável sobre corpo, mente e hábitos para uma vida com mais energia e bem-estar.</p>
-          </HeroText>
+          </S.HeroText>
 
-          <HeroImg
+          <S.HeroImg
             src="https://images.pexels.com/photos/3791134/pexels-photo-3791134.jpeg"
             alt="Pessoa praticando exercício ao ar livre — saúde e bem-estar"
             loading="lazy"
           />
-        </Hero>
+        </S.Hero>
 
-        <SectionTitle>Categorias</SectionTitle>
+        <S.SectionTitle>Categorias</S.SectionTitle>
+        <CategoryCarousel categories={categories} />
 
-        <Swiper
-          modules={[Autoplay, A11y]}
-          loop
-          centeredSlides
-          autoplay={{ delay: 3000, disableOnInteraction: false }}
-          speed={700}
-          spaceBetween={18}
-          slidesPerView={"auto"}
-          breakpoints={{
-            320: { slidesPerView: 1.05 },
-            640: { slidesPerView: 1.4 },
-            900: { slidesPerView: 2.2 },
-            1200: { slidesPerView: 3 }
-          }}
-          style={{ paddingBottom: "1.25rem", marginBottom: "1.5rem" }}
-          aria-label="Carrossel de categorias"
-        >
-          {categories.map(c => (
-            <SwiperSlide key={c.id} style={{ width: 320 }}>
-              <CatCard to={`/blog/${encodeURIComponent(c.id)}`} aria-label={`Categoria ${c.name}`}>
-                <CatThumb style={{ backgroundImage: `url(${c.image})` }} role="img" aria-label={`${c.name} imagem`} />
-                <CatOverlay>
-                  <h4>{c.name}</h4>
-                  <p>Conteúdos sobre {c.name.toLowerCase()} para seu bem-estar.</p>
-                </CatOverlay>
-              </CatCard>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-
-        <TwoColumnRow>
-          <Column flex="2" as="section" aria-labelledby="recent-title">
-            <SectionTitle id="recent-title">Artigos Recentes</SectionTitle>
-            <Grid>
+        <S.TwoColumnRow>
+          <S.Column flex="2" as="section" aria-labelledby="recent-title">
+            <S.SectionTitle id="recent-title">Artigos Recentes</S.SectionTitle>
+            <S.Grid>
               {recent.map((post) => (
                 <ArticleCard
                   key={post.slug || post.id}
@@ -283,17 +481,17 @@ export default function BlogHome() {
                   to={buildPostLink(post)}
                 />
               ))}
-            </Grid>
-          </Column>
+            </S.Grid>
+          </S.Column>
 
-          <Column flex="1" as="aside" aria-labelledby="side-title">
-            <SideBox>
+          <S.Column flex="1" as="aside" aria-labelledby="side-title">
+            <S.SideBox>
               <FraseDoDia />
 
               <h3 id="side-title">Populares</h3>
-              <PopularList>
+              <S.PopularList>
                 {popular.length ? popular.map(p => (
-                  <SmallPopular
+                  <S.SmallPopular
                     key={p.slug || p.id}
                     to={buildPostLink(p)}
                     aria-label={`Abrir artigo ${p.title || p.titulo}`}
@@ -309,449 +507,172 @@ export default function BlogHome() {
                       <strong>{p.title || p.titulo}</strong>
                       <span>{(p.excerpt || p.descricao || p.description || "").slice(0, 90)}{(p.excerpt || p.descricao || p.description || "").length > 90 ? "…" : ""}</span>
                     </div>
-                  </SmallPopular>
-                )) : <Empty>Sem artigos em destaque</Empty>}
-              </PopularList>
+                  </S.SmallPopular>
+                )) : <S.Empty>Sem artigos em destaque</S.Empty>}
+              </S.PopularList>
 
-              <Divider />
-
-              <h3>Calculadoras Rápidas</h3>
-              <CalculadoraPreview />
-
-              <Divider />
+              <S.Divider />
 
               <h3>Receitas recomendadas</h3>
-              <MiniRecipes>
-                {safeArray(receitas).flat().slice(0, 3).map(r => (
-                  <MiniRecipe key={r.slug} to={`/receitas/${encodeURIComponent(r.slug)}`}>
+              <S.MiniRecipes>
+                {receitasFlat.slice(0, 3).map(r => (
+                  <S.MiniRecipe key={r.slug} to={`/receitas/${encodeURIComponent(r.slug)}`}>
                     <img src={r.imagem || r.image || "/placeholder-1x1.png"} alt={r.titulo || r.title} loading="lazy" />
                     <div>
                       <strong>{r.titulo}</strong>
                       <small>{r.tempo || ""}</small>
                     </div>
-                  </MiniRecipe>
+                  </S.MiniRecipe>
                 ))}
-              </MiniRecipes>
+              </S.MiniRecipes>
 
-              <Divider />
+              <S.Divider />
 
               <MiniQuizSaude />
-            </SideBox>
-          </Column>
-        </TwoColumnRow>
+            </S.SideBox>
+          </S.Column>
+        </S.TwoColumnRow>
 
         {/* unified carousel */}
         <UnifiedCarousel items={carouselItems} />
 
-        <ContinueSection>
-          <ContinueExploring
-            posts={postsArray}
-            receitas={safeArray(receitas).flat()}
-            products={safeArray(productsData?.products)}
-            trips={safeArray(viagensData)}
+        <S.ContinueSection>
+          <LocalContinueExploring
+            posts={dedupPosts}
+            receitas={receitasFlat}
+            products={productsFlat}
+            trips={viagensFlat}
           />
-          <TagsNewsletterRow>
+
+          <S.TagsNewsletterRow>
             <TagsCloud articles={postsArray} />
             <NewsletterCTA />
-          </TagsNewsletterRow>
-        </ContinueSection>
-      </Wrapper>
+          </S.TagsNewsletterRow>
+        </S.ContinueSection>
+      </S.Wrapper>
 
       <Footer />
     </>
   );
 }
 
-/* ---------------- Styled (mantive grande parte do seu original + novos estilos pro unified carousel) ---------------- */
+/* ---------------- local styled for ContinueExploring ---------------- */
 
-const Hero = styled.section`
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 2rem;
-  align-items: center;
-  margin-bottom: 2.5rem;
-  padding: 1.6rem;
-  background: ${({ theme }) => theme.gradients.soft};
-  border-radius: ${({ theme }) => theme.radius.lg};
-  @media (max-width: 980px) {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-`;
 
-const HeroText = styled.div`
-  h1 {
-    font-size: 2.4rem;
-    margin-bottom: 0.6rem;
-    color: ${({ theme }) => theme.colors.primaryDark};
-    font-family: ${({ theme }) => theme.fonts.heading};
-  }
-  p {
-    font-size: 1.05rem;
-    color: ${({ theme }) => theme.colors.text};
-    margin-bottom: 1rem;
-  }
-`;
-
-const HeroImg = styled.img`
+const ContinueGrid = styled.section`
+  box-sizing: border-box;
   width: 100%;
-  max-height: 320px;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  border-radius: ${({ theme }) => theme.radius.md};
-  box-shadow: ${({ theme }) => theme.shadow.sm};
-  @media (max-width: 980px) {
-    margin-top: 1rem;
-    max-height: 220px;
-  }
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 1.6rem;
-  color: ${({ theme }) => theme.colors.primaryDark};
-  margin: 1.75rem 0 1rem;
-  text-align: center;
-`;
-
-/* Category cards (mantidos com overlay) */
-const CatCard = styled(Link)`
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  background: ${({ theme }) => theme.colors.surface};
-  border-radius: ${({ theme }) => theme.radius.md};
-  padding: 0.9rem;
-  text-decoration: none;
-  color: inherit;
-  box-shadow: ${({ theme }) => theme.shadow.sm};
-  cursor: pointer;
-  height: 100%;
-`;
-
-const CatThumb = styled.div`
-  width: 100%;
-  height: 160px;
-  background-size: cover;
-  background-position: center;
-  border-radius: 12px;
-  box-shadow: ${({ theme }) => theme.shadow.sm};
-`;
-
-const CatOverlay = styled.div`
-  margin-top: 0.6rem;
-  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.03) 100%);
-  padding: .6rem;
-  border-radius: 8px;
-  h4 { margin:0; color: ${({ theme }) => theme.colors.primaryDark}; }
-  p { margin:0; font-size:0.9rem; color: ${({ theme }) => theme.colors.secondaryDark}; opacity:0.95; }
-`;
-
-/* Layout columns (mantidos) */
-const TwoColumnRow = styled.div`
+  max-width: 100%;
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 1.25rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
   margin-top: 1rem;
 
-  @media (max-width: 980px) { 
-    grid-template-columns: 1fr; 
+  /* evita que conteúdos internos causem overflow do container pai */
+  overflow: hidden;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
   }
 `;
 
+/* Column: cartão que contém lista — garante que o conteúdo interno pode encolher */
 const Column = styled.div`
-  flex: ${(p) => p.flex || 1};
-`;
+  box-sizing: border-box;
+  background: ${({ theme }) => theme.colors?.surface || "#fff"};
+  padding: 0.9rem;
+  border-radius: 12px;
+  box-shadow: ${({ theme }) => theme.shadow?.xs || "0 6px 18px rgba(16,88,71,0.04)"};
+  min-width: 0; /* CRUCIAL: permite que filhos flex encolham sem forçar overflow */
 
-const Grid = styled.div`
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(3, 1fr);
-  margin-top: 0.6rem;
-  grid-auto-rows: 1fr;
-
-  & > a, & > article, & > div { height: 100%; }
-
-  @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
-  @media (max-width: 720px) { grid-template-columns: 1fr; }
-`;
-
-const SideBox = styled.aside`
-  background: ${({ theme }) => theme.colors.surface};
-  padding: 1rem;
-  border-radius: ${({ theme }) => theme.radius.md};
-  box-shadow: ${({ theme }) => theme.shadow.xs};
-`;
-
-const PopularList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-`;
-
-const SmallPopular = styled(Link)`
-  display: flex;
-  gap: 0.6rem;
-  text-decoration: none;
-  color: inherit;
-  align-items: center;
-  img { 
-    width: 72px; 
-    height: 60px; 
-    object-fit: cover; 
-    border-radius: 8px; 
-    flex-shrink: 0; 
-  }
-  div { display: flex; flex-direction: column; }
-  strong { font-size: 0.95rem; color: ${({ theme }) => theme.colors.primaryDark}; }
-  span { font-size: 0.85rem; color: ${({ theme }) => theme.colors.text}; opacity:0.9; }
-`;
-
-const MiniRecipes = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin-top: 0.6rem;
-`;
-
-const MiniRecipe = styled(Link)`
-  display: flex;
-  gap: 0.6rem;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  img { width: 64px; height: 56px; object-fit: cover; border-radius: 8px; }
-  strong { font-size: 0.95rem; color: ${({ theme }) => theme.colors.primaryDark}; }
-  small { font-size: 0.8rem; color: ${({ theme }) => theme.colors.text}; }
-`;
-
-const Empty = styled.div`
-  color: ${({ theme }) => theme.colors.text};
-  opacity: 0.8;
-  font-size: 0.95rem;
-  padding: 0.6rem 0;
-`;
-
-const Divider = styled.hr`
-  margin: 1rem 0;
-  border: none;
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
-`;
-
-const ContinueSection = styled.section`
-  margin-top: 2.5rem;
-`;
-
-const TagsNewsletterRow = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 1rem;
-  margin-top: 1.25rem;
-
-  @media (max-width: 980px) { grid-template-columns: 1fr; }
-`;
-
-const Wrapper = styled.main`
-  max-width: ${({ theme }) => theme.layout.maxWidth || "1200px"};
-  margin: 2.5rem auto;
-  padding: 0 1rem;
-`;
-
-/* ---------------- Styles do UnifiedCarousel (cards) ---------------- */
-
-const UnifiedWrapper = styled.section`
-  margin: 2rem 0;
-`;
-
-const UnifiedHeader = styled.div`
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom: 1rem;
-  gap: 1rem;
-  h2 { margin: 0; color: ${({ theme }) => theme.colors.primaryDark}; }
-  p { margin: 0; color: ${({ theme }) => theme.colors.secondaryDark}; font-size: .95rem; }
-`;
-
-const Controls = styled.div`
-  display:flex;
-  gap: .5rem;
-`;
-
-/* custom nav buttons */
-const NavButton = styled.button`
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  background: ${({ theme }) => theme.colors.surface};
-  color: ${({ theme }) => theme.colors.primaryDark};
-  font-size: 1.2rem;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  transition: transform .12s ease, background .12s ease;
-
-  &:hover {
-    transform: scale(1.05);
-    background: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.surface};
-  }
-
-  @media (max-width: 900px) {
-    display: none;
+  h4 {
+    margin: 0 0 0.6rem 0;
+    color: ${({ theme }) => theme.colors?.primaryDark};
   }
 `;
 
-/* Slide wrapper: garante stretch */
-const Slide = styled.div`
-  display: flex;
-  align-items: stretch;
-  justify-content: stretch;
-  min-height: 320px;
-  height: 100%;
+/* List: coluna de itens (vertical) */
+const List = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display:flex;
+  flex-direction:column;
+  gap:0.6rem;
   box-sizing: border-box;
 `;
 
-/* garante que o Link/clickable ocupe 100% do slide */
-const CardLink = styled(Link)`
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  width: 100%;
-  height: 100%;
-`;
+/* ListItem: força a imagem ocupar espaço fixo, evita que o texto empurre, e garante que texto quebre */
+const ListItem = styled.li`
+  box-sizing: border-box;
 
-/* card ocupa todo o espaço do slide e é um flex-column com footer fixo */
-const Card = styled.article.attrs(() => ({ className: "unified-card" }))`
-  background: ${({ theme }) => theme.colors.surface};
-  border-radius: 12px;
-  box-shadow: ${({ theme }) => theme.shadow.sm};
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 300px;
-  transition: transform .16s ease, box-shadow .16s ease;
-  width: 100%;
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: ${({ theme }) => theme.shadow.lg};
+  a {
+    display:flex;
+    gap:0.8rem;
+    text-decoration:none;
+    color:inherit;
+    align-items:center;
+    padding: 0.25rem 0;
+    min-width: 0; /* permite que o link encolha dentro do Column */
   }
 
-  @media (max-width: 720px) {
-    min-height: 280px;
-  }
-`;
-
-/* Thumb fixo no topo - não influencia o restante do fluxo */
-const Thumb = styled.div`
-  width: 100%;
-  height: 150px;
-  background-size: cover;
-  background-position: center;
-  flex-shrink: 0;
-`;
-
-/* corpo flex que ocupa o espaço restante — empurra o footer para baixo */
-const CardBody = styled.div`
-  padding: 0.9rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  flex: 1 1 auto;
-`;
-
-/* Badge permanece compacto */
-const Badge = styled.span`
-  display:inline-block;
-  font-size: 0.75rem;
-  padding: .24rem .48rem;
-  border-radius: 999px;
-  background: ${({ theme, type }) =>
-    type === "product" ? "#FFF3E0" :
-    type === "receita" ? "#E8F6EF" :
-    type === "trip" ? "#E8F0FF" :
-    "#F4F4F4"};
-  color: ${({ theme }) => theme.colors.primaryDark};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  width: fit-content;
-`;
-
-/* Título com clamp de 2 linhas */
-const CardTitle = styled.h4`
-  margin: 0;
-  font-size: 1.02rem;
-  color: ${({ theme }) => theme.colors.primaryDark};
-  line-height: 1.18;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-height: calc(1.02rem * 1.18 * 2);
-`;
-
-/* Excerpt ocupa espaço flex para criar uniformidade; clamp 3 linhas */
-const CardExcerpt = styled.p`
-  margin: 0;
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 0.9rem;
-  opacity: .95;
-  flex: 1 1 auto;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 0.4rem;
-`;
-
-/* meta curto (ex: tempo) */
-const CardMeta = styled.div`
-  font-size: 0.85rem;
-  color: ${({ theme }) => theme.colors.secondaryDark};
-`;
-
-/* footer fixo no fundo do card */
-const CardFooter = styled.div`
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: .6rem;
-  margin-top: .4rem;
-  flex-shrink: 0;
-`;
-
-/* CTAs */
-const ReadMore = styled.span`
-  font-size: 0.9rem;
-  color: ${({ theme }) => theme.colors.primary};
-  font-weight:600;
-`;
-
-const Price = styled.span`
-  background: ${({ theme }) => theme.colors.surfaceAlt || "#f5f5f5"};
-  padding: .25rem .5rem;
-  border-radius: 6px;
-  font-weight:700;
-  color: ${({ theme }) => theme.colors.primaryDark};
-`;
-
-/* estilo que aplica destaque no slide ativo (swiper adiciona .swiper-slide-active) */
-const SwiperActiveStyles = styled.div`
-  .swiper-slide,
-  .swiper-wrapper {
-    height: 100%;
-    align-items: stretch;
+  /* imagem: tamanho fixo (responda via media queries) */
+  img {
+    width: 120px;
+    height: 84px;
+    flex: 0 0 120px; /* reserva o espaço, não encolhe além disso */
+    object-fit: cover;
+    border-radius: 8px;
+    display:block;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   }
 
-  .swiper-slide-active .unified-card {
-    transform: scale(1.03);
-    box-shadow: ${({ theme }) => theme.shadow.xl};
+  /* content wrapper: permite truncamento interno em flex */
+  div {
+    min-width: 0; /* ESSENCIAL: permite truncamento do texto em flexbox */
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    overflow: hidden;
+  }
+
+  /* título: até 2 linhas sem estourar e com ellipsis */
+  strong {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.12;
+    font-size: 0.98rem;
+    color: ${({ theme }) => theme.colors?.primaryDark};
+    word-break: break-word;
+  }
+
+  /* descrição/meta: quebra palavras longas e limita linhas (ou usar nowrap se preferir) */
+  small {
+    display: block;
+    color: ${({ theme }) => theme.colors?.secondaryDark};
+    font-size: 0.86rem;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* permite quebra de palavras longas sem forçar overflow */
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  /* media queries para reduzir imagem em telas menores */
+  @media (max-width: 900px) {
+    img { width: 110px; height: 76px; flex: 0 0 110px; }
+  }
+  @media (max-width: 520px) {
+    img { width: 96px; height: 64px; flex: 0 0 96px; }
+    a { gap: 0.6rem; }
+    strong { -webkit-line-clamp: 2; font-size: 0.95rem; }
+    small { font-size: 0.82rem; }
   }
 `;
-
-/* ---------------- end file ---------------- */

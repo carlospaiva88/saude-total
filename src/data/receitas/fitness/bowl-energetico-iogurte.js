@@ -1,3 +1,4 @@
+// src/data/receitas/fitness/bowl-energetico-iogurte.js
 const bowlEnergeticoIogurte = {
   slug: "bowl-energetico-iogurte",
   titulo: "Bowl Energético de Iogurte com Banana e Granola",
@@ -6,6 +7,10 @@ const bowlEnergeticoIogurte = {
   calorias: 280,
   categoria: "Fitness",
   descricaoCurta: "Rápido, crocante e nutritivo — perfeito para o pré-treino.",
+  // resumo curto para cards / listagens
+  shortDescription: "Bowl prático com iogurte, banana e granola — carboidratos e proteínas na medida certa para seu pré-treino.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Bowl energético com iogurte, banana, granola e chia — rápido, nutritivo e ideal antes do treino.",
   ingredientes: [
     "1 pote de iogurte natural (170g)",
     "1 banana fatiada",

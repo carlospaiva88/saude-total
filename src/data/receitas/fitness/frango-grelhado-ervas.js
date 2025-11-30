@@ -7,6 +7,10 @@ const frangoGrelhadoErvas = {
   calorias: 260,
   categoria: "Almoço Fit",
   descricaoCurta: "Suculento, com ervas frescas e toque mediterrâneo.",
+  // resumo curto para cards / listagens
+  shortDescription: "Peito de frango grelhado temperado com ervas frescas — suculento, leve e perfeito para refeições balanceadas.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Frango grelhado com ervas e limão — receita simples e suculenta para um almoço saudável e saboroso.",
   ingredientes: [
     "2 filés de peito de frango",
     "1 colher (sopa) de azeite",

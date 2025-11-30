@@ -7,6 +7,10 @@ const tacosDePeixe = {
   calorias: 280,
   categoria: "Internacionais",
   descricaoCurta: "Inspirado na culinária mexicana — leve e saboroso.",
+  // resumo curto para cards / listagens
+  shortDescription: "Tacos leves com peixe grelhado, repolho e molho de iogurte — sabor mexicano com toque saudável.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Tacos de peixe: montagem rápida com filé grelhado, repolho crocante e molho cítrico — leve e saboroso.",
   ingredientes: [
     "Filés de peixe branco grelhados",
     "Tortilhas de milho",

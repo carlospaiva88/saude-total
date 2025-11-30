@@ -6,7 +6,12 @@ const article = {
   readingTime: "5 min",
   category: "mental",
   subcategory: "autoconhecimento-para-saude-mental",
+
+  shortDescription: "Práticas simples e reflexivas para aumentar autoconsciência, melhorar decisões e fortalecer a saúde mental.",
+  excerpt: "Descubra práticas de autoconhecimento — diário, meditação e reflexão — para reduzir ansiedade e fortalecer relações.",
+
   content: `
+<<<<<<< HEAD
     <p>O autoconhecimento deixou de ser apenas um conceito filosófico e se tornou uma necessidade real para quem deseja manter a saúde mental em equilíbrio. Em um mundo acelerado, repleto de estímulos, cobranças e incertezas, entender quem você é — o que sente, o que pensa, o que deseja e o que precisa — se tornou um dos maiores fatores de proteção emocional.</p>
 
     <p>Se você busca reduzir o estresse, melhorar relacionamentos, aumentar autoestima e conquistar estabilidade mental, o autoconhecimento é o primeiro passo.</p>
@@ -131,6 +136,17 @@ const article = {
     description: "Ajuda a registrar pensamentos e emoções, praticando a gratidão diária.",
     link: "https://amzn.to/44pKe8C",
     image: "https://m.media-amazon.com/images/I/61+06qhjiqL._AC_SL1500_.jpg",
+=======
+    <p>O autoconhecimento é um processo essencial para o fortalecimento da saúde mental, oferecendo maior controle emocional e qualidade de vida.</p>
+    ...
+  `,
+  product: {
+    name: "Diário de Autoconhecimento",
+    description: "Ajuda a registrar pensamentos e emoções, promovendo reflexão diária e crescimento pessoal.",
+    link: "https://amzn.to/3JMbXh7",
+    image: "https://m.media-amazon.com/images/I/71rUthuXkIL._AC_SX425_.jpg",
+>>>>>>> 9ad7391 (fazendo melhorias em todo o blog)
   },
 };
+
 export default article;

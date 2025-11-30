@@ -7,6 +7,10 @@ const panquecaBananaAveia = {
   calorias: 180,
   categoria: "Café da Manhã",
   descricaoCurta: "Leve, nutritiva e perfeita para começar o dia com energia.",
+  // resumo curto para cards / listagens
+  shortDescription: "Panqueca simples de banana e aveia — rápida, rica em fibras e perfeita para um café da manhã equilibrado.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Panqueca de banana e aveia: receita prática, nutritiva e ideal para começar o dia com energia e sabor.",
   ingredientes: [
     "1 banana madura amassada",
     "2 colheres (sopa) de aveia em flocos",

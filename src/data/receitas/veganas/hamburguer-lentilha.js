@@ -1,3 +1,4 @@
+// src/data/receitas/veganas/hamburguer-lentilha.js
 const hamburguerLentilha = {
   slug: "hamburguer-lentilha",
   titulo: "Hambúrguer Vegano de Lentilha",
@@ -6,6 +7,10 @@ const hamburguerLentilha = {
   calorias: 210,
   categoria: "Veganas",
   descricaoCurta: "Textura incrível e ótimo para sanduíches.",
+  // resumo curto para cards / listagens
+  shortDescription: "Hambúrguer vegano de lentilha e aveia — saboroso, com boa textura e ideal para sanduíches caseiros.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Hambúrguer vegano de lentilha: combinação de lentilha e aveia para textura firme e sabor caseiro — ótimo em sanduíches.",
   ingredientes: [
     "1 xícara de lentilha cozida",
     "1/2 xícara de aveia em flocos",

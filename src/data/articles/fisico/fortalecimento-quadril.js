@@ -6,6 +6,11 @@ const article = {
   readingTime: "6 min",
   category: "fisica",
   subcategory: "quadril",
+
+  shortDescription: "Rotina de exercícios para fortalecer quadril, aumentar mobilidade e prevenir dores lombares e desequilíbrios.",
+
+  excerpt: "Exercícios como ponte unilateral, clamshell e agachamento sumô para fortalecer quadril, melhorar postura e prevenir dores.",
+
   content: `
     <h2>Por que fortalecer o quadril?</h2>
     <p>O quadril é a base do movimento do corpo e responsável por várias funções importantes, desde a estabilidade até a performance esportiva. Um quadril forte ajuda a prevenir lesões, melhora a postura e reduz dores na região lombar.</p>

@@ -7,6 +7,10 @@ const smoothieVerdeDetox = {
   calorias: 130,
   categoria: "Bebidas Saudáveis",
   descricaoCurta: "Refrescante, antioxidante e ideal para desintoxicar naturalmente.",
+  // resumo curto para cards / listagens
+  shortDescription: "Smoothie verde com espinafre, banana e água de coco — leve, hidratante e rico em antioxidantes.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Smoothie verde detox com espinafre e água de coco — refrescante, leve e antioxidante.",
   ingredientes: [
     "1 banana congelada",
     "1 punhado de espinafre",

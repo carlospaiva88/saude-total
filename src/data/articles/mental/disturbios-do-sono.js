@@ -6,7 +6,12 @@ const article = {
   readingTime: "6 min",
   category: "mental",
   subcategory: "disturbios-do-sono",
+
+  shortDescription: "Guia prático para identificar os principais distúrbios do sono e adotar hábitos e tratamentos que melhorem sua qualidade de sono.",
+  excerpt: "Conheça insônia, apneia, bruxismo e outras condições do sono — sinais, causas e dicas práticas para melhorar as noites.",
+
   content: `
+<<<<<<< HEAD
     <p>Os distúrbios do sono afetam milhões de pessoas e podem destruir a produtividade, o humor, a saúde mental e até o equilíbrio hormonal. Muitas vezes, o distúrbio do sono passa despercebido e só vamos notar que estamos com problemas quando os sintomas começam a prejudicar a rotina.</p>
 
     <p>Neste artigo, vamos abordar com maior clareza o distúrbio do sono e você poderá compreender:</p>
@@ -232,5 +237,16 @@ const article = {
   image: "https://www.bluuesleep.com.br/wp-content/uploads/2025/09/SONOTONINA-2.webp",
 },
 
+=======
+    <p>Distúrbios do sono afetam o bem-estar mental e físico, interferindo na qualidade de vida. ...
+  `,
+  product: {
+    name: "Livro 'Vencendo a Depressão'",
+    description: "Guia prático para entender e lidar com a depressão, com dicas de psicólogos renomados.",
+    link: "https://amzn.to/3Xwg7y0",
+    image: "https://m.media-amazon.com/images/I/51A7kZDvV+L._SX331_BO1,204,203,200_.jpg",
+  },
+>>>>>>> 9ad7391 (fazendo melhorias em todo o blog)
 };
+
 export default article;

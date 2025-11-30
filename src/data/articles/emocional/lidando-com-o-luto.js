@@ -6,6 +6,10 @@ const article = {
   readingTime: "6 min",
   category: "emocional",
   subcategory: "lidando-com-o-luto",
+
+  shortDescription: "Um guia sensível para acompanhar o processo de luto: permitir sentir, buscar apoio e transformar dor em aprendizado e resiliência.",
+  excerpt: "Dicas práticas e acolhedoras para enfrentar o luto: permita sentir, busque apoio e cuide de si enquanto reconstrói seu caminho.",
+
   content: `
     <p>O luto é um processo complexo de perda que exige cuidados emocionais e tempo para a cura.</p>
 

@@ -6,6 +6,10 @@ const article = {
   readingTime: "7 min",
   category: "fisica",
   subcategory: "joelho",
+
+  shortDescription: "Exercícios práticos e seguros para fortalecer o joelho, proteger a articulação e melhorar estabilidade funcional.",
+  excerpt: "Confira exercícios como agachamento isométrico, elevação de perna e ponte de quadril para fortalecer e proteger seus joelhos.",
+
   content: `
     <h2>Por que fortalecer os joelhos?</h2>
     <p>Os joelhos são uma das articulações mais exigidas do corpo humano, responsáveis por sustentar o peso e permitir movimentos como andar, correr e agachar. Quando enfraquecidos, tornam-se propensos a dores, inflamações e lesões, especialmente com o passar dos anos ou em atividades de alto impacto.</p>

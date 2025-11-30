@@ -6,7 +6,12 @@ const article = {
   readingTime: "7 min",
   category: "mental",
   subcategory: "tecnicas-para-aliviar-estresse",
+
+  shortDescription: "Técnicas rápidas e práticas — respiração, movimento, organização e apoio — para reduzir o estresse cotidiano.",
+  excerpt: "Técnicas simples e eficazes para aliviar o estresse: respiração, movimento, organização do tempo e apoio emocional.",
+
   content: `
+<<<<<<< HEAD
     <p>O estresse virou um dos maiores problemas de saúde pública dos tempos modernos. A rotina acelerada, a pressão profissional, a falta de descanso e o excesso de estímulos fazem com que o corpo viva constantemente em modo de alerta. Porém, quando o estresse deixa de ser pontual e se torna crônico, ele afeta profundamente a saúde física, mental e emocional.
 
 Este guia completo explica <b>o que realmente é o estresse, por que ele acontece</b>, seus <b>principais sintomas</b>, <b>impactos no organismo</b> e <b>estratégias cientificamente comprovadas para reduzir o estresse</b>.
@@ -202,14 +207,26 @@ Essa resposta é útil em curto prazo, mas quando se torna constante, transforma
 Cuidar do estresse <b>não é luxo — é necessidade</b>.</p>
 
 
+=======
+    <p>O estresse é uma resposta natural do corpo a demandas excessivas, mas seu manejo adequado é essencial para a saúde mental e física.</p>
+    ...
+>>>>>>> 9ad7391 (fazendo melhorias em todo o blog)
   `,
-
   product: {
+<<<<<<< HEAD
   name: "Kit Óleo Essencial do Relaxamento.",
   description: "Ideal para estresse, ansiedade e insônia. Mais clareza e e bem estar.",
   link: "https://amzn.to/44uODXN",
   image: "https://m.media-amazon.com/images/I/61QkNiH6PnL._AC_SX425_PIbundle-2,TopRight,0,0_SH20_.jpg",
 },
 
+=======
+    name: "Tapete de Yoga Premium Antiderrapante",
+    description: "Ideal para exercícios de respiração, alongamentos e meditação.",
+    link: "https://amzn.to/47ZuawW",
+    image: "https://m.media-amazon.com/images/I/61dMso74fiL._AC_SX425_.jpg",
+  },
+>>>>>>> 9ad7391 (fazendo melhorias em todo o blog)
 };
+
 export default article;

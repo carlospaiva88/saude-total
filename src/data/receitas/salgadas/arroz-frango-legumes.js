@@ -1,3 +1,4 @@
+// src/data/receitas/salgadas/arroz-frango-legumes.js
 const arrozFrangoLegumes = {
   slug: "arroz-frango-legumes",
   titulo: "Arroz Integral com Frango e Legumes",
@@ -6,6 +7,10 @@ const arrozFrangoLegumes = {
   calorias: 420,
   categoria: "Salgadas",
   descricaoCurta: "Prato completo, nutritivo e perfeito para o dia a dia.",
+  // resumo curto para cards / listagens
+  shortDescription: "Arroz integral com peito de frango e legumes — refeição balanceada, prática e ideal para marmitas.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Arroz integral com frango e legumes: prato nutritivo, fácil de preparar e perfeito para refeições do dia a dia.",
   ingredientes: [
     "1 xícara de arroz integral cozido",
     "200g de peito de frango em cubos",

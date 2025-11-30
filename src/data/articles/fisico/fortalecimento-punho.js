@@ -6,6 +6,11 @@ const article = {
   readingTime: "6 min",
   category: "fisica",
   subcategory: "punho",
+
+  shortDescription: "Exercícios e recomendações para fortalecer o punho, prevenir lesões por esforço repetitivo e melhorar a pegada.",
+
+  excerpt: "Aprenda exercícios para fortalecer punho e antebraço: rotações com peso, flexão/extensão com halteres e apertos com bola terapêutica.",
+
   content: `
     <h2>Por que fortalecer o punho?</h2>
     <p>O punho é uma articulação fundamental para inúmeros movimentos do dia a dia e prática esportiva. Fortalecê-lo previne lesões como tendinites, melhora a estabilidade e a força, dando suporte para exercícios que exigem pegada e mobilidade.</p>

@@ -1,5 +1,4 @@
 const article = {
-  // Identificação e Metadados
   slug: "tecnicas-respiracao",
   title: "Técnicas de Respiração para Reduzir Estresse e Ansiedade",
   image: "https://images.pexels.com/photos/321576/pexels-photo-321576.jpeg",
@@ -8,7 +7,9 @@ const article = {
   category: "emocional",
   subcategory: "tecnica-respiracao",
 
-  // Conteúdo HTML completo — otimizável para SEO e leitura
+  shortDescription: "Guia prático com técnicas (4-7-8, diafragmática, alternada, box) para reduzir estresse, melhorar sono e foco em poucos minutos.",
+  excerpt: "Aprenda técnicas de respiração simples e eficazes — 4-7-8, diafragmática, alternada e box — para reduzir estresse e melhorar concentração.",
+
   content: `
     <h2>Respire Melhor, Viva Melhor</h2>
     <p>Em um mundo cheio de estímulos, a respiração é uma ferramenta poderosa e gratuita para restaurar o equilíbrio físico e emocional. Dominar técnicas de respiração pode reduzir o estresse, controlar a ansiedade e melhorar o sono de maneira natural.</p>
@@ -49,7 +50,6 @@ const article = {
     <p>Já testou alguma técnica de respiração? Compartilhe nos comentários a experiência e inspire outras pessoas!</p>
   `,
 
-  // Seção de Produto (mantida apenas um por artigo)
   product: {
     name: "Tapete de Yoga Premium Antiderrapante",
     description: "Ideal para exercícios de respiração, alongamentos e meditação.",

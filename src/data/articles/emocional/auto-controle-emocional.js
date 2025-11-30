@@ -6,6 +6,13 @@ const article = {
   readingTime: "5 min",
   category: "emocional",
   subcategory: "auto-controle-emocional",
+
+  // resumo curto para cards / listagens
+  shortDescription: "Práticas simples e eficazes — respiração, meditação, escuta ativa e hábitos saudáveis — para reconhecer e gerenciar emoções no dia a dia.",
+
+  // excerpt para cards (máx ~140 chars)
+  excerpt: "Aprenda 7 estratégias práticas para desenvolver autocontrole emocional: identificar emoções, respiração consciente, meditação e hábitos saudáveis.",
+
   content: `
     <p>O autocontrole emocional é a habilidade de reconhecer, compreender e gerenciar suas emoções em diferentes situações do dia a dia. Mais do que evitar explosões, é sobre escolher como reagir diante de desafios, pressões e até frustrações.</p>
 

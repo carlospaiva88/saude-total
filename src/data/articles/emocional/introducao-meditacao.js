@@ -6,6 +6,10 @@ const article = {
   readingTime: "6 min",
   category: "emocional",
   subcategory: "introducao-meditacao",
+
+  shortDescription: "Guia prático para começar a meditar: posturas, respiração, dicas de apps e como manter o hábito com apenas 5 minutos por dia.",
+  excerpt: "Aprenda como começar a meditar hoje: postura, respiração, técnicas simples e dicas práticas para criar o hábito em poucos minutos.",
+
   content: `
    <h2>Por que Meditar? O Guia Definitivo para Iniciantes</h2>
 

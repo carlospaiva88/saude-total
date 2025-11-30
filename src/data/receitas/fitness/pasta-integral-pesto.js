@@ -7,6 +7,10 @@ const pastaIntegralPesto = {
   calorias: 320,
   categoria: "Massas",
   descricaoCurta: "O sabor da Itália com um toque saudável e integral.",
+  // resumo curto para cards / listagens
+  shortDescription: "Massa integral ao pesto com tomatinhos — prato equilibrado, saboroso e nutritivo para uma refeição completa.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Pasta integral ao pesto com tomatinhos — receita simples e saborosa, perfeita para refeições equilibradas.",
   ingredientes: [
     "200g de massa integral",
     "1/2 xícara de molho pesto",

@@ -6,6 +6,10 @@ const brownieBatataDoce = {
   calorias: 160,
   categoria: "Sobremesas",
   descricaoCurta: "Fofinho, chocolatudo e saudável.",
+  // resumo curto para cards / listagens
+  shortDescription: "Brownie macio feito com batata-doce: menos açúcar e muito sabor — perfeito para sobremesa saudável.",
+  // excerpt para cards (máx ~140 chars)
+  excerpt: "Receita rápida de brownie fit com batata-doce, cacau e mel — textura de brownie com ingredientes mais nutritivos.",
   ingredientes: [
     "1 xícara de batata-doce cozida e amassada",
     "2 colheres (sopa) de cacau em pó",

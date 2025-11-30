@@ -1,4 +1,3 @@
-// src/data/receitas/doces/mousse-chocolate-fit.js
 const mousseChocolateFit = {
   slug: "mousse-chocolate-fit",
   titulo: "Mousse de Chocolate Fit",
@@ -7,6 +6,10 @@ const mousseChocolateFit = {
   calorias: 200,
   categoria: "Sobremesas",
   descricaoCurta: "Com cacau 70% e textura cremosa — sem culpa!",
+  // resumo curto para cards / listagens
+  shortDescription: "Mousse cremoso com cacau 70% e abacate: sobremesa rápida, nutritiva e com textura aveludada.",
+  // excerpt para cards (máx ~140 chars)
+  excerpt: "Mousse fit rápida com cacau, banana e abacate — doce cremoso, prático e rico em gorduras saudáveis.",
   ingredientes: [
     "2 colheres (sopa) de cacau em pó 70%",
     "1 banana madura",

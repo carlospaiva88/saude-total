@@ -6,15 +6,23 @@ const viagem = {
   readingTime: "9 min",
   category: "internacionais",
   subcategory: "cultura",
+  shortDescription: "Romantismo, arte e gastronomia — Paris fascina com seus museus, cafés e ruas encantadoras.",
   content: `
     <h2>O destino dos sonhos</h2>
-    <p>Paris é o símbolo do romantismo, da arte e da boa gastronomia. Cada esquina revela um novo charme e uma história para contar.</p>
+    <p>Paris é o símbolo do romantismo, da arte e da boa gastronomia. Cada esquina revela um novo charme e uma história para contar — de cafés acolhedores a monumentos que atravessam séculos.</p>
 
     <h3>Imperdíveis</h3>
     <ul>
-      <li><strong>Torre Eiffel:</strong> símbolo eterno da cidade.</li>
-      <li><strong>Museu do Louvre:</strong> lar da Mona Lisa e de obras-primas da humanidade.</li>
-      <li><strong>Montmartre:</strong> bairro boêmio e artístico.</li>
+      <li><strong>Torre Eiffel:</strong> símbolo eterno da cidade; suba para vistas inesquecíveis.</li>
+      <li><strong>Museu do Louvre:</strong> lar da Mona Lisa e de coleções que atravessam milênios.</li>
+      <li><strong>Montmartre:</strong> bairro boêmio, com artistas, pequenas galerias e a Basílica do Sagrado Coração.</li>
+    </ul>
+
+    <h3>Dicas práticas</h3>
+    <ul>
+      <li>Compre ingressos antecipados para museus nos meses de alta temporada.</li>
+      <li>Use metrô e caminhe — muitos bairros são mais apreciáveis a pé.</li>
+      <li>Prove as padarias locais: croissants, pain au chocolat e queijos regionais.</li>
     </ul>
 
     <blockquote>
@@ -22,7 +30,7 @@ const viagem = {
     </blockquote>
 
     <h3>Produto Recomendado</h3>
-    <p>Para caminhadas longas, invista em um <strong>tênis de viagem confortável</strong>.</p>
+    <p>Para caminhadas longas, invista em um <strong>tênis de viagem confortável</strong> ou uma <strong>mala compacta</strong> de rodinhas resistentes.</p>
   `,
   product: {
     name: "Tênis Adidas Ultraboost Light",

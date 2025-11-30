@@ -6,6 +6,10 @@ const pudimChiaCacau = {
   calorias: 220,
   categoria: "Sobremesas",
   descricaoCurta: "Doce cremoso, funcional e sem açúcar refinado.",
+  // resumo curto para cards / listagens
+  shortDescription: "Pudim de chia com cacau e leite vegetal — praticidade e nutrientes para um café da manhã ou sobremesa funcional.",
+  // excerpt para cards (máx ~140 chars)
+  excerpt: "Pudim vegano de chia com cacau: preparo simples, sem açúcar refinado e ideal para deixar na geladeira como opção prática.",
   ingredientes: [
     "3 colheres (sopa) de chia",
     "200 ml de leite vegetal",

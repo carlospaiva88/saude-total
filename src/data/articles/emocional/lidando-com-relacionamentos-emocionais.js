@@ -6,7 +6,11 @@ const article = {
   readingTime: "6 min",
   category: "emocional",
   subcategory: "lidando-com-relacionamentos-emocionais",
-  featured: true, 
+  featured: true,
+
+  shortDescription: "Dicas práticas para fortalecer vínculos, melhorar comunicação e resolver conflitos com empatia e técnicas eficazes.",
+  excerpt: "Estratégias úteis para fortalecer relações: escuta ativa, comunicação clara, respeito às diferenças e soluções colaborativas.",
+
   content: `
     <p>Relacionamentos saudáveis são fundamentais para o bem-estar emocional. Saiba como cultivar empatia, comunicação eficaz e resolver conflitos com sabedoria.</p>
 

@@ -1,3 +1,4 @@
+// src/data/receitas/veganas/curry-grao-bico.js
 const curryGraoBico = {
   slug: "curry-grao-bico",
   titulo: "Curry Vegano de Grão-de-Bico",
@@ -6,6 +7,10 @@ const curryGraoBico = {
   calorias: 360,
   categoria: "Veganas",
   descricaoCurta: "Aromático, cremoso e super nutritivo.",
+  // resumo curto para cards / listagens
+  shortDescription: "Curry vegano cremoso de grão-de-bico com leite de coco e curry — reconfortante, rico em fibras e fácil de fazer.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Curry vegano de grão-de-bico: receita cremosa e aromática com leite de coco e curry — ideal para jantares reconfortantes.",
   ingredientes: [
     "1 xícara de grão-de-bico cozido",
     "1 cebola picada",

@@ -1,19 +1,32 @@
+// src/components/Calculadora/TMB/TMBCalculator.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
+
+/**
+ * Calculadora TMB (Mifflin-St Jeor) — agora com 'goal'
+ * onResult({ tmb, peso, altura, idade, sexo, goal })
+ */
 
 export default function TMBCalculator({ onResult }) {
   const [peso, setPeso] = useState("");
   const [altura, setAltura] = useState("");
   const [idade, setIdade] = useState("");
   const [sexo, setSexo] = useState("masculino");
+  const [goal, setGoal] = useState("manter");
   const [tmbRes, setTmbRes] = useState(null);
+  const [error, setError] = useState("");
 
   const calcular = (e) => {
-    e.preventDefault();
-    const p = parseFloat(peso);
-    const h = parseFloat(altura);
-    const i = parseFloat(idade);
-    if (!p || !h || !i || p <= 0 || h <= 0 || i <= 0) return;
+    e?.preventDefault();
+    setError("");
+
+    const p = Number.parseFloat(peso);
+    const h = Number.parseFloat(altura);
+    const i = Number.parseFloat(idade);
+
+    if (!Number.isFinite(p) || p <= 0) return setError("Informe um peso válido (kg).");
+    if (!Number.isFinite(h) || h <= 0) return setError("Informe uma altura válida (cm).");
+    if (!Number.isFinite(i) || i <= 0) return setError("Informe uma idade válida.");
 
     const tmb =
       sexo === "masculino"
@@ -22,22 +35,41 @@ export default function TMBCalculator({ onResult }) {
 
     const rounded = Math.round(tmb);
     setTmbRes(rounded);
-    if (typeof onResult === "function") onResult({ tmb: rounded });
 
-    const hist = JSON.parse(localStorage.getItem("calc_history_tmb") || "[]");
-    hist.unshift({ tmb: rounded, peso: p, altura: h, idade: i, date: Date.now() });
-    localStorage.setItem("calc_history_tmb", JSON.stringify(hist.slice(0, 10)));
+    const payload = {
+      tmb: rounded,
+      peso: Number(p.toFixed(1)),
+      altura: Number(h.toFixed(0)),
+      idade: Number(i),
+      sexo,
+      goal,
+    };
+
+    if (typeof onResult === "function") onResult(payload);
+
+    // salva histórico simples
+    try {
+      const key = "calc_history_tmb";
+      const raw = localStorage.getItem(key);
+      const hist = raw ? JSON.parse(raw) : [];
+      hist.unshift({ id: Date.now(), createdAt: new Date().toISOString(), ...payload });
+      localStorage.setItem(key, JSON.stringify(hist.slice(0, 10)));
+    } catch (err) {
+      // ignore
+    }
   };
 
   return (
-    <Card as="form" onSubmit={calcular} aria-label="Calculadora TMB">
+    <FormCard onSubmit={calcular} aria-label="Calculadora TMB">
       <h3>Calculadora TMB</h3>
 
       <Row>
-        <label htmlFor="peso">Peso (kg)</label>
+        <label htmlFor="tmb-peso">Peso (kg)</label>
         <input
-          id="peso"
+          id="tmb-peso"
+          inputMode="decimal"
           type="number"
+          placeholder="72.5"
           value={peso}
           onChange={(e) => setPeso(e.target.value)}
           min="0"
@@ -47,10 +79,12 @@ export default function TMBCalculator({ onResult }) {
       </Row>
 
       <Row>
-        <label htmlFor="altura">Altura (cm)</label>
+        <label htmlFor="tmb-altura">Altura (cm)</label>
         <input
-          id="altura"
+          id="tmb-altura"
+          inputMode="numeric"
           type="number"
+          placeholder="175"
           value={altura}
           onChange={(e) => setAltura(e.target.value)}
           min="0"
@@ -60,10 +94,12 @@ export default function TMBCalculator({ onResult }) {
       </Row>
 
       <Row>
-        <label htmlFor="idade">Idade</label>
+        <label htmlFor="tmb-idade">Idade</label>
         <input
-          id="idade"
+          id="tmb-idade"
+          inputMode="numeric"
           type="number"
+          placeholder="32"
           value={idade}
           onChange={(e) => setIdade(e.target.value)}
           min="0"
@@ -73,40 +109,51 @@ export default function TMBCalculator({ onResult }) {
       </Row>
 
       <Row>
-        <label htmlFor="sexo">Sexo</label>
-        <select
-          id="sexo"
-          value={sexo}
-          onChange={(e) => setSexo(e.target.value)}
-          aria-label="Sexo"
-        >
+        <label htmlFor="tmb-sexo">Sexo</label>
+        <select id="tmb-sexo" value={sexo} onChange={(e) => setSexo(e.target.value)} aria-label="Sexo">
           <option value="masculino">Masculino</option>
           <option value="feminino">Feminino</option>
         </select>
       </Row>
 
-      <Primary type="submit">Calcular TMB</Primary>
+      <Row>
+        <label htmlFor="tmb-goal">Objetivo</label>
+        <select id="tmb-goal" value={goal} onChange={(e) => setGoal(e.target.value)} aria-label="Objetivo">
+          <option value="manter">Manter peso</option>
+          <option value="perder">Perder peso (défice)</option>
+          <option value="ganhar">Ganhar peso (superávit)</option>
+        </select>
+      </Row>
+
+      {error && <Error role="alert">{error}</Error>}
+
+      <Primary type="submit" aria-label="Calcular TMB">Calcular TMB</Primary>
 
       {tmbRes !== null && (
-        <Result>
-          <strong>{tmbRes} kcal/dia</strong>
+        <Result aria-live="polite">
+          <strong>{tmbRes.toLocaleString()} kcal/dia</strong>
           <div style={{ marginTop: 6 }}>
-            Sua TMB (taxa metabólica basal) é uma estimativa do gasto em repouso.
+            Sua TMB (taxa metabólica basal) — estima o gasto em repouso. Use as faixas abaixo como referência:
           </div>
+          <Ranges>
+            <RangeItem><strong>Manter:</strong> ≈ {tmbRes} kcal/dia</RangeItem>
+            <RangeItem><strong>Perder (défice 500 kcal):</strong> ≈ {Math.max(800, tmbRes - 500)} kcal/dia</RangeItem>
+            <RangeItem><strong>Ganhar (superávit 300 kcal):</strong> ≈ {tmbRes + 300} kcal/dia</RangeItem>
+          </Ranges>
         </Result>
       )}
-    </Card>
+    </FormCard>
   );
 }
 
-/* ---- styled ---- */
-const Card = styled.div`
+/* ---- styled (TMB) ---- */
+const FormCard = styled.form`
   background: ${({ theme }) => theme.colors.surface};
   border-radius: 14px;
-  padding: 1.2rem;
+  padding: 1.25rem;
   box-shadow: ${({ theme }) => theme.shadow.xs};
   width: 100%;
-  max-width: 520px;
+  max-width: 560px;
 `;
 
 const Row = styled.div`
@@ -115,14 +162,9 @@ const Row = styled.div`
   align-items: center;
   margin-bottom: 0.9rem;
 
-  label {
-    width: 140px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.colors.dark};
-  }
+  label { width: 140px; font-weight: 600; color: ${({ theme }) => theme.colors.dark}; }
 
-  input,
-  select {
+  input, select {
     flex: 1;
     padding: 0.7rem;
     border-radius: 10px;
@@ -132,10 +174,7 @@ const Row = styled.div`
 
   @media (max-width: 720px) {
     flex-direction: column;
-    label {
-      width: auto;
-      margin-bottom: 0.5rem;
-    }
+    label { width: auto; margin-bottom: 0.35rem; }
   }
 `;
 
@@ -149,10 +188,7 @@ const Primary = styled.button`
   margin-top: 0.6rem;
   cursor: pointer;
   transition: background 0.2s;
-
-  &:hover {
-    opacity: 0.9;
-  }
+  border: none;
 `;
 
 const Result = styled.div`
@@ -160,9 +196,13 @@ const Result = styled.div`
   padding: 1rem;
   border-radius: 10px;
   background: linear-gradient(90deg, #def2e9, #f6fefb);
-  text-align: center;
-
-  strong {
-    font-size: 1.2rem;
-  }
 `;
+
+const Error = styled.div`
+  color: ${({ theme }) => theme.colors.danger || "#bf2b2b"};
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+`;
+
+const Ranges = styled.ul` margin-top: 0.6rem; padding-left: 1rem; `;
+const RangeItem = styled.li` margin-top: 0.25rem; font-size: 0.95rem; `;

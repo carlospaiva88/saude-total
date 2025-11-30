@@ -1,3 +1,4 @@
+// src/data/receitas/fitness/omelete-claras-espinafre.js
 const omeleteClarasEspinafre = {
   slug: "omelete-claras-espinafre",
   titulo: "Omelete Proteica de Claras com Espinafre",
@@ -6,6 +7,10 @@ const omeleteClarasEspinafre = {
   calorias: 190,
   categoria: "Fitness",
   descricaoCurta: "Baixo em calorias e rico em proteínas — ideal para cutting.",
+  // resumo curto para cards / listagens
+  shortDescription: "Omelete leve de claras com espinafre — alto teor proteico e baixo em calorias, perfeito para refeições funcionais.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Omelete proteica de claras com espinafre: refeição rápida, rica em proteínas e ideal para quem busca definição.",
   ingredientes: [
     "4 claras de ovo",
     "1 ovo inteiro",

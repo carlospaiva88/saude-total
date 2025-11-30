@@ -1,27 +1,30 @@
 const viagem = {
   slug: "serra-da-canicula",
   title: "Serra da Canícula: Refúgio de Montanha e Bem-Estar",
-  category: "nacionais",
-  subcategory: "montanhas",
   image: "https://images.pexels.com/photos/417173/pexels-photo-417173.jpeg",
   date: "09/11/2025",
   readingTime: "6 min",
-  shortDescription: "Descubra o equilíbrio perfeito entre natureza, trilhas e descanso.",
+  category: "nacionais",
+  subcategory: "montanhas",
+  shortDescription: "Retiro de montanha perfeito para trilhas leves, yoga e contato com a natureza.",
   content: `
     <h2>Um retiro nas alturas</h2>
     <p>A Serra da Canícula é o destino ideal para quem busca tranquilidade, trilhas leves e hospedagens aconchegantes em meio às montanhas.</p>
 
     <h3>Atividades</h3>
     <ul>
-      <li>Trilha do Mirante da Pedra Alta</li>
-      <li>Yoga ao nascer do sol</li>
-      <li>Visita às pequenas fazendas de orgânicos</li>
-      <li>Noite de observação de estrelas</li>
+      <li><strong>Mirante da Pedra Alta:</strong> vistas amplas e pôr do sol inesquecível.</li>
+      <li><strong>Trilhas guiadas:</strong> opções para iniciantes e caminhantes experientes.</li>
+      <li><strong>Yoga e retiros:</strong> pousadas que oferecem programas de bem-estar.</li>
+      <li><strong>Observação de estrelas:</strong> pouca poluição luminosa e céu limpo.</li>
     </ul>
 
     <blockquote>
       <p><em>“Respirar o ar puro da serra é como resetar a mente.”</em></p>
     </blockquote>
+
+    <h3>Produto Recomendado</h3>
+    <p>Um bom <strong>casaco impermeável</strong> e botas leves fazem toda a diferença nas trilhas.</p>
   `,
   product: {
     name: "Casaco Impermeável Quechua",

@@ -6,6 +6,10 @@ const article = {
   readingTime: "5 min",
   category: "emocional",
   subcategory: "estrategias-para-bem-estar-emocional",
+
+  shortDescription: "Práticas práticas e acessíveis para cultivar leveza emocional: gratidão, limites saudáveis, movimento e pausas diárias.",
+  excerpt: "Descubra práticas simples — gratidão, limites, movimento e pausas — para melhorar seu bem-estar emocional e lidar com frustrações.",
+
   content: `
     <p>O bem-estar emocional envolve cuidar das emoções de forma consciente para levar uma vida mais leve e satisfatória.</p>
 

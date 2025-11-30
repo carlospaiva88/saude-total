@@ -6,6 +6,13 @@ const article = {
   readingTime: "7 min",
   category: "fisica",
   subcategory: "articulacoes",
+
+  // resumo curto para cards / listagens
+  shortDescription: "Práticas e exercícios para fortalecer articulações, melhorar mobilidade e prevenir lesões no dia a dia.",
+
+  // excerpt para cards (máx ~140 chars)
+  excerpt: "Entenda por que fortalecer as articulações é essencial e confira exercícios práticos para reduzir dor, inflamação e ganhar estabilidade.",
+
   content: `
     <h2>Importância do fortalecimento articular</h2>
     <p>As articulações suportam o peso e movimento do corpo, por isso mantê-las fortes é fundamental. Fortalecer as articulações previne lesões, melhora a mobilidade e permite a prática de esportes e atividades físicas com segurança.</p>

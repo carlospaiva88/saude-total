@@ -7,6 +7,10 @@ const wrapDeAtum = {
   calorias: 210,
   categoria: "Lanches",
   descricaoCurta: "Proteico, cremoso e rápido — ideal para o pós-treino.",
+  // resumo curto para cards / listagens
+  shortDescription: "Wrap leve com atum e abacate — fácil de montar, proteico e perfeito para levar.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Wrap de atum e abacate: lanche prático, cremoso e rico em proteínas — ideal para refeições rápidas.",
   ingredientes: [
     "1 pão folha integral",
     "1 lata de atum em água",

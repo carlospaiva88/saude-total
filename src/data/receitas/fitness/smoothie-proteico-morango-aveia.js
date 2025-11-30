@@ -1,3 +1,4 @@
+// src/data/receitas/fitness/smoothie-proteico-morango-aveia.js
 const smoothieProteicoMorangoAveia = {
   slug: "smoothie-proteico-morango-aveia",
   titulo: "Smoothie Proteico de Morango e Aveia",
@@ -6,6 +7,10 @@ const smoothieProteicoMorangoAveia = {
   calorias: 310,
   categoria: "Fitness",
   descricaoCurta: "Refrescante, nutritivo e perfeito para um café da manhã rápido.",
+  // resumo curto para cards / listagens
+  shortDescription: "Smoothie proteico com morango e aveia — rápido, saciante e ideal para ganho/recuperação muscular.",
+  // excerpt para carousels / listagens (máx ~140 chars)
+  excerpt: "Smoothie proteico de morango e aveia: café da manhã rápido, nutritivo e perfeito como pré ou pós-treino.",
   ingredientes: [
     "1 xícara de morangos congelados",
     "1 scoop de whey protein de baunilha (ou proteína vegetal)",

@@ -1,4 +1,4 @@
-// src/pages/ViagemPage.jsx
+// src/pages/ViagemPage.js
 import React, { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import styled from "styled-components";
@@ -10,31 +10,99 @@ import BreadcrumbsViagens from "../components/BreadcrumbsViagens";
 import RelatedCarousel from "../components/RelatedCarousel";
 import AdBlock from "../components/AdBlock";
 import Footer from "../components/Footer/Footer";
-import viagensData from "../data/viagens";
+import viagensDataDefault from "../data/viagens";
 import { ViagemCardBase } from "../components/Viagens/ViagemCard.style";
 
-/**
- * ViagemPage (substituto sem dependência em ProductRecommendationCard)
- * - usa ViagemCardBase já presente no seu projeto
- * - renderiza um bloco de produto recomendado inline, sem importar componentes ausentes
- */
+/* ---------------- helpers ---------------- */
+
+function normalizeStr(v = "") {
+  return String(v || "")
+    .normalize?.("NFD")?.replace(/[\u0300-\u036f]/g, "") // remove acentos quando possível
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+function findViagem({ viagensData, categoria, slug }) {
+  const normSlug = normalizeStr(slug || "");
+  const normCategoria = normalizeStr(categoria || "");
+
+  // busca direta: categoria + slug
+  if (normCategoria && normSlug && viagensData[normCategoria]) {
+    const found = (viagensData[normCategoria] || []).find(v => normalizeStr(v.slug) === normSlug);
+    if (found) return { ...found, categoria: normCategoria };
+  }
+
+  // busca por slug em todas as categorias
+  if (normSlug) {
+    for (const [cat, arr] of Object.entries(viagensData || {})) {
+      const found = (arr || []).find(v => {
+        return normalizeStr(v.slug) === normSlug
+          || normalizeStr(v.friendlySlug) === normSlug
+          || normalizeStr(v.title) === normSlug;
+      });
+      if (found) return { ...found, categoria: cat };
+    }
+  }
+
+  // fallback: talvez slug foi passado como categoria
+  if (normCategoria) {
+    for (const [cat, arr] of Object.entries(viagensData || {})) {
+      const found = (arr || []).find(v => normalizeStr(v.slug) === normCategoria);
+      if (found) return { ...found, categoria: cat };
+    }
+  }
+
+  return null;
+}
+
+function flattenViagens(viagensData) {
+  const out = [];
+  for (const [cat, arr] of Object.entries(viagensData || {})) {
+    if (!Array.isArray(arr)) continue;
+    for (const v of arr) out.push({ categoria: cat, ...v });
+  }
+  return out;
+}
+
+function parseDateToTime(d) {
+  if (!d) return 0;
+  if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(d)) {
+    const [dd, mm, yyyy] = d.split("/");
+    const iso = `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+    const ts = Date.parse(iso);
+    return isNaN(ts) ? 0 : ts;
+  }
+  const ts = Date.parse(d);
+  return isNaN(ts) ? 0 : ts;
+}
+
+/* ---------------- component ---------------- */
 
 export default function ViagemPage() {
   const { categoria, slug } = useParams();
 
-  // busca robusta: tenta por categoria+slug, senão procura por slug em qualquer categoria
-  const viagem = useMemo(() => {
-    if (categoria && slug && viagensData[categoria]) {
-      const found = viagensData[categoria].find((v) => v.slug === slug);
-      if (found) return { ...found, categoria };
-    }
-    for (const [cat, arr] of Object.entries(viagensData)) {
-      const found = (arr || []).find((v) => v.slug === (slug || categoria));
-      if (found) return { ...found, categoria: cat };
-    }
-    return null;
-  }, [categoria, slug]);
+  // flatten once (dados estáticos do módulo -> deps vazias)
+  const viagensArray = useMemo(() => flattenViagens(viagensDataDefault), []);
 
+  // find viagem robustamente
+  const viagem = useMemo(() => findViagem({ viagensData: viagensDataDefault, categoria, slug }), [categoria, slug]);
+
+  // related deve ser calculado antes de qualquer early return para não violar regras de hooks
+  const related = useMemo(() => {
+    if (!viagem) return [];
+    const sameCat = (viagensDataDefault[viagem.categoria] || []).filter(v => v.slug !== viagem.slug);
+    sameCat.sort((a, b) => parseDateToTime(b.date) - parseDateToTime(a.date));
+    const max = 12;
+    const picked = sameCat.slice(0, max);
+    if (picked.length >= Math.min(6, max)) return picked;
+    const others = viagensArray.filter(v => v.slug !== viagem.slug && v.categoria !== viagem.categoria);
+    others.sort((a, b) => parseDateToTime(b.date) - parseDateToTime(a.date));
+    const fill = others.slice(0, Math.max(0, max - picked.length));
+    return [...picked, ...fill].slice(0, max);
+  }, [viagem, viagensArray]);
+
+  // se não encontrou, renderiza fallback (hooks já foram todos chamados)
   if (!viagem) {
     return (
       <>
@@ -50,9 +118,18 @@ export default function ViagemPage() {
     );
   }
 
-  const related = (viagensData[viagem.categoria] || []).filter((v) => v.slug !== viagem.slug).slice(0, 12);
   const metaTitle = viagem.seo?.metaTitle || `${viagem.title} — Viva no Flow`;
   const metaDesc = viagem.seo?.metaDescription || viagem.shortDescription || viagem.excerpt || "";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": viagem.title,
+    "image": viagem.image,
+    "datePublished": viagem.date ? (new Date(parseDateToTime(viagem.date)).toISOString()) : undefined,
+    "author": { "@type": "Organization", "name": "Viva no Flow" },
+    "description": metaDesc,
+  };
 
   return (
     <>
@@ -61,7 +138,8 @@ export default function ViagemPage() {
         <meta name="description" content={metaDesc} />
         <meta property="og:title" content={metaTitle} />
         <meta property="og:description" content={metaDesc} />
-        <meta property="og:image" content={viagem.image} />
+        {viagem.image && <meta property="og:image" content={viagem.image} />}
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
       <Navbar />
@@ -81,7 +159,7 @@ export default function ViagemPage() {
             {viagem.heroVideo ? (
               <HeroVideo src={viagem.heroVideo} poster={viagem.image} autoPlay muted loop playsInline />
             ) : (
-              <HeroImg src={viagem.image} alt={viagem.title} />
+              <HeroImg src={viagem.image || "/placeholder-16x9.png"} alt={viagem.title} />
             )}
             <HeroOverlay>
               <Badge>{viagem.region || viagem.categoria || "Destino"}</Badge>
@@ -96,7 +174,7 @@ export default function ViagemPage() {
 
         <MainGrid>
           <Content>
-            <Intro dangerouslySetInnerHTML={{ __html: viagem.intro || viagem.shortDescription || viagem.excerpt || viagem.content?.slice?.(0, 320) }} />
+            <Intro dangerouslySetInnerHTML={{ __html: viagem.intro || viagem.shortDescription || viagem.excerpt || (viagem.content?.slice?.(0, 320) ?? "") }} />
 
             <QuickFacts>
               <Fact><strong>Local:</strong> {viagem.location || viagem.region || viagem.title}</Fact>
@@ -154,12 +232,11 @@ export default function ViagemPage() {
 
             <AdBlock />
 
-            {/* Produto recomendado — render inline usando ViagemCardBase (sem importar componente ausente) */}
             {viagem.product && (
               <Section>
                 <h3>Produto recomendado</h3>
 
-                <InlineProductCard onClick={() => window.open(viagem.product.link || "#", "_blank", "noopener noreferrer")}>
+                <InlineProductCard role="link" onClick={() => window.open(viagem.product.link || "#", "_blank", "noopener noreferrer")}>
                   <div className="imgWrap">
                     <img src={viagem.product.image} alt={viagem.product.name} loading="lazy" />
                   </div>
@@ -213,13 +290,14 @@ export default function ViagemPage() {
         <Section>
           <h3>Outros destinos na mesma categoria</h3>
           <RelatedCarousel items={related.map(r => ({ slug: r.slug, title: r.title, image: r.image, categoria: viagem.categoria }))} renderCard={(r) => (
-            <ViagemCardBase onClick={() => window.location.assign(`/viagens/${viagem.categoria}/${r.slug}`)}>
-              <img src={r.image} alt={r.title} style={{ width: "100%", height: 140, objectFit: "cover" }} />
-              <div style={{ padding: 12 }}>
-                <h4 style={{ margin: 0 }}>{r.title}</h4>
-              </div>
-            </ViagemCardBase>
-          )} />
+          <ViagemCardBase onClick={() => window.location.assign(`/viagens/${viagem.categoria}/${r.slug}`)}>
+                <img src={r.image} alt={r.title} style={{ width: "100%", height: 140, objectFit: "cover" }} />
+                <div style={{ padding: 12 }}>
+                  <h4 style={{ margin: 0 }}>{r.title}</h4>
+                </div>
+              </ViagemCardBase>
+            )}
+          />
         </Section>
       </Article>
 
@@ -284,7 +362,7 @@ const Checklist = styled.ul`margin:0;padding-left:1rem; li{margin-bottom:.4rem;}
 const TagList = styled.div`display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;`;
 const Tag = styled.span`background:#effaf5;padding:.3rem .6rem;border-radius:999px;font-size:.85rem;`;
 
-/* Inline product card (substitui product recommendation component ausente) */
+/* Inline product card */
 const InlineProductCard = styled.div`
   display:flex;
   gap: 0.8rem;

@@ -1,132 +1,131 @@
-// src/components/Blog/ContinueExploring.jsx
-import React from "react";
-import styled from "styled-components";
+// src/components/BlogPage/ContinueExploring.js
+import React, { useMemo } from "react";
+import * as S from "./ContinueExploring.styles";
 import { Link } from "react-router-dom";
-import { recommend } from "../utils/recommender"; 
 
-export default function ContinueExploring({ posts = [], receitas = [] }) {
-  // Tentamos recomendações com fallback
-  const rec = recommend ? recommend({ limit: 6 }) : { articles: posts.slice(0,3), recipes: receitas.slice(0,3), products: [] };
+/* ---------------------- helpers ---------------------- */
 
-  const articles = rec.articles || posts.slice(0,3);
-  const recipes = rec.recipes || receitas.slice(0,3);
-  const products = rec.products || [];
+function safeArray(input) {
+  if (!input) return [];
+  return Array.isArray(input) ? input : Object.values(input);
+}
 
+function safeImage(r) {
+  return r?.imagem || r?.image || "/placeholder-16x9.png";
+}
+
+function safeExcerpt(r) {
   return (
-    <Wrapper>
-      <Heading>Continue explorando</Heading>
-
-          <Grid>
-          {/* Artigos Recomendados */}
-            <Column>
-              <SmallHeading>Artigos recomendados</SmallHeading>
-              {articles.map(a => (
-                <Card key={a.slug || a.id} to={`/blog/${a.category || a.categoria || "geral"}/${a.slug || a.friendlySlug || a.id}`}>
-                  <img src={a.image || a.imagem} alt={a.title || a.titulo} />
-                  <div>
-                    <strong>{a.title || a.titulo}</strong>
-                    <p>{(a.excerpt || a.description || a.descricao || "").slice(0, 90)}...</p>
-                  </div>
-                </Card>
-              ))}
-            </Column>
-          {/* Receitas Sugeridas*/}
-            <Column>
-              <SmallHeading>Receitas sugeridas</SmallHeading>
-              {recipes.map(r => (
-                <Card key={r.slug} to={`/receitas/${r.slug}`}>
-                  <img src={r.imagem || r.image} alt={r.titulo || r.title} />
-                  <div>
-                    <strong>{r.titulo}</strong>
-                    <p>{(r.descricaoCurta || r.descricao || "").slice(0, 90)}...</p>
-                  </div>
-                </Card>
-              ))}
-            </Column>
-          {/* Produtos*/}
-            <Column>
-              <SmallHeading>Produtos</SmallHeading>
-              {products.length ? products.map(p => (
-                <ProductCard key={p.id} href={p.affiliateLink} target="_blank" rel="noopener noreferrer">
-                  <img src={p.image} alt={p.name} />
-                  <div>
-                    <strong>{p.name}</strong>
-                    <p>{p.description?.slice(0, 90)}</p>
-                  </div>
-                </ProductCard>
-              )) : <Empty>No momento, sem produtos recomendados</Empty>}
-            </Column>
-          </Grid>
-    </Wrapper>
+    r.shortDescription ||
+    r.descricaoCurta ||
+    r.excerpt ||
+    r.descricao ||
+    r.description ||
+    ""
   );
 }
 
-/* Styled */
-const Wrapper = styled.section`
-  margin-top: 1.6rem;
-  background: ${({ theme }) => theme.colors.surface};
-  padding: 1rem;
-  border-radius: ${({ theme }) => theme.radius.md};
-  box-shadow: ${({ theme }) => theme.shadow.xs};
-`;
+function buildRecipeLink(r) {
+  return `/receitas/${encodeURIComponent(r.slug)}`;
+}
 
-const Heading = styled.h3`
-  margin: 0 0 0.6rem 0;
-  color: ${({ theme }) => theme.colors.primaryDark};
-`;
+function buildArticleLink(a) {
+  const categoria = a.category || a.categoria || "geral";
+  const slug = a.slug || a.friendlySlug;
+  return `/blog/${encodeURIComponent(categoria)}/${encodeURIComponent(slug)}`;
+}
 
-const Grid = styled.div`
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(3, 1fr);
-  margin-top: 0.6rem;
-  grid-auto-rows: 1fr;
+function buildProductLink(p) {
+  const slug = p.slug || p.id;
+  return `/produtos/${encodeURIComponent(slug)}`;
+}
 
-  /* garante que cada filho preencha a célula */
-  & > a, & > article, & > div {
-    height: 100%;
-  }
+function buildTripLink(v) {
+  const cat =
+    v.categorySlug ||
+    v.category ||
+    v.region ||
+    v.tipo ||
+    v.type ||
+    "nacional";
 
-  @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
-  @media (max-width: 720px) { grid-template-columns: 1fr; }
-`;
+  const slug = v.slug || v.id || v.title || v.nome;
+  return `/viagens/${encodeURIComponent(String(cat))}/${encodeURIComponent(
+    String(slug)
+  )}`;
+}
 
+/* ---------------------- main ---------------------- */
 
-const Column = styled.div`
-`;
+export default function ContinueExploring({ posts = [], receitas = [], products = [], trips = [] }) {
+  const flatReceitas = useMemo(() => safeArray(receitas), [receitas]);
+  const flatProducts = useMemo(() => safeArray(products), [products]);
+  const flatTrips = useMemo(() => safeArray(trips), [trips]);
+  const flatPosts = useMemo(() => safeArray(posts), [posts]);
 
-const SmallHeading = styled.h4`
-  margin: 0 0 0.6rem 0;
-  color: ${({ theme }) => theme.colors.primary};
-  font-size: 0.95rem;
-`;
+  /* ---------------- CARDS MONTADOS ---------------- */
 
-const Card = styled(Link)`
-  display:flex;
-  gap:0.6rem;
-  align-items:flex-start;
-  text-decoration:none;
-  color: inherit;
-  padding: 0.45rem 0;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  const cards = useMemo(() => {
+    const artigos = flatPosts.slice(0, 6).map((a) => ({
+      type: "article",
+      title: a.title || a.titulo,
+      image: safeImage(a),
+      excerpt: safeExcerpt(a).slice(0, 110) + "…",
+      link: buildArticleLink(a),
+    }));
 
-  img { width: 84px; height: 64px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
-  strong { display:block; color: ${({ theme }) => theme.colors.primaryDark}; font-size: 0.95rem; }
-  p { font-size: 0.85rem; color: ${({ theme }) => theme.colors.text}; margin: 0.15rem 0 0; }
-`;
+    const rc = flatReceitas.slice(0, 6).map((r) => ({
+      type: "receita",
+      title: r.titulo || r.title,
+      image: safeImage(r),
+      excerpt: safeExcerpt(r).slice(0, 110) + "…",
+      link: buildRecipeLink(r),
+    }));
 
-const ProductCard = styled.a`
-  display:flex;
-  gap:0.6rem;
-  align-items:flex-start;
-  text-decoration:none;
-  color: inherit;
-  padding: 0.45rem 0;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+    const produtos = flatProducts.slice(0, 6).map((p) => ({
+      type: "product",
+      title: p.name,
+      image: p.image,
+      excerpt: p.description?.slice(0, 110) + "…",
+      link: buildProductLink(p),
+    }));
 
-  img { width: 84px; height: 64px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
-  strong { display:block; color: ${({ theme }) => theme.colors.primaryDark}; font-size: 0.95rem; }
-  p { font-size: 0.85rem; color: ${({ theme }) => theme.colors.text}; margin: 0.15rem 0 0; }
-`;
+    const viagensCards = flatTrips.slice(0, 6).map((v) => ({
+      type: "trip",
+      title: v.title || v.titulo,
+      image: v.image,
+      excerpt: safeExcerpt(v).slice(0, 110) + "…",
+      link: buildTripLink(v),
+    }));
 
-const Empty = styled.div` padding: 0.6rem 0; color: ${({ theme }) => theme.colors.text}; `;
+    return [...artigos, ...rc, ...produtos, ...viagensCards];
+  }, [flatPosts, flatReceitas, flatProducts, flatTrips]);
+
+  return (
+    <S.Wrapper>
+      <h2>Continue Explorando</h2>
+      <S.Grid>
+        {cards.map((item, i) => (
+          <S.Card key={i}>
+            <Link to={item.link}>
+              <S.Thumb style={{ backgroundImage: `url(${item.image})` }} />
+              <S.Body>
+                <S.Badge type={item.type}>
+                  {item.type === "article"
+                    ? "Artigo"
+                    : item.type === "receita"
+                    ? "Receita"
+                    : item.type === "product"
+                    ? "Produto"
+                    : "Viagem"}
+                </S.Badge>
+                <h3>{item.title}</h3>
+                <p>{item.excerpt}</p>
+              </S.Body>
+            </Link>
+          </S.Card>
+        ))}
+      </S.Grid>
+    </S.Wrapper>
+  );
+}

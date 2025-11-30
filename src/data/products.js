@@ -14,6 +14,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/61aVQSXVYrL._AC_SX679_.jpg",
       description: "Creatina pura para aumento de força e energia.",
       affiliateLink: "https://amzn.to/45GWzq4",
+      shortDescription: "Creatina pura para força e explosão nos treinos.",
+      excerpt: "Creatina monohidratada de alta pureza — ajuda no ganho de força, desempenho e recuperação em treinos intensos.",
     },
     {
       id: "whey-protein-isolado",
@@ -23,6 +25,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/8130uasb5ML._AC_SY300_SX300_QL70_ML2_.jpg",
       description: "Fonte de proteína isolada para recuperação muscular rápida.",
       affiliateLink: "https://amzn.to/45FjQsz",
+      shortDescription: "Proteína isolada para recuperação muscular rápida.",
+      excerpt: "Whey protein isolado: alto teor proteico e baixo teor de carboidrato e lactose — ideal pós-treino para recuperação e síntese muscular.",
     },
     {
       id: "bcaa",
@@ -32,6 +36,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/71stXLxNKZL._AC_SY300_SX300_QL70_ML2_.jpg",
       description: "Aminoácidos para redução da fadiga e recuperação muscular.",
       affiliateLink: "https://amzn.to/4lOa77S",
+      shortDescription: "Aminoácidos essenciais para recuperar e reduzir fadiga.",
+      excerpt: "BCAA (leucina, isoleucina e valina) para suporte à recuperação muscular, reduzindo fadiga e mantendo síntese proteica após o treino.",
     },
     {
       id: "glutamina",
@@ -41,6 +47,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/81dUMPXQYFL._AC_SX522_.jpg",
       description: "Aminoácido fundamental para recuperação intensiva.",
       affiliateLink: "https://amzn.to/4oYKh40",
+      shortDescription: "Glutamina para suporte à recuperação e sistema imune.",
+      excerpt: "Glutamina em pó para recuperação pós-treino e suporte ao sistema imune — útil em fases de treino intenso e dieta restritiva.",
     },
     {
       id: "termogenico",
@@ -50,6 +58,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/515beSfdVnL._AC_SX522_.jpg",
       description: "Ajuda na queima de gordura e aumento de energia.",
       affiliateLink: "https://amzn.to/4fUrp1M",
+      shortDescription: "Formula termogênica para apoio à queima de gordura.",
+      excerpt: "Termogênico natural com ingredientes que elevam levemetne o metabolismo e a energia — apoio para treinos e controle de peso.",
     },
     {
       id: "pre-treino",
@@ -59,6 +69,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/61Vu9dlMveL._AC_SY300_SX300_QL70_ML2_.jpg",
       description: "Formula para aumentar concentração e disposição nos treinos.",
       affiliateLink: "https://amzn.to/3HT9o7D",
+      shortDescription: "Pré-treino para foco, energia e performance.",
+      excerpt: "Pré-treino energético com cafeína e beta-alanina para mais foco, disposição e rendimento nas sessões mais exigentes.",
     },
 
     // Acessórios
@@ -70,6 +82,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/61rQhmvoJIL._AC_SY300_SX300_QL70_ML2_.jpg",
       description: "Faixa elástica para fortalecimento e alongamento.",
       affiliateLink: "https://amzn.to/4fUtc70",
+      shortDescription: "Faixa elástica versátil para treinos e alongamentos.",
+      excerpt: "Elastic band: resistente e portátil, perfeita para fortalecimento, ativação de glúteos e exercícios de mobilidade em qualquer lugar.",
     },
     {
       id: "faixa-lombar",
@@ -79,6 +93,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/41LBidYT-NL._SX425_.jpg",
       description: "Suporte lombar ergonômico para segurança e conforto.",
       affiliateLink: "https://amzn.to/45Fm8YH",
+      shortDescription: "Suporte lombar ajustável para estabilidade e conforto.",
+      excerpt: "Faixa lombar ajustável para suporte em treinos e tarefas de levantamento — reduz esforço e promove postura mais segura.",
     },
     {
       id: "bola-exercicio",
@@ -88,6 +104,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/51tghMwuMYL._AC_SX425_.jpg",
       description: "Bolsa inflável para exercícios de estabilidade e alongamento.",
       affiliateLink: "https://amzn.to/47cFHZw",
+      shortDescription: "Bola de exercício para estabilidade, core e alongamento.",
+      excerpt: "Bola de exercício (fitball) ideal para treinos de core, pilates e alongamentos — melhora equilíbrio e força funcional.",
     },
     {
       id: "halteres",
@@ -97,6 +115,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/61dFtGuHM4S._AC_SX522_.jpg",
       description: "Conjunto ajustável para treino de força e resistência.",
       affiliateLink: "https://amzn.to/47jkFZd",
+      shortDescription: "Halteres ajustáveis para treinos em casa e progressão de carga.",
+      excerpt: "Halteres ajustáveis: solução prática para treino de força em casa, com variação de peso e economia de espaço.",
     },
     {
       id: "colchonete-yoga",
@@ -106,6 +126,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/51Oj-FOI9hS._AC_SX569_.jpg",
       description: "Antiderrapante e confortável para prática de yoga e pilates.",
       affiliateLink: "https://amzn.to/3UMlhPH",
+      shortDescription: "Colchonete antiderrapante e confortável para yoga.",
+      excerpt: "Colchonete para yoga com superfície antiderrapante e densidade ideal para conforto e suporte em posturas e alongamentos.",
     },
     {
       id: "corda-pular",
@@ -115,6 +137,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/61e4dMDdxZL._AC_SX522_.jpg",
       description: "Ferramenta cardio essencial para treinos em casa e academia.",
       affiliateLink: "https://amzn.to/4oWJZuv",
+      shortDescription: "Corda de pular leve e ajustável para cardio em casa.",
+      excerpt: "Corda de pular com cabo ajustável — ótima para treino cardio, queima de calorias e condicionamento em pouco espaço.",
     },
 
     // Vitaminas
@@ -126,6 +150,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/51njnfeVaXL._AC_SY300_SX300_QL70_ML2_.jpg",
       description: "Auxilia na saúde óssea e redução de dores.",
       affiliateLink: "https://amzn.to/47Pr0M3",
+      shortDescription: "Vitamina D para suporte ósseo e bem-estar geral.",
+      excerpt: "Vitamina D de alta absorção — importante para saúde óssea, função imunológica e bem-estar geral, especialmente em deficiência.",
     },
     {
       id: "vitamina-c",
@@ -135,6 +161,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/51jHKlmcgML._AC_SY300_SX300_QL70_ML2_.jpg",
       description: "Antioxidante natural que fortalece o sistema imunológico.",
       affiliateLink: "https://amzn.to/45Wn4qk",
+      shortDescription: "Vitamina C 1000mg para suporte imunológico diário.",
+      excerpt: "Vitamina C 1000mg — potente antioxidante que auxilia o sistema imunológico e auxilia na recuperação após esforço e desgaste.",
     },
     {
       id: "complexo-b",
@@ -144,6 +172,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/61dnyb09rHL._AC_SY300_SX300_QL70_ML2_.jpg",
       description: "Conjunto de vitaminas do complexo B para energia e bem-estar.",
       affiliateLink: "https://amzn.to/41rAlpw",
+      shortDescription: "Complexo B para energia, metabolismo e humor.",
+      excerpt: "Complexo B completo para suporte energético, função neurológica e metabolismo — indicado em rotina de treino e dietas restritas.",
     },
     {
       id: "omega-3",
@@ -153,6 +183,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/51lfH7q-tGL._AC_SX679_.jpg",
       description: "Ácidos graxos essenciais para o coração e cérebro saudáveis.",
       affiliateLink: "https://amzn.to/3JFgw82",
+      shortDescription: "Ômega-3 para saúde cardiovascular e cerebral.",
+      excerpt: "Ômega-3 (EPA/DHA) de alta concentração — suporte à saúde cardiovascular, função cerebral e controle inflamatório.",
     },
     {
       id: "multivitaminico",
@@ -162,6 +194,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/61NaC7CqvcL._AC_SY300_SX300_QL70_ML2_.jpg",
       description: "Formula completa para suporte diário de saúde geral.",
       affiliateLink: "https://amzn.to/3JBmN4D",
+      shortDescription: "Multivitamínico para complemento nutricional diário.",
+      excerpt: "Multivitamínico diário com vitaminas e minerais balanceados — ajuda a preencher lacunas na alimentação e manter energia e imunidade.",
     },
     {
       id: "colageno",
@@ -171,6 +205,8 @@ const productsData = {
       image: "https://m.media-amazon.com/images/I/817VAOmwk7L._AC_SY300_SX300_QL70_ML2_.jpg",
       description: "Suporte para pele, articulações e saúde óssea.",
       affiliateLink: "https://amzn.to/4mF2fac",
+      shortDescription: "Colágeno hidrolisado para pele, articulações e recuperação.",
+      excerpt: "Colágeno hidrolisado em pó para suporte de pele, unhas e articulações — útil em programas de recuperação e bem-estar estrutural.",
     },
   ],
 };
