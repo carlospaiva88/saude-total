@@ -9,7 +9,7 @@ import receitas from "../../data/receitas/index";
 import TagsCloud from "../../components/BlogPage/TagsCloud";
 import NewsletterCTA from "../../components/BlogPage/NewsletterCTA";
 import viagensData from "../../data/viagens/index";
-import productsData from "../../data/products";
+import productsData from "../../data/products/";
 import MiniQuizSaude from "../../components/BlogPage/MiniQuizSaude";
 import FraseDoDia from "../BlogPage/FraseDoDia";
 import CategoryCarousel from "./CategoryCarousel";
