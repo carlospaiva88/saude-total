@@ -49,10 +49,10 @@ function slugify(s = "") {
     .replace(/[\u0300-\u036f]/g, "") // remove acentos
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9\-]/g, "")
-    .replace(/\-+/g, "-")
-    .replace(/^\-|\-$/g, "");
+    .replace(/s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
 }
 
 function toISODate(d) {
@@ -68,7 +68,7 @@ function toISODate(d) {
 }
 
 function stripHtml(html = "") {
-  return String(html || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+  return String(html || "").replace(/<[^>]+>/g, "").replace(/s+/g, " ").trim();
 }
 
 function excerptFromContent(article, max = 160) {

@@ -130,22 +130,15 @@ const article = {
     <p>A mente humana não é um problema a ser corrigido, mas um sistema complexo que precisa ser compreendido. O autoconhecimento elimina ruídos internos, aumenta a clareza e fortalece seu bem-estar emocional.</p>
 
     <p>É por isso que ele não é apenas uma ferramenta — <b>é uma chave essencial para uma vida mentalmente saudável, equilibrada e consciente.</b></p>
-  `,
-  product: {
-    name: "Diário da Gratidão",
-    description: "Ajuda a registrar pensamentos e emoções, praticando a gratidão diária.",
-    link: "https://amzn.to/44pKe8C",
-    image: "https://m.media-amazon.com/images/I/61+06qhjiqL._AC_SL1500_.jpg",
-=======
+  
     <p>O autoconhecimento é um processo essencial para o fortalecimento da saúde mental, oferecendo maior controle emocional e qualidade de vida.</p>
-    ...
+    
   `,
   product: {
     name: "Diário de Autoconhecimento",
     description: "Ajuda a registrar pensamentos e emoções, promovendo reflexão diária e crescimento pessoal.",
     link: "https://amzn.to/3JMbXh7",
     image: "https://m.media-amazon.com/images/I/71rUthuXkIL._AC_SX425_.jpg",
->>>>>>> 9ad7391 (fazendo melhorias em todo o blog)
   },
 };
 

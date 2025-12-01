@@ -5,7 +5,6 @@ import { PageShell } from "../../components/Calculadora/CalculadoraShared.styles
 import IMCCalculator from "../../components/Calculadora/IMC/IMCCalculator";
 import TMBCalculator from "../../components/Calculadora/TMB/TMBCalculator";
 import CaloriasCalculator from "../../components/Calculadora/Calorias/CaloriasCalculator";
-import CalculadoraPreview from "../../components/Calculadora/CalculadoraPreview";
 import { recommend } from "../../components/utils/recommender";
 import articlesData from "../../data/articles/index";
 import receitasIndex from "../../data/receitas/index";
@@ -75,7 +74,7 @@ export default function GlobalCalculadoraPage() {
     const arr = Array.isArray(articlesData) ? articlesData : Object.values(articlesData || {});
     const dedup = dedupeByKey(arr, (a) => (a?.slug || a?.id || a?.title || a?.titulo || "").toString().trim());
     return dedup.slice(0, 6);
-  }, [articlesData]);
+  }, []); // ESLint fix: array vazio
 
   // Unified visual recommendations for grid — manter ordem mas remover duplicatas entre tipos
   const visualRecs = useMemo(() => {
@@ -105,7 +104,7 @@ export default function GlobalCalculadoraPage() {
   const featuredProducts = useMemo(() => {
     const prods = Array.isArray(productsData?.products) ? productsData.products : [];
     return dedupeByKey(prods, (p) => (p?.id || p?.link || p?.affiliateLink || p?.name || "").toString()).slice(0, 3);
-  }, [productsData]);
+  }, []); // ESLint fix: array vazio
 
   // On result — payload already contains goal for both calculators
   function handleOnResult(r) {
@@ -223,9 +222,7 @@ export default function GlobalCalculadoraPage() {
               <Tab isActive={active === "imc"} onClick={() => setActive("imc")}>IMC</Tab>
               <Tab isActive={active === "tmb"} onClick={() => setActive("tmb")}>TMB</Tab>
               <Tab isActive={active === "calorias"} onClick={() => setActive("calorias")}>Calorias</Tab>
-
               <Spacer />
-             
             </Tabs>
 
             <ContentArea>
@@ -388,7 +385,6 @@ const RightCol = styled.aside``;
 const Tabs = styled.div` display:flex; gap:.6rem; align-items:center; margin-bottom:1rem; flex-wrap:wrap; `;
 const Tab = styled.button` background:${({isActive, theme}) => isActive ? theme.colors.primary : theme.colors.surface}; color:${({isActive}) => isActive ? "white" : "inherit"}; padding:.6rem .9rem; border-radius:10px; border:none; font-weight:700; cursor:pointer; `;
 const Spacer = styled.div` flex:1; `;
-const PreviewWrapper = styled.div` min-width:220px; `;
 
 const ContentArea = styled.div``;
 const CalcWrap = styled.div` margin-bottom: 1rem; `;

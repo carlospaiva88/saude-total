@@ -229,24 +229,13 @@ const article = {
 <p>Os distúrbios do sono são mais comuns do que parecem e podem destruir completamente sua disposição, saúde mental e bem-estar físico. Quanto mais cedo você identifica o problema, mais rápido recupera a qualidade de vida.</p>
  
     `,
-  
-  product: {
-  name: "Melatonina em Gummie",
-  description: "Recupere o sono e o seu bem estar com Sonotonina.",
-  link: "https://pv.b4you.com.br/pages/937c56de-e0f9-46ec-92d2-a15bceecfac8/8rj7xtIRz7",
-  image: "https://www.bluuesleep.com.br/wp-content/uploads/2025/09/SONOTONINA-2.webp",
-},
-
-=======
-    <p>Distúrbios do sono afetam o bem-estar mental e físico, interferindo na qualidade de vida. ...
-  `,
+    
   product: {
     name: "Livro 'Vencendo a Depressão'",
     description: "Guia prático para entender e lidar com a depressão, com dicas de psicólogos renomados.",
     link: "https://amzn.to/3Xwg7y0",
     image: "https://m.media-amazon.com/images/I/51A7kZDvV+L._SX331_BO1,204,203,200_.jpg",
   },
->>>>>>> 9ad7391 (fazendo melhorias em todo o blog)
 };
 
 export default article;

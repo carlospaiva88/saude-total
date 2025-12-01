@@ -213,20 +213,13 @@ Cuidar do estresse <b>não é luxo — é necessidade</b>.</p>
 >>>>>>> 9ad7391 (fazendo melhorias em todo o blog)
   `,
   product: {
-<<<<<<< HEAD
   name: "Kit Óleo Essencial do Relaxamento.",
   description: "Ideal para estresse, ansiedade e insônia. Mais clareza e e bem estar.",
   link: "https://amzn.to/44uODXN",
   image: "https://m.media-amazon.com/images/I/61QkNiH6PnL._AC_SX425_PIbundle-2,TopRight,0,0_SH20_.jpg",
 },
 
-=======
-    name: "Tapete de Yoga Premium Antiderrapante",
-    description: "Ideal para exercícios de respiração, alongamentos e meditação.",
-    link: "https://amzn.to/47ZuawW",
-    image: "https://m.media-amazon.com/images/I/61dMso74fiL._AC_SX425_.jpg",
-  },
->>>>>>> 9ad7391 (fazendo melhorias em todo o blog)
+
 };
 
 export default article;

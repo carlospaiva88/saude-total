@@ -94,7 +94,7 @@ export default function RelatedCarousel({ items = [], renderCard = null, title =
 /* ---------------- helpers ---------------- */
 
 function slugify(s = "") {
-  return String(s || "").toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "");
+  return String(s || "").toLowerCase().replace(/s+/g, "-").replace(/[^a-z0-9-]/g, "");
 }
 
 function truncate(str = "", n = 120) {
