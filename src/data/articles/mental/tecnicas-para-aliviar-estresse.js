@@ -11,7 +11,6 @@ const article = {
   excerpt: "Técnicas simples e eficazes para aliviar o estresse: respiração, movimento, organização do tempo e apoio emocional.",
 
   content: `
-<<<<<<< HEAD
     <p>O estresse virou um dos maiores problemas de saúde pública dos tempos modernos. A rotina acelerada, a pressão profissional, a falta de descanso e o excesso de estímulos fazem com que o corpo viva constantemente em modo de alerta. Porém, quando o estresse deixa de ser pontual e se torna crônico, ele afeta profundamente a saúde física, mental e emocional.
 
 Este guia completo explica <b>o que realmente é o estresse, por que ele acontece</b>, seus <b>principais sintomas</b>, <b>impactos no organismo</b> e <b>estratégias cientificamente comprovadas para reduzir o estresse</b>.
@@ -207,10 +206,8 @@ Essa resposta é útil em curto prazo, mas quando se torna constante, transforma
 Cuidar do estresse <b>não é luxo — é necessidade</b>.</p>
 
 
-=======
     <p>O estresse é uma resposta natural do corpo a demandas excessivas, mas seu manejo adequado é essencial para a saúde mental e física.</p>
     ...
->>>>>>> 9ad7391 (fazendo melhorias em todo o blog)
   `,
   product: {
   name: "Kit Óleo Essencial do Relaxamento.",

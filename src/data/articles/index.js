@@ -33,7 +33,6 @@ import meditacaoBasica from "./mental/meditacao-basica";
 import meditacaoAvancada2 from "./mental/meditacao-avancada2";
 import sintomasDepressao from "./mental/sintomas-fisicos-depressao";
 
-
 import autoestimaEspiritual from "./espiritual/autoestima-espiritual";
 import meditacaoAvancada from "./espiritual/meditacao-avancada";
 import energiaPositiva from "./espiritual/energia-positiva";
@@ -41,7 +40,7 @@ import poderGratidao from "./espiritual/poder-gratidao";
 import equilibrioEspiritual from "./espiritual/equilibrio-espiritual-diario";
 
 /* -------------------------
-   HELPERS DE NORMALIZAÇÃO
+   HELPERS DE NORMALIZAÇÃO (CORRIGIDOS)
    ------------------------- */
 function slugify(s = "") {
   return String(s || "")
@@ -49,7 +48,7 @@ function slugify(s = "") {
     .replace(/[\u0300-\u036f]/g, "") // remove acentos
     .toLowerCase()
     .trim()
-    .replace(/s+/g, "-")
+    .replace(/\s+/g, "-") // CORREÇÃO: usar \s para espaços
     .replace(/[^a-z0-9-]/g, "")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
@@ -68,7 +67,8 @@ function toISODate(d) {
 }
 
 function stripHtml(html = "") {
-  return String(html || "").replace(/<[^>]+>/g, "").replace(/s+/g, " ").trim();
+  // remove tags HTML e normaliza espaços corretamente
+  return String(html || "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 }
 
 function excerptFromContent(article, max = 160) {
@@ -112,7 +112,6 @@ const rawArticles = [
   { ...meditacaoBasica, friendlySlug: "meditacao-basica" },
   { ...meditacaoAvancada2, friendlySlug: "meditacao-avancada-praticas" },
   { ...sintomasDepressao, friendlySlug: "sintomas-fisicos-depressao"},
-
 
   // espiritual
   { ...autoestimaEspiritual, friendlySlug: "autoestima-espiritual" },
