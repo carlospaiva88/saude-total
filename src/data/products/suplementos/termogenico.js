@@ -1,74 +1,84 @@
 // src/data/products/termogenico.js
-// Produto padronizado (Amazon-API-ready)
-
 const termogenico = {
-  id: "termogenico-natural-60caps",
-  ASIN: "B0TERMOGENICO60",
-  marketplaceId: "BR",
-  sku: "TERMOGENICO-60C-PWR",
+  id: "B0TERMOGENICO60",
+  asin: "B0TERMOGENICO60",
+  slug: "termogenico-natural-60caps-powerburn",
 
-  name: "Termogênico Natural 60 Cápsulas - PowerBurn",
+  title: "Termogênico Natural 60 cápsulas — PowerBurn",
   brand: "PowerBurn",
-  manufacturer: "PowerBurn Labs",
-  category: ["Suplementos", "Termogênicos"],
-  categoriesTree: ["Sports Nutrition", "Fat Burners", "Thermogenics"],
+  category: "suplementos",
+  subCategory: "termogenicos",
+  featured: true,
+  tags: ["termogênico", "queima de gordura", "energia"],
+
+   images: [
+    "https://m.media-amazon.com/images/I/61vU2Sa526L._AC_UL320_.jpg"
+   ],
 
   price: {
-    currency: "BRL",
-    formatted: "R$ 99,00",
+    display: "R$ 99,00",
     amount: 99.0,
+    currency: "BRL",
+    raw: {
+      condition: "New",
+      merchant: "Amazon.com.br",
+      price: { amount: 99.0, currency: "BRL", display: "R$ 99,00" },
+      offerUrl: "https://www.amazon.com.br/dp/B0TERMOGENICO60?tag=seuAffiliateTag"
+    },
   },
+
+  affiliateLink: "https://www.amazon.com.br/dp/B0TERMOGENICO60?tag=seuAffiliateTag",
+
   availability: "InStock",
+  rating: 4.5,
+  reviews: 1250,
 
-  detailPageURL: "https://www.amazon.com.br/dp/B0TERMOGENICO60?tag=seu-affid",
-
-  images: [
-    "https://m.media-amazon.com/images/I/515beSfdVnL._AC_SX522_.jpg",
-    "https://m.media-amazon.com/images/I/515beSfdVnL._AC_SY300_.jpg",
-  ],
-
-  shortDescription: "Fórmula natural para energia e aceleração metabólica.",
+  shortDescription: "Fórmula natural com cafeína e extratos para acelerar o metabolismo.",
   excerpt:
-    "Termogênico natural com cafeína, chá verde e gengibre — auxilia na queima de gordura e aumento de energia para treinos intensos.",
+    "Termogênico com cafeína, chá verde e gengibre — auxilia na queima de gordura, aumenta energia e suporte para treinos.",
 
   description:
-    "<p>Termogênico natural formulado com ingredientes de alta eficácia como cafeína, chá verde e gengibre. Aumenta o gasto calórico e dá mais disposição.</p>" +
-    "<ul>" +
-    "<li>Acelera o metabolismo</li>" +
-    "<li>Aumenta foco e energia</li>" +
-    "<li>Com ingredientes naturais</li>" +
-    "</ul>",
+    "Termogênico natural formulado com cafeína, extrato de chá verde e gengibre para apoiar o aumento do gasto calórico e a energia durante o dia. Indicado para quem busca definição e mais disposição durante treinos. Respeite as doses recomendadas.",
 
-  features: [
-    "Com cafeína e chá verde",
-    "Apoia queima de gordura",
-    "Energia para treinos intensos",
-    "Zero açúcar",
-  ],
-
-  serving: {
-    servingSize: "2 cápsulas",
-    servingsPerContainer: 30,
-    suggestedUse: "Consumir 2 cápsulas 30 minutos antes do treino.",
+  meta: {
+    manufacturer: "PowerBurn Labs",
+    packageWeight: "60 cápsulas",
+    asin: "B0TERMOGENICO60",
+    lastUpdated: "2025-12-01"
   },
 
-  rating: 4.5,
-  reviewsCount: 1250,
-
-  affiliate: {
-    affiliateLink: "https://amzn.to/4fUrp1M",
-    trackingTag: "seu-affid",
-  },
-
-  seo: {
-    metaTitle: "Termogênico Natural — Energia e Queima de Gordura",
-    metaDescription:
-      "Termogênico natural com cafeína e chá verde para energia e aceleração metabólica. Ideal para treinos e definição.",
-  },
-
-  isFeatured: true,
-  createdAt: "2025-11-23",
-  updatedAt: "2025-11-23",
+  rawAmazon: {
+    ASIN: "B0TERMOGENICO60",
+    DetailPageURL: "https://www.amazon.com.br/dp/B0TERMOGENICO60",
+    ItemInfo: {
+      Title: { DisplayValue: "Termogênico Natural 60 Cápsulas - PowerBurn" },
+      ByLineInfo: { Brand: { DisplayValue: "PowerBurn" } },
+      Features: {
+        DisplayValues: [
+          "Com cafeína e chá verde",
+          "Gengibre e ingredientes naturais",
+          "60 cápsulas por embalagem"
+        ]
+      }
+    },
+    Images: {
+      Primary: {
+        Small: { URL: "https://m.media-amazon.com/images/I/515beSfdVnL._AC_SX522_.jpg" },
+        Medium: { URL: "https://m.media-amazon.com/images/I/515beSfdVnL._AC_SY300_.jpg" },
+        Large: { URL: "https://m.media-amazon.com/images/I/71example-termogenico-large.jpg" }
+      }
+    },
+    Offers: {
+      Listings: [
+        {
+          Price: { DisplayAmount: "R$ 99,00", Amount: 99.0, Currency: "BRL" },
+          Availability: { Type: "NOW" },
+          MerchantInfo: { Name: "Amazon" }
+        }
+      ]
+    },
+    CustomerReviews: { StarRating: 4.5, TotalReviewCount: 1250 }
+  }
 };
 
 export default termogenico;

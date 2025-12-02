@@ -6,8 +6,8 @@
 // Suplementos
 import creatina from "./suplementos/creatina";
 import wheyIsolado from "./suplementos/whey-protein-isolado";
-import bcaa from "./vitaminas/bcaa";
-import glutamina from "./vitaminas/glutamina";
+import bcaa from "./suplementos/bcaa";
+import glutamina from "./suplementos/glutamina";
 import termogenico from "./suplementos/termogenico";
 import preTreino from "./suplementos/preTreino";
 
@@ -15,6 +15,10 @@ import preTreino from "./suplementos/preTreino";
 import omega3 from "./vitaminas/omega3";
 import multivitaminico from "./vitaminas/multivitaminico";
 import colageno from "./vitaminas/colageno";
+import complexoB from "./vitaminas/complexoB";
+import vitaminaC from "./vitaminas/vitaminaC";
+import vitaminaD from "./vitaminas/vitaminaD";
+
 
 
 // Acessorios
@@ -58,6 +62,15 @@ import monitorSono from "./bio-hacking/monitor-sono";
 import suplementoAshwagandha from "./bio-hacking/ashwagandha";
 
 
+// Cozinha
+import airfryerCompacta from "./cozinha-saudavel/airfryer-compacta"
+import balancaDigital from "./cozinha-saudavel/balanca-digital-alimentos"
+import conjuntosPotesHermeticos from "./cozinha-saudavel/conjuntos-potes-hermeticos"
+import liquidificadorBlender from "./cozinha-saudavel/liquidificador-blender"
+import mixerImmersion from "./cozinha-saudavel/mixer-immersion"
+import panelaAntiAderente from "./cozinha-saudavel/panela-antiaderente"
+
+
 // ----------------------------------------------------------
 //          CATEGORIAS UNIVERSAIS PADRONIZADAS
 // ----------------------------------------------------------
@@ -65,13 +78,15 @@ import suplementoAshwagandha from "./bio-hacking/ashwagandha";
 export const productCategories = [
   { id: "suplementos", name: "Suplementos" },
   { id: "vitaminas", name: "Vitaminas & Saúde" },
-  { id: "acessorios", name: "Acessórios Fitness" },
+  { id: "acessorios-fitness", name: "Acessórios Fitness" },
 
-  { id: "home-gym", name: "Home Gym Essentials" },
+  { id: "home-gym-essentials", name: "Home Gym Essentials" },
   { id: "relaxamento", name: "Relaxamento & Sono" },
   { id: "viagem", name: "Viagem & Outdoor" },
   { id: "lifestyle", name: "Lifestyle & Bem-estar" },
   { id: "biohacking", name: "Biohacking" },
+  { id: "cozinha-saudavel", name: "Cozinha Saudavel" },
+
 ];
 
 // ----------------------------------------------------------
@@ -91,6 +106,10 @@ export const products = [
   omega3,
   multivitaminico,
   colageno,
+  complexoB,
+  vitaminaC,
+  vitaminaD,
+
 
   // Acessórios
   elasticBand,
@@ -129,6 +148,14 @@ export const products = [
   coldPlungeMini,
   monitorSono,
   suplementoAshwagandha,
+
+// Cozinha Saudavel
+  airfryerCompacta,
+  balancaDigital,
+  conjuntosPotesHermeticos,
+  mixerImmersion,
+  panelaAntiAderente,
+  liquidificadorBlender,
 ];
 
 // Objeto compatível com o formato antigo

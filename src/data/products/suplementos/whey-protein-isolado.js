@@ -11,11 +11,9 @@ const wheyProteinIsolado = {
   featured: false,
   tags: ["whey", "proteína", "pós-treino"],
 
-  image: {
-    small: "https://m.media-amazon.com/images/I/41WHEYISO-small.jpg",
-    medium: "https://m.media-amazon.com/images/I/51WHEYISO-medium.jpg",
-    large: "https://m.media-amazon.com/images/I/71WHEYISO-large.jpg",
-  },
+  images: [
+    "https://m.media-amazon.com/images/I/51lOuKbCawL._AC_UL320_.jpg"
+   ],
 
   price: {
     display: "R$ 129,90",
@@ -24,11 +22,7 @@ const wheyProteinIsolado = {
     raw: {
       condition: "New",
       merchant: "Amazon.com.br",
-      price: {
-        amount: 129.9,
-        currency: "BRL",
-        display: "R$ 129,90"
-      },
+      price: { amount: 129.9, currency: "BRL", display: "R$ 129,90" },
       offerUrl: "https://www.amazon.com.br/dp/B08WHEYISO01?tag=seuAffiliateTag"
     }
   },
@@ -39,32 +33,19 @@ const wheyProteinIsolado = {
   rating: 4.6,
   reviews: 3142,
 
-  shortDescription:
-    "Proteína isolada de rápida absorção para recuperação muscular.",
+  shortDescription: "Proteína isolada de rápida absorção para recuperação muscular.",
   excerpt:
     "Whey protein isolado com alto teor proteico, baixa lactose e rápida absorção — ideal para pós-treino e recuperação muscular eficiente.",
 
-  description: `
-    <h2>Whey Protein Isolado UltraPure — 900g</h2>
-    <p>Suplemento proteico de alta qualidade, 100% isolado, baixo teor de carboidratos e lactose. Ideal para recuperação pós-treino e construção muscular.</p>
-
-    <h3>Benefícios</h3>
-    <ul>
-      <li>Rápida absorção e digestão leve;</li>
-      <li>Alto teor de proteína por dose (27g);</li>
-      <li>Ideal para pós-treino ou complementação proteica;</li>
-      <li>Baixa lactose e 0g de açúcar.</li>
-    </ul>
-
-    <h3>Como usar</h3>
-    <p>Consumir 1 dose (30g) com água gelada ou bebida de preferência. Indicado após o treino ou entre refeições.</p>
-  `,
+  // descrição longa — string simples (sem HTML)
+  description:
+    "Whey Protein Isolado UltraPure (900g) é um suplemento proteico de alta qualidade, formulado para rápida absorção e digestão leve. Ideal para recuperação pós-treino e construção muscular. Cada dose contém aproximadamente 27 g de proteína. Produto com baixo teor de carboidratos e lactose reduzida.",
 
   meta: {
     manufacturer: "UltraPure Nutrition",
     packageWeight: "900g",
     asin: "B08WHEYISO01",
-    lastUpdated: "2025-11-30"
+    lastUpdated: "2025-12-01"
   },
 
   rawAmazon: {
@@ -91,20 +72,13 @@ const wheyProteinIsolado = {
     Offers: {
       Listings: [
         {
-          Price: {
-            DisplayAmount: "R$ 129,90",
-            Amount: 129.9,
-            Currency: "BRL"
-          },
+          Price: { DisplayAmount: "R$ 129,90", Amount: 129.9, Currency: "BRL" },
           Availability: { Type: "NOW" },
           MerchantInfo: { Name: "Amazon" }
         }
       ]
     },
-    CustomerReviews: {
-      StarRating: 4.6,
-      TotalReviewCount: 3142
-    }
+    CustomerReviews: { StarRating: 4.6, TotalReviewCount: 3142 }
   }
 };
 

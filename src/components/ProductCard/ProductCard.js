@@ -8,56 +8,126 @@ import {
   CardTitle,
   CardSubtitle,
   CardDescription,
-  CardPrice,
-  CardButton,
+  
   CardSticker
 } from "../CardBase/cardBase";
 
 /**
- * ProductCard atualizado:
- * - Preço à esquerda
- * - Botão de afiliado à direita com label baseada em product.vendor (fallback Amazon)
- * - Robust price parsing (aceita "39,90", "€39.90", etc)
+ * ProductCard atualizado (patch):
+ * - Suporta product.images (array) e product.image/product.img
+ * - Parse robusto de price (aceita {amount, formatted, currency}, string "R$ 39,90", number, etc)
+ * - Formata moeda usando product.price.currency / product.currency / fallback BRL
+ * - Mantém acessibilidade e estrutura existente
  *
  * Props:
- * - product: { id, name, image, description, price, affiliateLink, vendor, category, brand, rating, reviews, featured }
+ * - product: { id, name, title, images, image, img, shortDescription, excerpt, description,
+ *              price (obj|string|number), priceAmount, currency, affiliateLink, vendor,
+ *              category, brand, rating, reviewsCount, featured }
  * - onBuy: callback local (usado quando não há affiliateLink)
  */
 export default function ProductCard({ product = {}, onBuy }) {
+  // Títulos e textos
   const title = product.name || product.title || "Produto";
-  const excerpt = product.description || product.short || "";
-  const image = product.image || product.img || "/placeholder-16x9.png";
+  const excerpt =
+    product.shortDescription || product.excerpt || product.short || product.description || "";
 
+  // IMAGEM: prioridade images[0] -> image -> img -> placeholder
+  const image =
+    (product.images && Array.isArray(product.images) && product.images.length > 0 && product.images[0]) ||
+    product.image ||
+    product.img ||
+    "/placeholder-16x9.png";
+
+  /**
+   * parsePrice: aceita
+   * - number -> retorna number
+   * - objeto { amount, formatted, currency } -> usa amount se existir, senão tenta formatted
+   * - string "R$ 129,90" / "129.90" / "1.234,56" / "1,234.56" -> normaliza corretamente
+   */
   const parsePrice = (v) => {
     if (v == null) return null;
+
+    // objeto
+    if (typeof v === "object") {
+      if (v.amount != null && !isNaN(Number(v.amount))) return Number(v.amount);
+      if (v.formatted) v = v.formatted;
+      else return null;
+    }
+
+    // número puro
+    if (typeof v === "number") return v;
+
+    // agora v é string
     const s = String(v).trim();
-    const cleaned = s.replace(/[^\d.,-]/g, "");
+    if (!s) return null;
+
+    const cleaned = s.replace(/[^\d.,-]/g, ""); // mantém dígitos, vírgula, ponto, traço
+
+    // caso tenha vírgula e ponto (ex: "1.234,56" ou "1,234.56")
     if (/,/.test(cleaned) && /\./.test(cleaned)) {
-      return Number(cleaned.replace(/\./g, "").replace(",", "."));
+      // normalmente em pt: milhar '.' decimal ','
+      // detectar posição para decidir
+      if (cleaned.lastIndexOf(",") > cleaned.lastIndexOf(".")) {
+        // pt style: remove pontos (milhar) e trocar vírgula por ponto (decimal)
+        const n = Number(cleaned.replace(/\./g, "").replace(",", "."));
+        return isNaN(n) ? null : n;
+      } else {
+        // en style: remove vírgulas (milhar)
+        const n = Number(cleaned.replace(/,/g, ""));
+        return isNaN(n) ? null : n;
+      }
     }
+
+    // só vírgula (ex: "129,90") => vírgula decimal
     if (/,/.test(cleaned) && !/\./.test(cleaned)) {
-      return Number(cleaned.replace(",", "."));
+      const n = Number(cleaned.replace(",", "."));
+      return isNaN(n) ? null : n;
     }
+
+    // caso padrão (ex: "129.90" ou "12990")
     const n = Number(cleaned);
     return isNaN(n) ? null : n;
   };
 
-  const priceNum = parsePrice(product.price ?? product.preco ?? product.value);
-  const priceText = priceNum !== null ? priceNum.toLocaleString("pt-PT", { style: "currency", currency: "EUR" }) : null;
+  // suportar vários formatos onde o valor pode estar
+  const priceNum =
+    parsePrice(product.price?.amount ?? product.priceAmount ?? product.price ?? product.preco ?? product.value);
 
-  const vendor = (product.vendor || product.retailer || "Amazon");
+  // moeda/locale: prioriza product.price.currency -> product.currency -> BRL
+  const currency = (product.price && product.price.currency) || product.currency || "BRL";
+  const locale = currency === "BRL" ? "pt-BR" : "pt-PT";
+
+  const priceText =
+    priceNum !== null
+      ? priceNum.toLocaleString(locale, { style: "currency", currency })
+      : null;
+
+  // vendor / affiliate
+  const vendor = product.vendor || product.retailer || "Amazon";
   const affiliateLink = product.affiliateLink || product.link || product.url || null;
 
-  // aria text for affiliate CTA
-  const affiliateLabel = affiliateLink
-    ? `Ver ${title} na ${vendor}`
-    : `Comprar ${title}`;
+  const affiliateLabel = affiliateLink ? `Ver ${title} na ${vendor}` : `Comprar ${title}`;
+
+  /**
+   * Nota sobre CORS: se a imagem existir (abrir em nova aba) mas não carregar no app,
+   * verifique o console por "blocked by CORS policy". Imagens da Amazon às vezes
+   * precisam ser proxyadas via backend ou substituídas por imagens hospedadas
+   * sem restrição durante o desenvolvimento.
+   *
+   * Se desejar fallback automático para dev, poderia usar:
+   * const imageToShow = image && image.includes("m.media-amazon.com") ? "/placeholder.png" : image;
+   *
+   * Aqui deixamos a URL original para que você possa testar/inspecionar.
+   */
 
   return (
     <CardWrapper role="listitem" aria-label={title}>
       <CardBase>
         {product.category && <CardSticker aria-hidden>{product.category}</CardSticker>}
+
+        {/* CardImage é importado do CardBase — esperamos que aceite src/alt/loading */}
         <CardImage src={image} alt={title} loading="lazy" />
+
         <CardBody>
           <CardTitle>{title}</CardTitle>
           {product.brand && <CardSubtitle>{product.brand}</CardSubtitle>}
@@ -69,7 +139,7 @@ export default function ProductCard({ product = {}, onBuy }) {
               {product.rating != null && (
                 <Rating aria-label={`Avaliação ${product.rating} de 5`}>
                   <strong>{product.rating}</strong>
-                  {product.reviews ? <small> ({product.reviews})</small> : null}
+                  {product.reviewsCount || product.reviews ? <small> ({product.reviewsCount ?? product.reviews})</small> : null}
                 </Rating>
               )}
             </PriceBlock>
@@ -86,11 +156,7 @@ export default function ProductCard({ product = {}, onBuy }) {
                   Ver na {vendor}
                 </StyledAffiliateButton>
               ) : (
-                <StyledAffiliateButton
-                  as="button"
-                  onClick={onBuy}
-                  aria-label={affiliateLabel}
-                >
+                <StyledAffiliateButton as="button" onClick={onBuy} aria-label={affiliateLabel}>
                   Comprar
                 </StyledAffiliateButton>
               )}

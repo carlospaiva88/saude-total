@@ -1,75 +1,86 @@
 // src/data/products/preTreino.js
-// Produto padronizado (Amazon-API-ready)
-
 const preTreino = {
-  id: "pre-treino-energico-300g",
-  ASIN: "B0PRETREINO300",
-  marketplaceId: "BR",
-  sku: "PRE-TREINO-300G-FX",
+  id: "B0PRETREINO300",
+  asin: "B0PRETREINO300",
+  slug: "pre-treino-energetico-ultrafocus-300g",
 
-  name: "Pré-Treino Energético 300g - UltraFocus",
+  title: "Pré-Treino Energético 300g — UltraFocus",
   brand: "UltraFocus Labs",
-  manufacturer: "UltraFocus Nutrition",
-  category: ["Suplementos", "Pré-treino"],
-  categoriesTree: ["Sports Nutrition", "Pre-Workout"],
+  category: "suplementos",
+  subCategory: "pre-treino",
+  featured: false,
+  tags: ["pré-treino", "energia", "foco", "performance"],
+
+ images: [
+    "https://m.media-amazon.com/images/I/71D+u3oWo0L._AC_UL320_.jpg"
+   ],
 
   price: {
-    currency: "BRL",
-    formatted: "R$ 89,90",
+    display: "R$ 89,90",
     amount: 89.9,
+    currency: "BRL",
+    raw: {
+      condition: "New",
+      merchant: "Amazon.com.br",
+      price: { amount: 89.9, currency: "BRL", display: "R$ 89,90" },
+      offerUrl: "https://www.amazon.com.br/dp/B0PRETREINO300?tag=seuAffiliateTag"
+    },
   },
+
+  affiliateLink: "https://www.amazon.com.br/dp/B0PRETREINO300?tag=seuAffiliateTag",
+
   availability: "InStock",
-
-  detailPageURL: "https://www.amazon.com.br/dp/B0PRETREINO300?tag=seu-affid",
-
-  images: [
-    "https://m.media-amazon.com/images/I/61Vu9dlMveL._AC_SY300_SX300_QL70_ML2_.jpg",
-    "https://m.media-amazon.com/images/I/61Vu9dlMveL._AC_SX522_.jpg",
-  ],
-
-  shortDescription: "Performance, foco e energia para treinos intensos.",
-  excerpt:
-    "Pré-treino com cafeína, beta-alanina e taurina — aumenta foco, disposição e rendimento nas sessões mais pesadas.",
-
-  description:
-    "<p>Pré-treino avançado formulado para maximizar energia e foco. Ideal para quem busca treinos de alta performance.</p>" +
-    "<ul>" +
-    "<li>200 mg de cafeína por dose</li>" +
-    "<li>Com beta-alanina para resistência</li>" +
-    "<li>Aumenta foco e explosão</li>" +
-    "</ul>",
-
-  features: [
-    "Explosão de energia imediata",
-    "Com beta-alanina e taurina",
-    "Ideal para treinos de força",
-    "Sabor frutado refrescante",
-  ],
-
-  serving: {
-    servingSize: "10 g",
-    servingsPerContainer: 30,
-    suggestedUse:
-      "Misture 1 scoop em 250 ml de água 20–30 minutos antes do treino.",
-  },
-
   rating: 4.4,
-  reviewsCount: 980,
+  reviews: 980,
 
-  affiliate: {
-    affiliateLink: "https://amzn.to/3HT9o7D",
-    trackingTag: "seu-affid",
+  shortDescription: "Pré-treino para mais energia, foco e rendimento.",
+  excerpt:
+    "Fórmula com cafeína, beta-alanina e taurina — ideal para treinos intensos, aumento de força e explosão muscular.",
+
+  // descrição longa — string simples (sem HTML)
+  description:
+    "Pré-treino avançado para impulsionar foco, energia e performance. Contém 200 mg de cafeína por dose, beta-alanina para resistência e taurina para apoio neuromuscular. Ideal para treinos pesados e atletas que buscam melhorar explosão e rendimento.",
+
+  meta: {
+    manufacturer: "UltraFocus Labs",
+    packageWeight: "300g",
+    asin: "B0PRETREINO300",
+    lastUpdated: "2025-12-01"
   },
 
-  seo: {
-    metaTitle: "Pré-Treino Energético 300g — Energia e Performance",
-    metaDescription:
-      "Pré-treino com ingredientes potentes para aumentar foco, energia e explosão muscular.",
-  },
-
-  isFeatured: false,
-  createdAt: "2025-11-23",
-  updatedAt: "2025-11-23",
+  rawAmazon: {
+    ASIN: "B0PRETREINO300",
+    DetailPageURL: "https://www.amazon.com.br/dp/B0PRETREINO300",
+    ItemInfo: {
+      Title: { DisplayValue: "Pré-Treino Energético 300g - UltraFocus" },
+      ByLineInfo: { Brand: { DisplayValue: "UltraFocus" } },
+      Features: {
+        DisplayValues: [
+          "200 mg de cafeína por dose",
+          "Beta-alanina para resistência",
+          "Taurina e coadjuvantes para foco"
+        ]
+      }
+    },
+    Images: {
+      Primary: {
+        Small: { URL: "https://m.media-amazon.com/images/I/61Vu9dlMveL._AC_SY300_.jpg" },
+        Medium: { URL: "https://m.media-amazon.com/images/I/61Vu9dlMveL._AC_SX522_.jpg" },
+        Large: { URL: "https://m.media-amazon.com/images/I/61Vu9dlMveL._AC_SL1500_.jpg" }
+      }
+    },
+    Offers: {
+      Listings: [
+        {
+          Price: { DisplayAmount: "R$ 89,90", Amount: 89.9, Currency: "BRL" },
+          Availability: { Type: "NOW" },
+          MerchantInfo: { Name: "Amazon" },
+          DetailPageURL: "https://www.amazon.com.br/dp/B0PRETREINO300"
+        }
+      ]
+    },
+    CustomerReviews: { StarRating: 4.4, TotalReviewCount: 980 }
+  }
 };
 
 export default preTreino;

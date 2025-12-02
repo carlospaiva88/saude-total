@@ -1,22 +1,26 @@
 // src/data/products/vitaminaC.js
-// Produto padronizado (Amazon-API-ready)
+// Produto padronizado (Amazon-API-ready) — Vitamina C 1000 mg
 
 const vitaminaC = {
   id: "vitamina-c-1000mg",
   ASIN: "B07VITC1000",
+  asin: "B07VITC1000",
   marketplaceId: "BR",
   sku: "VITC-1000MG",
+  slug: "vitamina-c-1000mg-immunoplus",
 
   name: "Vitamina C 1000 mg - ImmunoPlus",
+  title: "Vitamina C 1000 mg - ImmunoPlus",
   brand: "ImmunoPlus",
   manufacturer: "ImmunoPlus Nutraceuticos",
-  category: ["Vitaminas", "Vitamina C"],
+  category: "vitaminas",
   categoriesTree: ["Saúde", "Vitaminas & Suplementos"],
+  tags: ["vitamina c", "imunidade", "antioxidante", "recuperação"],
 
   price: {
     currency: "BRL",
     formatted: "R$ 39,90",
-    amount: 39.9,
+    amount: 39.9
   },
   availability: "InStock",
 
@@ -24,30 +28,28 @@ const vitaminaC = {
 
   images: [
     "https://m.media-amazon.com/images/I/51jHKlmcgML._AC_SY300_.jpg",
-    "https://m.media-amazon.com/images/I/51jHKlmcgML._AC_SX300_.jpg",
+    "https://m.media-amazon.com/images/I/51jHKlmcgML._AC_SX300_.jpg"
   ],
 
-  shortDescription: "Vitamina C 1000 mg — antioxidante para suporte imunológico e recuperação.",
+  shortDescription:
+    "Vitamina C 1000 mg — antioxidante para suporte imunológico e recuperação.",
+
   excerpt:
     "Vitamina C 1000 mg em comprimidos — antioxidante que apoia o sistema imune, reduz fadiga e auxilia recuperação pós-esforço.",
 
+  // descrição longa convertida para TEXTO SIMPLES (sem HTML)
   description:
-    "<p>Vitamina C em alta dosagem (1000 mg) com liberação rápida — ideal como complemento nutricional diário para suporte imunológico e antioxidante.</p>" +
-    "<ul>" +
-    "<li>Dosagem: 1000 mg por dose</li>" +
-    "<li>Quantidade: 60 comprimidos</li>" +
-    "<li>Com bioflavonoides para melhor absorção</li>" +
-    "</ul>",
+    "Vitamina C em alta dosagem (1000 mg) com liberação rápida — ideal como complemento nutricional diário para suporte imunológico e antioxidante.\n\n- Dosagem: 1000 mg por dose\n- Quantidade: 60 comprimidos\n- Contém bioflavonoides para melhor absorção",
 
   features: [
     "1000 mg por comprimido",
     "Contém bioflavonoides",
     "Embalagem com 60 comprimidos",
-    "Suporta sistema imunológico",
+    "Suporta sistema imunológico"
   ],
 
   dimensions: {
-    weight: "aprox. 140 g (embalagem)",
+    weight: "aprox. 140 g (embalagem)"
   },
 
   rating: 4.6,
@@ -55,18 +57,18 @@ const vitaminaC = {
 
   affiliate: {
     affiliateLink: "https://amzn.to/45Wn4qk",
-    trackingTag: "seu-affid",
+    trackingTag: "seu-affid"
   },
 
   seo: {
     metaTitle: "Vitamina C 1000mg — Antioxidante e Suporte Imunológico",
     metaDescription:
-      "Vitamina C 1000 mg com bioflavonoides — antioxidante potente para suporte imunológico e recuperação. 60 comprimidos.",
+      "Vitamina C 1000 mg com bioflavonoides — antioxidante potente para suporte imunológico e recuperação. 60 comprimidos."
   },
 
   isFeatured: false,
   createdAt: "2025-11-23",
-  updatedAt: "2025-11-23",
+  updatedAt: "2025-11-23"
 };
 
 export default vitaminaC;
