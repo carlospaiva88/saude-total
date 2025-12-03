@@ -1,7 +1,7 @@
 const viagem = {
   slug: "morro-de-sao-paulo",
   title: "Morro de São Paulo: Praias Perfeitas e Vida Tropical",
-  image: "https://images.pexels.com/photos/5668874/pexels-photo-5668874.jpeg",
+  image: "https://images.pexels.com/photos/33744138/pexels-photo-33744138.jpeg",
   date: "26/11/2025",
   readingTime: "7 min",
   category: "nacionais",

@@ -1,7 +1,7 @@
 const viagem = {
   slug: "bariloche",
   title: "Bariloche: Neve, Lagos e Montanhas na Patagônia",
-  image: "https://images.pexels.com/photos/356831/pexels-photo-356831.jpeg",
+  image: "https://images.pexels.com/photos/28256485/pexels-photo-28256485.jpeg",
   date: "26/11/2025",
   readingTime: "8 min",
   category: "internacionais",

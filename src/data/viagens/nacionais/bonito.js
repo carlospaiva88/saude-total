@@ -1,7 +1,7 @@
 const viagem = {
   slug: "bonito",
   title: "Bonito: Flutuação, Grutas e Natureza Surreal no Mato Grosso do Sul",
-  image: "https://images.pexels.com/photos/4621624/pexels-photo-4621624.jpeg",
+  image: "https://images.pexels.com/photos/14584514/pexels-photo-14584514.jpeg",
   date: "26/11/2025",
   readingTime: "8 min",
   category: "nacionais",

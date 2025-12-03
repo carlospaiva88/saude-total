@@ -1,7 +1,7 @@
 const viagem = {
   slug: "fernando-de-noronha",
   title: "Fernando de Noronha: O Paraíso Brasileiro de Águas Transparentes",
-  image: "https://images.pexels.com/photos/3727254/pexels-photo-3727254.jpeg",
+  image: "https://images.pexels.com/photos/12271415/pexels-photo-12271415.jpeg",
   date: "22/11/2025",
   readingTime: "9 min",
   category: "nacionais",

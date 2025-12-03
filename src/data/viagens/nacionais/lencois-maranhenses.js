@@ -1,7 +1,7 @@
 const viagem = {
   slug: "lencois-maranhenses",
   title: "Lençóis Maranhenses: Dunas, Lagoas e Uma Paisagem Surreal",
-  image: "https://images.pexels.com/photos/1542088/pexels-photo-1542088.jpeg",
+  image: "https://images.pexels.com/photos/27688570/pexels-photo-27688570.jpeg",
   date: "20/11/2025",
   readingTime: "7 min",
   category: "nacionais",

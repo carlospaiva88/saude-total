@@ -1,7 +1,7 @@
 const viagem = {
   slug: "ouro-preto",
   title: "Ouro Preto: História, Arte e Arquitetura Barroca",
-  image: "https://images.pexels.com/photos/17085477/pexels-photo-17085477.jpeg",
+  image: "https://images.pexels.com/photos/31038107/pexels-photo-31038107.jpeg",
   date: "26/11/2025",
   readingTime: "6 min",
   category: "nacionais",

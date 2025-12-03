@@ -1,7 +1,7 @@
 const viagem = {
   slug: "alter-do-chao",
   title: "Alter do Chão: O Caribe Amazônico",
-  image: "https://images.pexels.com/photos/6043244/pexels-photo-6043244.jpeg",
+  image: "https://images.pexels.com/photos/9319766/pexels-photo-9319766.jpeg",
   date: "26/11/2025",
   readingTime: "7 min",
   category: "nacionais",

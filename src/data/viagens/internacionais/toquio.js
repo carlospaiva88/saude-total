@@ -1,7 +1,7 @@
 const viagem = {
   slug: "toquio",
   title: "Tóquio: Tecnologia, Cultura e Tradições Milenares",
-  image: "https://images.pexels.com/photos/205097/pexels-photo-205097.jpeg",
+  image: "https://images.pexels.com/photos/33312850/pexels-photo-33312850.jpeg",
   date: "24/11/2025",
   readingTime: "8 min",
   category: "internacionais",

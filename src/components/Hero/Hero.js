@@ -10,43 +10,66 @@ import {
   HeroSubheadline,
 } from "./Hero.styles";
 
-/**
- * Hero principal da homepage
- *
- * Observações:
- * - FloatingImage recebe `decorative` (boolean) para marcar imgs como decorativas (alt="" aria-hidden)
- * - HeroImage usa loading="lazy" e decoding="async"
- * - Ajuste as URLs / textos conforme necessário
- */
-
 const floatingImages = [
-  { src: "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg", pos: "top-left", delay: "0s", decorative: true },
-  { src: "https://images.pexels.com/photos/414029/pexels-photo-414029.jpeg", pos: "top-right", delay: "0.8s", decorative: true },
-  { src: "https://images.pexels.com/photos/3076514/pexels-photo-3076514.jpeg", pos: "bottom-right", delay: "1.6s", decorative: true },
-  { src: "https://images.pexels.com/photos/3757375/pexels-photo-3757375.jpeg", pos: "bottom-left", delay: "2.2s", decorative: true },
-  { src: "https://images.pexels.com/photos/3823039/pexels-photo-3823039.jpeg", pos: "middle-left", delay: "2.8s", decorative: true },
-  // remova/adicione conforme preferir
+  {
+    src: "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg",
+    pos: "top-left",
+    delay: "0s",
+    decorative: true,
+  },
+  {
+    src: "https://images.pexels.com/photos/414029/pexels-photo-414029.jpeg",
+    pos: "top-right",
+    delay: "0.8s",
+    decorative: true,
+  },
+  {
+    src: "https://images.pexels.com/photos/3076514/pexels-photo-3076514.jpeg",
+    pos: "bottom-right",
+    delay: "1.6s",
+    decorative: true,
+  },
+  {
+    src: "https://images.pexels.com/photos/3757375/pexels-photo-3757375.jpeg",
+    pos: "bottom-left",
+    delay: "2.2s",
+    decorative: true,
+  },
+  {
+    src: "https://images.pexels.com/photos/3823039/pexels-photo-3823039.jpeg",
+    pos: "middle-left",
+    delay: "2.8s",
+    decorative: true,
+  },
 ];
 
 export default function Hero() {
   return (
-    <HeroSection id="inicio" role="region" aria-label="Seção principal da página inicial">
+    <HeroSection
+      id="inicio"
+      role="region"
+      aria-label="Seção principal da página inicial"
+    >
       <HeroContent>
         <HeroHeadline>
-          Viva no Flow — equilíbrio, saúde e bem-estar todos os dias
+          Viva no Flow — saúde física, mental e emocional no dia a dia
         </HeroHeadline>
 
         <HeroSubheadline>
-          Descubra dicas, receitas e produtos para transformar corpo e mente.
+          Conteúdos práticos sobre sono, ansiedade, alimentação, movimento
+          e bem-estar, com receitas e recomendações de produtos que
+          realmente podem fazer diferença na sua rotina.
         </HeroSubheadline>
 
-        <HeroButton href="#blog" aria-label="Ir para o blog - confira nossas dicas de saúde">
-          Confira nossas dicas de saúde
+        <HeroButton
+          href="/blog"
+          aria-label="Ir para o blog e conferir conteúdos de saúde e bem-estar"
+        >
+          Começar pelo blog →
         </HeroButton>
       </HeroContent>
 
       <HeroImageWrapper aria-hidden="false">
-        {/* imagem principal: troque src por uma versão otimizada quando possível */}
         <HeroImage
           src="https://images.pexels.com/photos/1005456/pexels-photo-1005456.jpeg"
           alt="Pessoa saudável praticando exercício ao ar livre"
@@ -58,7 +81,7 @@ export default function Hero() {
           <FloatingImage
             key={i}
             src={img.src}
-            alt={img.decorative ? "" : `Ilustração: ${i + 1}`}
+            alt={img.decorative ? "" : `Ilustração ${i + 1}`}
             position={img.pos}
             delay={img.delay}
             loading="lazy"

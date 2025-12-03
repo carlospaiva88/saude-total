@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 /* --------------------- COMPONENTE PRINCIPAL --------------------- */
 
-export default function DestinosDestaque({ title = "🌎 Destinos em Destaque", maxItems = 10 }) {
+export default function DestinosDestaque({ title = "Destinos em Destaque", maxItems = 10 }) {
   const swiperRef = useRef();
 
   const viagens = useMemo(() => {

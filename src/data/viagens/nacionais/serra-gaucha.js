@@ -1,7 +1,7 @@
 const viagem = {
   slug: "serra-gaucha",
   title: "Serra Gaúcha: Vinhos, Natureza e Charme no Sul do Brasil",
-  image: "https://images.pexels.com/photos/1595242/pexels-photo-1595242.jpeg",
+  image: "https://images.pexels.com/photos/27638225/pexels-photo-27638225.jpeg",
   date: "11/11/2025",
   readingTime: "6 min",
   category: "nacionais",

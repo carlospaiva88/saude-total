@@ -12,9 +12,13 @@ const floatImage = keyframes`
   100% { transform: translateY(0); }
 `;
 
-/* respeitar preferências do usuário por reduzir movimento */
+/* respeitar preferência do usuário por reduzir movimento */
 const prefersReducedMotion = `@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
 }`;
 
 /* Container do hero */
@@ -24,7 +28,8 @@ export const HeroSection = styled.section`
   justify-content: space-between;
   gap: 2rem;
   padding: 3.5rem 2rem;
-  background: ${({ theme }) => theme?.gradients?.hero || "linear-gradient(180deg,#e6f9f0,#f7fff9)"};
+  background: ${({ theme }) =>
+    theme?.gradients?.hero || "linear-gradient(180deg,#e6f9f0,#f7fff9)"};
   color: ${({ theme }) => theme?.colors?.white || "#fff"};
   min-height: 520px;
   position: relative;
@@ -46,6 +51,7 @@ export const HeroContent = styled.div`
   max-width: 640px;
   z-index: 3;
   animation: ${fadeInUp} 850ms cubic-bezier(.2,.9,.2,1) both;
+
   @media (max-width: 980px) {
     order: 2;
     width: 100%;
@@ -53,16 +59,17 @@ export const HeroContent = styled.div`
   }
 `;
 
-/* Títulos e textos */
+/* Título principal */
 export const HeroHeadline = styled.h1`
   font-size: clamp(1.6rem, 3.8vw, 3rem);
   line-height: 1.05;
   margin: 0 0 0.75rem 0;
   font-weight: 800;
   color: ${({ theme }) => theme?.colors?.surface || "#04332a"};
-  text-wrap: balance; /* se suportado */
+  text-wrap: balance;
 `;
 
+/* Subtítulo */
 export const HeroSubheadline = styled.p`
   margin: 0 0 1.25rem 0;
   font-size: clamp(1rem, 1.6vw, 1.2rem);
@@ -74,19 +81,22 @@ export const HeroSubheadline = styled.p`
 export const HeroButton = styled.a`
   display: inline-block;
   padding: 0.9rem 1.6rem;
-  background: ${({ theme }) => theme?.gradients?.button || "linear-gradient(90deg,#2fa57a,#1f7f5f)"};
+  background: ${({ theme }) =>
+    theme?.gradients?.button || "linear-gradient(90deg,#2fa57a,#1f7f5f)"};
   color: ${({ theme }) => theme?.colors?.surface || "#fff"};
   border-radius: ${({ theme }) => theme?.radius?.pill || "999px"};
   font-weight: 700;
   text-decoration: none;
-  box-shadow: ${({ theme }) => theme?.shadow?.sm || "0 6px 18px rgba(39,174,96,0.12)"};
+  box-shadow: ${({ theme }) =>
+    theme?.shadow?.sm || "0 6px 18px rgba(39,174,96,0.12)"};
   transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
   -webkit-tap-highlight-color: transparent;
 
   &:hover,
   &:focus {
     transform: translateY(-4px);
-    box-shadow: ${({ theme }) => theme?.shadow?.md || "0 12px 28px rgba(39,174,96,0.16)"};
+    box-shadow: ${({ theme }) =>
+      theme?.shadow?.md || "0 12px 28px rgba(39,174,96,0.16)"};
     outline: none;
   }
 
@@ -95,7 +105,7 @@ export const HeroButton = styled.a`
   }
 `;
 
-/* Imagem e wrapper */
+/* Wrapper da imagem */
 export const HeroImageWrapper = styled.div`
   position: relative;
   flex: 1;
@@ -113,7 +123,7 @@ export const HeroImageWrapper = styled.div`
   }
 `;
 
-/* Imagem central (use picture if quiser versions) */
+/* Imagem principal */
 export const HeroImage = styled.img`
   width: 100%;
   max-width: 420px;
@@ -132,7 +142,7 @@ export const HeroImage = styled.img`
   ${prefersReducedMotion}
 `;
 
-/* Floating decorative images */
+/* Imagens flutuantes decorativas */
 export const FloatingImage = styled.img.attrs((p) => ({
   role: p.decorative ? undefined : "img",
 }))`
@@ -190,7 +200,6 @@ export const FloatingImage = styled.img.attrs((p) => ({
       transform: rotate(5deg);
     `}
 
-  /* hide floats on small screens */
   @media (max-width: 768px) {
     display: none;
   }

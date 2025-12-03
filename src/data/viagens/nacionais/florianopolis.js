@@ -1,7 +1,7 @@
 const viagem = {
   slug: "florianopolis",
   title: "Florianópolis: Trilhas, Praias e Qualidade de Vida",
-  image: "https://images.pexels.com/photos/248797/pexels-photo-248797.jpeg",
+  image: "https://images.pexels.com/photos/3021843/pexels-photo-3021843.jpeg",
   date: "26/11/2025",
   readingTime: "8 min",
   category: "nacionais",

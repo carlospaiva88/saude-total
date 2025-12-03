@@ -5,69 +5,90 @@
     <link rel="icon" href="%PUBLIC_URL%/saude.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="theme-color" content="#264653" />
-    <meta name="description" content="Saúde com Movimento - Dicas, produtos e conteúdo sobre saúde, fitness e bem-estar." />
-    <meta name="keywords" content="saúde, fitness, bem-estar, suplementos, dicas saúde, vida saudável" />
-    <meta name="author" content="Nome do Autor ou Empresa" />
+
+    <!-- SEO básico -->
+    <meta
+      name="description"
+      content="Viva no Flow - Receitas saudáveis, viagens, produtos de afiliado e conteúdos sobre saúde, bem-estar e qualidade de vida."
+    />
+    <meta
+      name="keywords"
+      content="viva no flow, saúde, bem-estar, receitas saudáveis, viagens, produtividade, vida saudável, produtos de afiliado"
+    />
+    <meta name="author" content="Viva no Flow" />
 
     <!-- Open Graph (Facebook, LinkedIn, etc) -->
-    <meta property="og:title" content="Saúde com Movimento" />
-    <meta property="og:description" content="Dicas, produtos e conteúdo sobre saúde, fitness e bem-estar." />
-    <meta property="og:image" content="%PUBLIC_URL%/og-saude.png" />
-    <meta property="og:url" content="https://saude-com-movimento.vercel.app/" />
+    <meta property="og:title" content="Viva no Flow" />
+    <meta
+      property="og:description"
+      content="Receitas, viagens, produtos e conteúdos para você viver no flow: mais saúde, liberdade e qualidade de vida."
+    />
+    <meta property="og:image" content="%PUBLIC_URL%/og-vivanoflow.png" />
+    <meta property="og:url" content="https://vivanoflow.com/" />
     <meta property="og:type" content="website" />
 
+    <!-- Ícones e manifest -->
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/saude.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link rel="canonical" href="https://saude-com-movimento.vercel.app/" />
+    <!-- Canonical -->
+    <link rel="canonical" href="https://vivanoflow.com/" />
 
     <!-- Google Fonts: Poppins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      as="style"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
+    <!-- Ícones Material -->
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
 
-      <!--Pré-carregamento de fontes e ícones-->
-      <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" as="style" />
-      <link rel="preload" href="%PUBLIC_URL%/saude.png" as="image" />
+    <!-- Pré-carregamento de imagens -->
+    <link rel="preload" href="%PUBLIC_URL%/saude.png" as="image" />
 
-      <!--Favicons e PWA completos-->
-      <link rel="icon" sizes="32x32" href="%PUBLIC_URL%/saude-32.png" />
-      <link rel="icon" sizes="192x192" href="%PUBLIC_URL%/saude-192.png" />
-      <link rel="apple-touch-icon" href="%PUBLIC_URL%/saude-apple.png" />
+    <!-- Favicons -->
+    <link rel="icon" sizes="32x32" href="%PUBLIC_URL%/saude-32.png" />
+    <link rel="icon" sizes="192x192" href="%PUBLIC_URL%/saude-192.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/saude-apple.png" />
 
-      <!--Estrutura de SEO Avançada-->
-      <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          "name": "Viva no Flow",
-          "url": "https://saude-com-movimento.vercel.app/",
-          "description": "Dicas, produtos e conteúdo sobre saúde, fitness e bem-estar.",
-          "author": {
-            "@type": "Organization",
-            "name": "Viva no Flow"
-          }
+    <!-- Schema.org / JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Viva no Flow",
+        "url": "https://vivanoflow.com/",
+        "description": "Viva no Flow - receitas, viagens, produtos de afiliado e conteúdos sobre saúde, bem-estar e qualidade de vida.",
+        "author": {
+          "@type": "Organization",
+          "name": "Viva no Flow"
         }
-      </script>
+      }
+    </script>
 
     <title>Viva no Flow</title>
 
-    <!--Google Analytics -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=SEU_ID"></script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S3S95QK2P6"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'SEU_ID');
+      gtag('config', 'G-S3S95QK2P6');
     </script>
-       <!--Google Analytics -->
   </head>
   <body>
     <noscript>Por favor, habilite o JavaScript para uma melhor experiência.</noscript>
     <div id="root"></div>
   </body>
-</html> 
+</html>

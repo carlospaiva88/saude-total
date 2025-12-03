@@ -217,23 +217,46 @@ export default function ArticlePage() {
      ------------------------- */
   const related = useMemo(() => {
     if (!article) return [];
-    const seen = new Set([article.slug || article.id]);
-    const sameSub = articles.filter((a) => {
-      const sub = a.subCategory || a.subcategoria || a.sub || "";
-      const matches =
+
+    const maxItems = 12;
+    const seen = new Set();
+    const pushIf = (a) => {
+      const key = (a.slug || a.friendlySlug || a.id || "").toString();
+      if (!key || key === (article.slug || article.id)) return false;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      result.push(a);
+      return true;
+    };
+
+    const result = [];
+
+    // 1) itens da mesma subcategoria (prioridade)
+    for (const a of articles) {
+      if (!a) continue;
+      const sub = (a.subCategory || a.subcategoria || a.sub || "").toString();
+      const matchesSub =
         sub &&
         (article.subCategory === sub ||
           article.subcategoria === sub ||
           article.sub === sub);
-      return matches && !seen.has(a.slug || a.id);
-    });
-    const sameCat = articles.filter((a) => {
-      const cat = a.category || a.categoria || "";
-      const matches =
+      if (matchesSub) {
+        if (pushIf(a) && result.length >= maxItems) return result;
+      }
+    }
+
+    // 2) itens da mesma categoria (complemento)
+    for (const a of articles) {
+      if (!a) continue;
+      const cat = (a.category || a.categoria || "").toString();
+      const matchesCat =
         cat && (article.category === cat || article.categoria === cat);
-      return matches && !seen.has(a.slug || a.id);
-    });
-    return [...sameSub, ...sameCat].filter((a) => a.slug !== article.slug).slice(0, 12);
+      if (matchesCat) {
+        if (pushIf(a) && result.length >= maxItems) return result;
+      }
+    }
+
+    return result.slice(0, maxItems);
   }, [articles, article]);
 
   // after related is known, clamp index and recompute cardWidth considering related length

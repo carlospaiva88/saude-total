@@ -1,7 +1,7 @@
 const viagem = {
   slug: "cancun",
   title: "Cancún: Caribe Azul, Vida Noturna e Cultura Maia",
-  image: "https://images.pexels.com/photos/760040/pexels-photo-760040.jpeg",
+  image: "https://images.pexels.com/photos/2914305/pexels-photo-2914305.jpeg",
   date: "25/11/2025",
   readingTime: "7 min",
   category: "internacionais",

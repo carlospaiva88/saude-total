@@ -41,8 +41,25 @@ function safeDate(d) {
   return isNaN(parsed) ? 0 : parsed;
 }
 
+/**
+ * safeImage:
+ * - tenta images[0]
+ * - depois image/img/imagem/thumb
+ */
 function safeImage(item) {
-  return item?.image || item?.imagem || item?.thumb || item?.imagem || "/placeholder-16x9.png";
+  if (!item) return "/placeholder-16x9.png";
+
+  const fromArray =
+    Array.isArray(item.images) && item.images.length > 0 ? item.images[0] : null;
+
+  return (
+    fromArray ||
+    item.image ||
+    item.img ||
+    item.imagem ||
+    item.thumb ||
+    "/placeholder-16x9.png"
+  );
 }
 
 function buildPostLink(post) {
@@ -57,9 +74,56 @@ function buildTripLink(v) {
   return `/viagens/${encodeURIComponent(String(cat).toLowerCase())}/${encodeURIComponent(String(slug))}`;
 }
 
+/**
+ * getAllProducts:
+ * - aceita o formato atual { products, categories }
+ * - ou um array direto de produtos (fallback)
+ */
+function getAllProducts(data) {
+  if (!data) return [];
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data.products)) return data.products;
+  return safeArray(data.products);
+}
+
+/**
+ * getProductPriceDisplay:
+ * - normaliza preço para SEMPRE string (nada de objeto no JSX)
+ * - aceita:
+ *   - string: "R$ 199,90"
+ *   - number: 199.9
+ *   - objeto: { display, formatted, raw, amount, currency }
+ */
+function getProductPriceDisplay(p) {
+  if (!p) return null;
+
+  const v = p.price ?? p.priceText ?? p.priceFormatted;
+
+  if (typeof v === "string" || typeof v === "number") {
+    return String(v);
+  }
+
+  if (v && typeof v === "object") {
+    if (v.display) return String(v.display);
+    if (v.formatted) return String(v.formatted);
+    if (v.raw) return String(v.raw);
+
+    if (v.amount != null && !isNaN(Number(v.amount))) {
+      const currency = v.currency || p.currency || "BRL";
+      const locale = currency === "BRL" ? "pt-BR" : "pt-PT";
+      try {
+        return Number(v.amount).toLocaleString(locale, { style: "currency", currency });
+      } catch {
+        return String(v.amount);
+      }
+    }
+  }
+
+  return null;
+}
+
 /* ---------------- dedupe helpers ---------------- */
 
-// normaliza strings: remove acentos, trim, toLower, colapsa espaços
 function normalizeString(str = "") {
   return String(str || "")
     .normalize("NFD")
@@ -69,7 +133,6 @@ function normalizeString(str = "") {
     .toLowerCase();
 }
 
-// retorna chave única preferindo slug/id, senão title normalizado
 function keyForPost(p = {}) {
   if (!p) return "";
   if (p.slug && String(p.slug).trim()) return normalizeString(String(p.slug));
@@ -79,7 +142,6 @@ function keyForPost(p = {}) {
   return normalizeString(p.title || p.titulo || p.nome || "");
 }
 
-// regras de preferência para manter melhor versão do post
 function preferPost(existing, candidate) {
   const getBool = (x) => !!(x && (x.featured || x.destaque || x.popular));
   if (!existing) return candidate;
@@ -100,13 +162,13 @@ function preferPost(existing, candidate) {
   return existing;
 }
 
-// uniquePosts: retorna array deduplicado preservando prioridade
 function uniquePosts(posts = []) {
   const map = new Map();
   for (const p of posts || []) {
     const key = keyForPost(p);
     if (!key) {
-      const fallback = normalizeString(JSON.stringify(p)).slice(0, 40) || Math.random().toString(36).slice(2,8);
+      const fallback =
+        normalizeString(JSON.stringify(p)).slice(0, 40) || Math.random().toString(36).slice(2, 8);
       if (!map.has(fallback)) map.set(fallback, p);
       continue;
     }
@@ -120,20 +182,16 @@ function uniquePosts(posts = []) {
   return Array.from(map.values());
 }
 
-/* ---------------- replace shortenTitle (safe) ---------------- */
-/* shortenTitle: reduz título em listagens quando apropriado
-   - remove subtítulos após ":" ou "—" ou "-" e limita comprimento
-   - robusto contra valores não-string
-*/
+/* ---------------- shortenTitle (safe) ---------------- */
 function shortenTitle(title = "", max = 36) {
   try {
-    // garante string
     const raw = title == null ? "" : String(title);
-    // corta por separadores comuns e mantem apenas partes não vazias
-    const parts = raw.split(/[:—\-–]/).map(p => String(p || "").trim()).filter(Boolean);
+    const parts = raw
+      .split(/[:—\-–]/)
+      .map((p) => String(p || "").trim())
+      .filter(Boolean);
     let base = parts.length ? parts[0] : raw.trim();
     if (base.length <= max) return base;
-    // corta por palavra sem quebrar no meio
     const words = base.split(/\s+/);
     let out = "";
     for (const w of words) {
@@ -142,7 +200,6 @@ function shortenTitle(title = "", max = 36) {
     }
     return out + (out.length < base.length ? "…" : "");
   } catch (err) {
-    // fallback seguro
     const s = (title == null ? "" : String(title)).slice(0, max);
     return s + (s.length < String(title || "").length ? "…" : "");
   }
@@ -159,7 +216,6 @@ function trunc(str = "", n = 120) {
 function UnifiedCarousel({ items = [] }) {
   const swiperRef = useRef(null);
 
-  // garantir items únicos por link/title (não-condicional)
   const effectiveItems = useMemo(() => {
     const seen = new Set();
     const out = [];
@@ -175,8 +231,12 @@ function UnifiedCarousel({ items = [] }) {
 
   if (!effectiveItems || effectiveItems.length === 0) return null;
 
-  const slidePrev = () => { if (swiperRef.current) swiperRef.current.slidePrev(); };
-  const slideNext = () => { if (swiperRef.current) swiperRef.current.slideNext(); };
+  const slidePrev = () => {
+    if (swiperRef.current) swiperRef.current.slidePrev();
+  };
+  const slideNext = () => {
+    if (swiperRef.current) swiperRef.current.slideNext();
+  };
 
   const loopedSlides = Math.max(Math.min(effectiveItems.length, 12), 1);
 
@@ -189,8 +249,12 @@ function UnifiedCarousel({ items = [] }) {
         </div>
 
         <S.Controls>
-          <S.NavButton onClick={slidePrev} aria-label="Anterior">‹</S.NavButton>
-          <S.NavButton onClick={slideNext} aria-label="Próximo">›</S.NavButton>
+          <S.NavButton onClick={slidePrev} aria-label="Anterior">
+            ‹
+          </S.NavButton>
+          <S.NavButton onClick={slideNext} aria-label="Próximo">
+            ›
+          </S.NavButton>
         </S.Controls>
       </S.UnifiedHeader>
 
@@ -208,13 +272,13 @@ function UnifiedCarousel({ items = [] }) {
             320: { slidesPerView: 1.05 },
             640: { slidesPerView: 1.35 },
             900: { slidesPerView: 2 },
-            1200: { slidesPerView: 3 }
+            1200: { slidesPerView: 3 },
           }}
           a11y={{ prevSlideMessage: "Anterior", nextSlideMessage: "Próximo" }}
           style={{ paddingBottom: 12, position: "relative" }}
         >
           {effectiveItems.map((it, i) => (
-            <SwiperSlide key={`${(it.link||it.title)}-${i}`} style={{ height: "100%" }}>
+            <SwiperSlide key={`${it.link || it.title}-${i}`} style={{ height: "100%" }}>
               <S.Slide>
                 <S.CardLink
                   to={it.link}
@@ -222,18 +286,32 @@ function UnifiedCarousel({ items = [] }) {
                   onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                 >
                   <S.Card>
-                    <S.Thumb role="img" aria-label={it.title} style={{ backgroundImage: `url(${safeImage(it)})` }} />
+                    <S.Thumb
+                      role="img"
+                      aria-label={it.title}
+                      style={{ backgroundImage: `url(${safeImage(it)})` }}
+                    />
                     <S.CardBody>
                       <S.Badge type={it.type}>
-                        {it.badge || (it.type === "article" ? "Artigo" : it.type === "receita" ? "Receita" : it.type === "product" ? "Produto" : "Viagem")}
+                        {it.badge ||
+                          (it.type === "article"
+                            ? "Artigo"
+                            : it.type === "receita"
+                            ? "Receita"
+                            : it.type === "product"
+                            ? "Produto"
+                            : "Viagem")}
                       </S.Badge>
                       <S.CardTitle>{it.title}</S.CardTitle>
 
                       <S.CardExcerpt
                         dangerouslySetInnerHTML={{
-                          __html: (it.excerpt && it.excerpt.length > 0)
-                            ? (it.excerpt.length > 140 ? `${it.excerpt.slice(0, 137)}…` : it.excerpt)
-                            : '&nbsp;'
+                          __html:
+                            it.excerpt && it.excerpt.length > 0
+                              ? it.excerpt.length > 140
+                                ? `${it.excerpt.slice(0, 137)}…`
+                                : it.excerpt
+                              : "&nbsp;",
                         }}
                         aria-hidden={!(it.excerpt && it.excerpt.length > 0)}
                       />
@@ -254,17 +332,10 @@ function UnifiedCarousel({ items = [] }) {
   );
 }
 
-/* ---------------- LocalContinueExploring (4 col) ----------------
-   Columns:
-    - Artigos (lista compacta com título curto + meta)
-    - Receitas (mini recipes)
-    - Produtos (product mini card)
-    - Viagens (mini trip card)
-*/
+/* ---------------- LocalContinueExploring (4 col) ---------------- */
 function LocalContinueExploring({ posts = [], receitas = [], products = [], trips = [] }) {
-  // dedupe posts again and keep top N
   const uniqPosts = useMemo(() => uniquePosts(posts).slice(0, 6), [posts]);
-  const uniqRecipes = useMemo(() => (safeArray(receitas).flat().slice(0, 6)), [receitas]);
+  const uniqRecipes = useMemo(() => safeArray(receitas).flat().slice(0, 6), [receitas]);
   const uniqProducts = useMemo(() => safeArray(products).slice(0, 6), [products]);
   const uniqTrips = useMemo(() => uniquePosts(trips).slice(0, 6), [trips]);
 
@@ -273,7 +344,7 @@ function LocalContinueExploring({ posts = [], receitas = [], products = [], trip
       <Column>
         <h4>Artigos</h4>
         <List>
-          {uniqPosts.map(p => (
+          {uniqPosts.map((p) => (
             <ListItem key={p.slug || p.id || p.title}>
               <a href={buildPostLink(p)}>
                 <img src={safeImage(p)} alt={p.title} />
@@ -290,17 +361,18 @@ function LocalContinueExploring({ posts = [], receitas = [], products = [], trip
       <Column>
         <h4>Receitas</h4>
         <List>
-          {uniqRecipes.map(r => (
+          {uniqRecipes.map((r) => (
             <ListItem key={r.slug}>
               <a href={`/receitas/${encodeURIComponent(r.slug)}`}>
-                <img src={r.imagem || r.image ||"/placeholder-4x3.png"} alt={r.titulo} />
+                <img src={r.imagem || r.image || "/placeholder-4x3.png"} alt={r.titulo} />
                 <div>
                   <strong>{shortenTitle(r.titulo)}</strong>
                   <small>
                     {r.tempo ? r.tempo : ""}
                     {r.calorias ? ` • ${r.calorias} kcal` : ""}
-                    <br/> 
-                    {r.shortDescription}</small>
+                    <br />
+                    {r.shortDescription}
+                  </small>
                 </div>
               </a>
             </ListItem>
@@ -309,33 +381,38 @@ function LocalContinueExploring({ posts = [], receitas = [], products = [], trip
       </Column>
 
       <Column>
-        <h4>Produtos</h4>
-        <List>
-          {uniqProducts.map(p => (
+      <h4>Produtos</h4>
+      <List>
+        {uniqProducts.map((p) => {
+          const priceText = getProductPriceDisplay(p);
+
+          return (
             <ListItem key={p.id || p.slug}>
               <a href={p.affiliateLink || p.link} target="_blank" rel="noreferrer">
-                <img src={p.image || "/placeholder-4x3.png"} alt={p.name} />
+                <img src={safeImage(p) || "/placeholder-4x3.png"} alt={p.name || p.title} />
                 <div>
-                  <strong>{shortenTitle(p.name)}</strong>
+                  <strong>{shortenTitle(p.name || p.title || p.nome || "Produto")}</strong>
                   <small>
-                    {p.price ? `${p.price}` : (p.brand || "")}
-                    <br/>
+                    {priceText || p.brand || ""}
+                    <br />
                     {p.shortDescription}
-                    </small>
+                  </small>
                 </div>
               </a>
             </ListItem>
-          ))}
-        </List>
-      </Column>
+          );
+        })}
+      </List>
+    </Column>
+
 
       <Column>
         <h4>Viagens</h4>
         <List>
-          {uniqTrips.map(t => (
+          {uniqTrips.map((t) => (
             <ListItem key={t.slug || t.title}>
               <a href={t.slug ? buildTripLink(t) : "/viagens"}>
-                <img src={t.image || t.imagem || "/placeholder-4x3.png"} alt={t.title} />
+                <img src={safeImage(t) || "/placeholder-4x3.png"} alt={t.title} />
                 <div>
                   <strong>{shortenTitle(t.title || t.titulo)}</strong>
                   <small>{trunc(t.shortDescription || t.excerpt || "", 90)}</small>
@@ -352,7 +429,6 @@ function LocalContinueExploring({ posts = [], receitas = [], products = [], trip
 /* ---------------- main page component ---------------- */
 
 export default function BlogHome() {
-  // postsArray: fonte estática vindo dos módulos
   const postsArray = useMemo(() => safeArray(articlesData), []);
 
   const recent = useMemo(() => {
@@ -363,7 +439,7 @@ export default function BlogHome() {
   }, [postsArray]);
 
   const popular = useMemo(() => {
-    const raw = postsArray.filter(p => p.featured || p.destaque || p.popular);
+    const raw = postsArray.filter((p) => p.featured || p.destaque || p.popular);
     const seen = new Set();
     const dedup = [];
     for (const p of raw) {
@@ -377,75 +453,78 @@ export default function BlogHome() {
     return dedup;
   }, [postsArray]);
 
-  // carouselItems: monta mix de conteúdos (dependências vazias intencionais porque os módulos são estáticos)
   const carouselItems = useMemo(() => {
-    const produtos = safeArray(productsData?.products).map(p => ({
+    const allProducts = getAllProducts(productsData);
+
+    const produtos = allProducts.map((p) => ({
       type: "product",
-      title: p.name,
-      image: p.image || "/placeholder-16x9.png",
-      link: `/produtos/${encodeURIComponent(p.slug || p.id)}`,
-      excerpt: p.summary || p.description || "",
-      badge: "Produto",
-      price: p.price ? `R$ ${p.price}` : null,
+      title: p.name || p.title || "Produto",
+      image: safeImage(p),
+      link: p.affiliateLink || p.link || `/produtos/${encodeURIComponent(p.slug || p.id || "")}`,
+      excerpt: (p.shortDescription || p.excerpt || p.description || "").slice(0, 140),
+      badge: p.category || "Produto",
+      price: getProductPriceDisplay(p),
     }));
 
-    const recs = safeArray(receitas).flat().map(r => ({
-      type: "receita",
-      title: r.titulo || r.title || "Receita",
-      image: r.imagem || r.image || "/placeholder-16x9.png",
-      link: `/receitas/${encodeURIComponent(r.slug)}`,
-      excerpt: (r.descricaoCurta || r.descricao || "").slice(0, 140),
-      badge: r.categoria || "Receita",
-      meta: r.tempo ? `${r.tempo}` : undefined,
-    }));
+    const recs = safeArray(receitas)
+      .flat()
+      .map((r) => ({
+        type: "receita",
+        title: r.titulo || r.title || "Receita",
+        image: r.imagem || r.image || "/placeholder-16x9.png",
+        link: `/receitas/${encodeURIComponent(r.slug)}`,
+        excerpt: (r.descricaoCurta || r.descricao || "").slice(0, 140),
+        badge: r.categoria || "Receita",
+        meta: r.tempo ? `${r.tempo}` : undefined,
+      }));
 
-    // Flatten robusto de viagensData: aceita objeto com categorias
     const viagensArr = Array.isArray(viagensData)
       ? viagensData.flat(Infinity).filter(Boolean)
-      : Object.values(viagensData || {}).flat(Infinity).filter(Boolean);
+      : Object.values(viagensData || {})
+          .flat(Infinity)
+          .filter(Boolean);
 
-    const viagens = safeArray(viagensArr).map(v => ({
+    const viagens = safeArray(viagensArr).map((v) => ({
       type: "trip",
       title: v.title || v.titulo || v.nome || "Viagem",
-      image: v.image || v.imagem || "/placeholder-16x9.png",
-      link: v.slug ? buildTripLink(v) : (v.link || "/viagens"),
+      image: safeImage(v),
+      link: v.slug ? buildTripLink(v) : v.link || "/viagens",
       excerpt: (v.shortDescription || v.excerpt || v.description || "").slice(0, 140),
       badge: "Viagem",
     }));
 
-    const artigos = safeArray(articlesData)
-      .slice()
-      .map(a => ({
-        type: "article",
-        title: a.title || a.titulo || "Artigo",
-        image: safeImage(a),
-        link: buildPostLink(a),
-        excerpt: (a.excerpt || a.descricao || a.description || a.shortDescription || "").slice(0, 140),
-        badge: a.category || a.categoria || "Artigo",
-      }));
+    const artigos = safeArray(articlesData).slice().map((a) => ({
+      type: "article",
+      title: a.title || a.titulo || "Artigo",
+      image: safeImage(a),
+      link: buildPostLink(a),
+      excerpt: (a.excerpt || a.descricao || a.description || a.shortDescription || "").slice(
+        0,
+        140
+      ),
+      badge: a.category || a.categoria || "Artigo",
+    }));
 
     const mixed = [
       ...artigos.slice(0, 8),
       ...recs.slice(0, 6),
       ...produtos.slice(0, 4),
-      ...viagens.slice(0, 8)
+      ...viagens.slice(0, 8),
     ];
 
-    // dedup robusto por posts (aplica preferências já definidas)
     const dedup = uniquePosts(mixed).slice(0, 18);
     return dedup;
   }, []);
 
-  // dedup de artigos antes de enviar para ContinueExploring (evita repetir posts recomendados)
   const dedupPosts = useMemo(() => uniquePosts(postsArray), [postsArray]);
 
-  // prepare small arrays for continue exploring
-  // <-- removi useMemo aqui porque receitas e productsData são módulos estáticos (evita warnings eslint sobre depender de variáveis de módulo)
   const receitasFlat = safeArray(receitas).flat();
-  const productsFlat = safeArray(productsData?.products);
+  const productsFlat = getAllProducts(productsData);
 
   const viagensFlat = useMemo(() => {
-    const arr = Array.isArray(viagensData) ? viagensData.flat(Infinity) : Object.values(viagensData || {}).flat(Infinity);
+    const arr = Array.isArray(viagensData)
+      ? viagensData.flat(Infinity)
+      : Object.values(viagensData || {}).flat(Infinity);
     return safeArray(arr).filter(Boolean);
   }, []);
 
@@ -475,11 +554,7 @@ export default function BlogHome() {
             <S.SectionTitle id="recent-title">Artigos Recentes</S.SectionTitle>
             <S.Grid>
               {recent.map((post) => (
-                <ArticleCard
-                  key={post.slug || post.id}
-                  item={post}
-                  to={buildPostLink(post)}
-                />
+                <ArticleCard key={post.slug || post.id} item={post} to={buildPostLink(post)} />
               ))}
             </S.Grid>
           </S.Column>
@@ -490,34 +565,48 @@ export default function BlogHome() {
 
               <h3 id="side-title">Populares</h3>
               <S.PopularList>
-                {popular.length ? popular.map(p => (
-                  <S.SmallPopular
-                    key={p.slug || p.id}
-                    to={buildPostLink(p)}
-                    aria-label={`Abrir artigo ${p.title || p.titulo}`}
-                  >
-                    <img
-                      src={safeImage(p)}
-                      alt={p.title || p.titulo || "Artigo popular"}
-                      loading="lazy"
-                      width={72}
-                      height={60}
-                    />
-                    <div>
-                      <strong>{p.title || p.titulo}</strong>
-                      <span>{(p.excerpt || p.descricao || p.description || "").slice(0, 90)}{(p.excerpt || p.descricao || p.description || "").length > 90 ? "…" : ""}</span>
-                    </div>
-                  </S.SmallPopular>
-                )) : <S.Empty>Sem artigos em destaque</S.Empty>}
+                {popular.length ? (
+                  popular.map((p) => (
+                    <S.SmallPopular
+                      key={p.slug || p.id}
+                      to={buildPostLink(p)}
+                      aria-label={`Abrir artigo ${p.title || p.titulo}`}
+                    >
+                      <img
+                        src={safeImage(p)}
+                        alt={p.title || p.titulo || "Artigo popular"}
+                        loading="lazy"
+                        width={72}
+                        height={60}
+                      />
+                      <div>
+                        <strong>{p.title || p.titulo}</strong>
+                        <span>
+                          {(p.excerpt || p.descricao || p.description || "").slice(0, 90)}
+                          {(p.excerpt || p.descricao || p.description || "").length > 90 ? "…" : ""}
+                        </span>
+                      </div>
+                    </S.SmallPopular>
+                  ))
+                ) : (
+                  <S.Empty>Sem artigos em destaque</S.Empty>
+                )}
               </S.PopularList>
 
               <S.Divider />
 
               <h3>Receitas recomendadas</h3>
               <S.MiniRecipes>
-                {receitasFlat.slice(0, 3).map(r => (
-                  <S.MiniRecipe key={r.slug} to={`/receitas/${encodeURIComponent(r.slug)}`}>
-                    <img src={r.imagem || r.image || "/placeholder-1x1.png"} alt={r.titulo || r.title} loading="lazy" />
+                {receitasFlat.slice(0, 3).map((r) => (
+                  <S.MiniRecipe
+                    key={r.slug}
+                    to={`/receitas/${encodeURIComponent(r.slug)}`}
+                  >
+                    <img
+                      src={r.imagem || r.image || "/placeholder-1x1.png"}
+                      alt={r.titulo || r.title}
+                      loading="lazy"
+                    />
                     <div>
                       <strong>{r.titulo}</strong>
                       <small>{r.tempo || ""}</small>
@@ -533,7 +622,6 @@ export default function BlogHome() {
           </S.Column>
         </S.TwoColumnRow>
 
-        {/* unified carousel */}
         <UnifiedCarousel items={carouselItems} />
 
         <S.ContinueSection>
@@ -558,7 +646,6 @@ export default function BlogHome() {
 
 /* ---------------- local styled for ContinueExploring ---------------- */
 
-
 const ContinueGrid = styled.section`
   box-sizing: border-box;
   width: 100%;
@@ -567,8 +654,6 @@ const ContinueGrid = styled.section`
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   margin-top: 1rem;
-
-  /* evita que conteúdos internos causem overflow do container pai */
   overflow: hidden;
 
   @media (max-width: 1100px) {
@@ -579,100 +664,119 @@ const ContinueGrid = styled.section`
   }
 `;
 
-/* Column: cartão que contém lista — garante que o conteúdo interno pode encolher */
 const Column = styled.div`
   box-sizing: border-box;
-  background: ${({ theme }) => theme.colors?.surface || "#fff"};
+  background: ${({ theme }) => theme.colors?.surface || "#f8fafc"};
   padding: 0.9rem;
   border-radius: 12px;
-  box-shadow: ${({ theme }) => theme.shadow?.xs || "0 6px 18px rgba(16,88,71,0.04)"};
-  min-width: 0; /* CRUCIAL: permite que filhos flex encolham sem forçar overflow */
+  box-shadow: ${({ theme }) => theme.shadow?.xs || "0 6px 18px rgba(15,23,42,0.04)"};
+  min-width: 0;
 
   h4 {
     margin: 0 0 0.6rem 0;
-    color: ${({ theme }) => theme.colors?.primaryDark};
+    color: ${({ theme }) => theme.colors?.primaryDark || "#0f172a"};
+    font-size: 0.98rem;
+    font-weight: 700;
   }
 `;
 
-/* List: coluna de itens (vertical) */
+
 const List = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
-  display:flex;
-  flex-direction:column;
-  gap:0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
   box-sizing: border-box;
 `;
 
-/* ListItem: força a imagem ocupar espaço fixo, evita que o texto empurre, e garante que texto quebre */
 const ListItem = styled.li`
   box-sizing: border-box;
 
   a {
-    display:flex;
-    gap:0.8rem;
-    text-decoration:none;
-    color:inherit;
-    align-items:center;
-    padding: 0.25rem 0;
-    min-width: 0; /* permite que o link encolha dentro do Column */
-  }
-
-  /* imagem: tamanho fixo (responda via media queries) */
-  img {
-    width: 120px;
-    height: 84px;
-    flex: 0 0 120px; /* reserva o espaço, não encolhe além disso */
-    object-fit: cover;
-    border-radius: 8px;
-    display:block;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-  }
-
-  /* content wrapper: permite truncamento interno em flex */
-  div {
-    min-width: 0; /* ESSENCIAL: permite truncamento do texto em flexbox */
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    text-decoration: none;
+    color: inherit;
+    padding: 0.6rem;
+    border-radius: 12px;
+    background: ${({ theme }) => theme.colors?.surfaceAlt || "rgba(255,255,255,0.9)"};
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    gap: 0.45rem;
+    min-width: 0;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  }
+
+  a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+    background: ${({ theme }) => theme.colors?.surface || "#fff"};
+  }
+
+  img {
+    width: 100%;
+    /* mantém proporção agradável em todas colunas */
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+  }
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
     overflow: hidden;
   }
 
-  /* título: até 2 linhas sem estourar e com ellipsis */
   strong {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: ${({ theme }) => theme.colors?.primaryDark || "#0f172a"};
+    line-height: 1.25;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 2; /* no máximo 2 linhas */
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1.12;
-    font-size: 0.98rem;
-    color: ${({ theme }) => theme.colors?.primaryDark};
-    word-break: break-word;
   }
 
-  /* descrição/meta: quebra palavras longas e limita linhas (ou usar nowrap se preferir) */
   small {
-    display: block;
-    color: ${({ theme }) => theme.colors?.secondaryDark};
-    font-size: 0.86rem;
-    line-height: 1.2;
+    font-size: 0.82rem;
+    line-height: 1.25;
+    color: ${({ theme }) => theme.colors?.secondaryDark || "#64748b"};
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* segura a descrição em 2 linhas */
+    -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    /* permite quebra de palavras longas sem forçar overflow */
     word-break: break-word;
     overflow-wrap: anywhere;
   }
 
-  /* media queries para reduzir imagem em telas menores */
   @media (max-width: 900px) {
-    img { width: 110px; height: 76px; flex: 0 0 110px; }
+    a {
+      padding: 0.5rem;
+      border-radius: 10px;
+    }
+    img {
+      border-radius: 8px;
+    }
   }
+
   @media (max-width: 520px) {
-    img { width: 96px; height: 64px; flex: 0 0 96px; }
-    a { gap: 0.6rem; }
-    strong { -webkit-line-clamp: 2; font-size: 0.95rem; }
-    small { font-size: 0.82rem; }
+    a {
+      padding: 0.45rem;
+      gap: 0.35rem;
+    }
+    strong {
+      font-size: 0.9rem;
+    }
+    small {
+      font-size: 0.8rem;
+    }
   }
 `;
+

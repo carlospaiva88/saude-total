@@ -1,7 +1,7 @@
 const viagem = {
   slug: "punta-cana",
   title: "Punta Cana: Resorts All Inclusive e Caribe Turquesa",
-  image: "https://images.pexels.com/photos/240524/pexels-photo-240524.jpeg",
+  image: "https://images.pexels.com/photos/3675435/pexels-photo-3675435.jpeg",
   date: "26/11/2025",
   readingTime: "7 min",
   category: "internacionais",

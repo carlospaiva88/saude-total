@@ -1,5 +1,5 @@
 const viagem = {
-  slug: "bali",
+  slug: "bali-indonesia",
   title: "Bali: Espiritualidade, Natureza e Beleza Sem Igual",
   image: "https://images.pexels.com/photos/1544351/pexels-photo-1544351.jpeg",
   date: "11/11/2025",

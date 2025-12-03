@@ -1,7 +1,7 @@
 const viagem = {
   slug: "jalapao",
   title: "Jalapão: Fervedouros, Dunas e Aventura no Tocantins",
-  image: "https://images.pexels.com/photos/4621624/pexels-photo-4621624.jpeg",
+  image: "https://images.pexels.com/photos/6060134/pexels-photo-6060134.jpeg",
   date: "21/11/2025",
   readingTime: "8 min",
   category: "nacionais",

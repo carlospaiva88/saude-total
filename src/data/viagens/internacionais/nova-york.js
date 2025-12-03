@@ -1,7 +1,7 @@
 const viagem = {
   slug: "nova-york",
   title: "Nova York: A Cidade Que Nunca Dorme",
-  image: "https://images.pexels.com/photos/218983/pexels-photo-218983.jpeg",
+  image: "https://images.pexels.com/photos/290386/pexels-photo-290386.jpeg",
   date: "26/11/2025",
   readingTime: "9 min",
   category: "internacionais",
