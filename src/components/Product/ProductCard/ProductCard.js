@@ -10,7 +10,7 @@ import {
   CardDescription,
   
   CardSticker
-} from "../CardBase/cardBase";
+} from "../../CardBase/cardBase";
 
 /**
  * ProductCard atualizado (patch):

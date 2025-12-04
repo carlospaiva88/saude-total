@@ -1,10 +1,10 @@
 // src/pages/ProductsPage.jsx
 import React, { useMemo, useState } from "react";
 import styled, { keyframes, css } from "styled-components";
-import Navbar from "../Navbar/Navbar";
-import Footer from "../Footer/Footer";
+import Navbar from "../../Navbar/Navbar";
+import Footer from "../../Footer/Footer";
 import ProductCard from "../ProductCard/ProductCard";
-import productsData from "../../data/products";
+import productsData from "../../../data/products";
 
 // Fade in up animation for product cards
 const fadeInUp = keyframes`
@@ -22,7 +22,6 @@ const AnimatedCard = styled.div`
 
 export default function ProductsPage() {
   const todasCategorias = productsData?.categories || [];
-  const todosProdutos = productsData?.products || [];
 
   const [categoriaAtiva, setCategoriaAtiva] = useState("todos");
   const [query, setQuery] = useState("");
@@ -31,36 +30,43 @@ export default function ProductsPage() {
   const perPage = 12;
 
   // filtered + search + sort
-  const produtosFiltrados = useMemo(() => {
-    let list = todosProdutos.slice();
+// filtered + search + sort
+const produtosFiltrados = useMemo(() => {
+  const todosProdutos = productsData?.products || [];
+  let list = todosProdutos.slice();
 
-    if (categoriaAtiva && categoriaAtiva !== "todos") {
-      list = list.filter(p => String(p.category || p.categoryId || "").toLowerCase() === String(categoriaAtiva).toLowerCase());
-    }
+  if (categoriaAtiva && categoriaAtiva !== "todos") {
+    list = list.filter(p =>
+      String(p.category || p.categoryId || "").toLowerCase()
+      === String(categoriaAtiva).toLowerCase()
+    );
+  }
 
-    if (query && query.trim().length > 0) {
-      const q = query.trim().toLowerCase();
-      list = list.filter(p =>
-        (p.name || p.title || "").toLowerCase().includes(q) ||
-        (p.description || p.desc || "").toLowerCase().includes(q) ||
-        (p.tags || []).join(" ").toLowerCase().includes(q)
-      );
-    }
+  if (query && query.trim().length > 0) {
+    const q = query.trim().toLowerCase();
+    list = list.filter(p =>
+      (p.name || p.title || "").toLowerCase().includes(q) ||
+      (p.description || p.desc || "").toLowerCase().includes(q) ||
+      (p.tags || []).join(" ").toLowerCase().includes(q)
+    );
+  }
 
-    // sort
-    if (sortBy === "price-asc") {
-      list.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
-    } else if (sortBy === "price-desc") {
-      list.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
-    } else if (sortBy === "newest") {
-      list.sort((a, b) => (new Date(b.publishedAt || b.date || 0)) - (new Date(a.publishedAt || a.date || 0)));
-    } else {
-      // featured fallback: bring affiliate/featured first
-      list.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-    }
+  if (sortBy === "price-asc") {
+    list.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+  } else if (sortBy === "price-desc") {
+    list.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
+  } else if (sortBy === "newest") {
+    list.sort(
+      (a, b) =>
+        new Date(b.publishedAt || b.date || 0) -
+        new Date(a.publishedAt || a.date || 0)
+    );
+  } else {
+    list.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+  }
 
-    return list;
-  }, [todosProdutos, categoriaAtiva, query, sortBy]);
+  return list;
+}, [categoriaAtiva, query, sortBy]);
 
   const total = produtosFiltrados.length;
   const pages = Math.max(1, Math.ceil(total / perPage));
@@ -256,17 +262,6 @@ const HeroCTA = styled.button`
   box-shadow: 0 8px 24px rgba(42,157,143,0.12);
   transition: transform .12s ease, filter .12s ease;
   &:hover { transform: translateY(-3px); filter: brightness(.97); }
-`;
-
-
-
-const HeroImage = styled.img`
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: ${({ theme }) => theme.radius?.md || "10px"};
-  box-shadow: ${({ theme }) => theme.shadow?.sm || "0 6px 18px rgba(0,0,0,0.06)"};
-  @media (max-width: 980px) { margin-top: 1rem; height: 180px; }
 `;
 
 

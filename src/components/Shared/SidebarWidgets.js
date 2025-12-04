@@ -1,9 +1,8 @@
 // src/components/Sidebar/SidebarWidgets.jsx
 import React from "react";
 import styled from "styled-components";
-import EbookCard from "../components/EbookCard";
-import SocialShare from "../components/SocialShare";
-import RelatedCarousel from "../components/RelatedCarousel";
+import EbookCard from "../../components/Shared/EbookCard";
+import SocialShare from "../../components/Shared/SocialShare";
 
 export default function SidebarWidgets({ recipe, related = [] }) {
   return (
@@ -50,4 +49,3 @@ const WidgetTitle = styled.h4`margin:0 0 .5rem 0;color:${({theme})=>theme.colors
 const Tags = styled.div`display:flex;flex-wrap:wrap;gap:0.4rem`;
 const Tag = styled.a`background:${({theme})=>theme.colors.surfaceAlt || "#f1f1f1"};padding:.35rem .6rem;border-radius:999px;text-decoration:none;color:${({theme})=>theme.colors.primary};font-weight:600;font-size:.85rem`;
 const AdBox = styled.div`padding:.6rem;border-radius:8px;background:linear-gradient(180deg,rgba(42,157,143,0.06),transparent);strong{display:block;margin-bottom:.4rem}`;
-const MiniCarouselWrapper = styled.div`min-height:120px;`;

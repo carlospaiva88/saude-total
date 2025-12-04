@@ -1,11 +1,11 @@
 // src/pages/Subcategoria.jsx
 import React, { useMemo, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar/Navbar";
-import Footer from "../components/Footer/Footer";
-import Breadcrumbs from "../components/BreadCrumbs";
+import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
+import Breadcrumbs from "../Shared/BreadCrumbs";
 import styled from "styled-components";
-import articlesData from "../data/articles"; 
+import articlesData from "../../data/articles"; 
 
 import {
   CardBase,
@@ -14,7 +14,7 @@ import {
   CardTitle,
   CardDescription,
   CardButton
-} from "../components/CardBase/cardBase";
+} from "../CardBase/cardBase";
 
 
 

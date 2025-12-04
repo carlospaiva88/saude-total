@@ -11,19 +11,19 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import styled from "styled-components";
 
-import Navbar from "../components/Navbar/Navbar";
-import NavBarSpacer from "../components/Navbar/NavbarSpacer";
-import Footer from "../components/Footer/Footer";
-import Breadcrumbs from "../components/BreadCrumbs";
-import ShareButtons from "../components/ShareButtons"; // fallback mobile inline share
-import Comentarios from "../components/Comentarios";
-import ReadingProgress from "../components/ReadingProgress";
+import Navbar from "../Navbar/Navbar";
+import NavBarSpacer from "../Navbar/NavbarSpacer";
+import Footer from "../Footer/Footer";
+import Breadcrumbs from "../../components/Shared/BreadCrumbs";
+import ShareButtons from "../Shared/ShareButtons"; // fallback mobile inline share
+import Comentarios from "../Shared/Comentarios";
+import ReadingProgress from "../Shared/ReadingProgress";
 
-import ProductInline from "../components/ProductInline";
-import NewsletterInline from "../components/NewsLetterInline"; // ajuste de caminho
-import AuthorBox from "../components/AuthorBox";
+import ProductInline from "../../components/Product/ProductInline";
+import NewsletterInline from "../Shared/NewsLetterInline"; // ajuste de caminho
+import AuthorBox from "../Shared/AuthorBox";
 
-import articlesData from "../data/articles"; // array ou objeto
+import articlesData from "../../data/articles"; // array ou objeto
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 /* ---------- Helpers ---------- */

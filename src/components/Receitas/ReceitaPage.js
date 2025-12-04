@@ -7,17 +7,17 @@ import receitas from "../../data/receitas/index";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import NavbarSpacer from "../../components/Navbar/NavbarSpacer";
-import BreadcrumbsViagens from "../BreadcrumbsViagens";
+import Breadcrumbs from "../../components/Shared/BreadCrumbs";
 import RecipeHeroCarousel from "../../components/Receitas/RecipeHeroCarousel";
-import SocialShare from "../../components/SocialShare";
-import ProductRecommended from "../../components/ProductRecommended";
-import SidebarWidgets from "../../components/SidebarWidgets";
-import EbookCard from "../../components/EbookCard";
+import SocialShare from "../../components/Shared/SocialShare";
+import ProductRecommended from "../../components/Product/ProductRecommended";
+import SidebarWidgets from "../../components/Shared/SidebarWidgets";
+import EbookCard from "../../components/Shared/EbookCard";
 import ReviewWidget from "../../components/Receitas/ReviewWidget"
 import NutritionFacts from "../../components/Receitas/NutritionFacts"
 import TipsBox from "../../components/Receitas/TipsBox"
 import SavePrintButtons from "../../components/Receitas/SavePrintsButtons"
-import RelatedCarousel from "../../components/RelatedCarousel";
+import RelatedCarousel from "../../components/Shared/RelatedCarousel";
 import RecipeCard from "../../components/Receitas/RecipeCard"
 import RecipeInfoPanel from "./RecipeInfoPanes";
 
@@ -77,7 +77,7 @@ export default function ReceitaPage() {
       <PageContainer>
 
         <TopRow>
-          <BreadcrumbsViagens
+          <Breadcrumbs
             paths={[
               { name: "Receitas", url: "/receitas" },
               { name: receita.categoria, url: `/receitas/categoria/${receita.categoria?.toLowerCase()}` },

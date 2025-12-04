@@ -13,7 +13,7 @@ import SectionWrapper from "./Layout/SectionWrapper"
 // Componentes comuns
 import Navbar from "./components/Navbar/Navbar";
 import NavbarSpacer from "./components/Navbar/NavbarSpacer";
-import ScrollToTop from "./components/ScrollToTop";
+import ScrollToTop from "./components/Shared/ScrollToTop";
 import Footer from "./components/Footer/Footer";
 
 
@@ -23,7 +23,7 @@ import HealthTips from "./components/HealthTips/HealthTips";
 import HomeReceitasSection from "./components/Receitas/HomeReceitasSection";
 import TravelHighlights from "./components/TravelHighlights/TravelHighlights";
 import FinalCTA from "./components/FinalCTA/FinalCTA";
-import ArticlePage from "./pages/ArtigoPage";
+import ArticlePage from "./components/Article/ArtigoPage"
 import viagensData from "./data/viagens";
 
 // Páginas Receitas
@@ -40,19 +40,19 @@ import CaloriasCalculator from "./components/Calculadora/Calorias/CaloriasCalcul
 
 
 // Viagens
-import ViagensHome from "./pages/ViagensHome";
-import ViagensCategoria from "./pages/ViagensCategoria";
-import ViagemPage from "./pages/ViagemPage";
+import ViagensHome from "./components/Viagens/ViagensHome";
+import ViagensCategoria from "./components/Viagens/ViagensCategoria";
+import ViagemPage from "./components/Viagens/ViagemPage";
 
 // Sobre
 import Sobre from "./components/Sobre/Sobre";
 
 // Lazy Loading
 const BlogHome = lazy(() => import("./components/BlogPage/BlogHome"));
-const Categoria = lazy(() => import("./pages/Categoria"));
-const Subcategoria = lazy(() => import("./pages/SubCategoria"));
+const Categoria = lazy(() => import("./components/Article/Categoria"));
+const Subcategoria = lazy(() => import("./components/Article/SubCategoria"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-const ProductsPage = lazy(() => import("./components/ProductsPage/ProductsPage"));
+const ProductsPage = lazy(() => import("./components/Product/ProductsPage/ProductsPage"));
 
 function App() {
   return (

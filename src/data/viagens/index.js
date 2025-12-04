@@ -13,6 +13,7 @@ import alterDoChao from "./nacionais/alter-do-chao";
 import florianopolis from "./nacionais/florianopolis";
 import morroDeSaoPaulo from "./nacionais/morro-de-sao-paulo";
 import ouroPreto from "./nacionais/ouro-preto";
+import serraCanicula from "./nacionais/serra-da-canicula"
 
 // internacionais
 import bali from "./internacionais/bali";
@@ -40,6 +41,7 @@ const viagensData = {
     florianopolis,
     morroDeSaoPaulo,
     ouroPreto,
+    serraCanicula,
   ],
   internacionais: [
     bali,

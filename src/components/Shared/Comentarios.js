@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import DOMPurify from "dompurify";
 import slugify from "slugify";
-import profanityFilter from "./utils/profanityFilter"; 
+import profanityFilter from "../utils/profanityFilter"; 
 
 const STORAGE_PREFIX = "vivanoflow:comments:";
 

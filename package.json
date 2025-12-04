@@ -31,7 +31,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "vercel-build": "npm install --legacy-peer-deps && npm run build"
+    "vercel-build": "npm install --legacy-peer-deps && npm run build",
+    "lint:unused-files": "madge src --extensions js,jsx --orphans"
+
   },
   "eslintConfig": {
     "extends": [
@@ -52,6 +54,7 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^8.57.1"
+    "eslint": "^8.57.1",
+    "madge": "^8.0.0"
   }
 }

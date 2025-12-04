@@ -48,6 +48,11 @@ import tapeteAcupressao from "./relaxamento/tapete-acupressao-eco-set";
 import mochila30L from "./viagem/mochila-viagem-30l";
 import toalhaQuickDry from "./viagem/toalha-quick-dry-microfibra-medium";
 import powerbank20000 from "./viagem/powerbank-20000mah-rapido";
+import packingCube from "./viagem/packing-cubes-set-6pcs"
+import almofadaPescoco from "./viagem/almofada-pescoco-inflavel-travel-pillow"
+import necessarieToiletry from "./viagem/necessaire-toiletry-bag-waterproof"
+import adaptadorUniversal from "./viagem/adaptador-universal-viagem-uk-eu-us"
+
 
 // Lifestyle e Bem-estar
 import garrafaInox from "./lifestyle/garrafa-inox";
@@ -136,6 +141,12 @@ export const products = [
   mochila30L,
   toalhaQuickDry,
   powerbank20000,
+  adaptadorUniversal,
+  necessarieToiletry,
+  packingCube,
+  almofadaPescoco,
+
+  
 
   // Lifestyle
   garrafaInox,

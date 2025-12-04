@@ -1,9 +1,9 @@
 // src/pages/BlogCategory.jsx
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import Navbar from "../components/Navbar/Navbar";
-import Footer from "../components/Footer/Footer";
-import Breadcrumbs from "../components/BreadCrumbs";
+import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
+import Breadcrumbs from "../Shared/BreadCrumbs";
 import styled from "styled-components";
 
 import {
@@ -13,7 +13,7 @@ import {
   CardTitle,
   CardDescription,
   CardButton
-} from "../components/CardBase/cardBase";
+} from "../CardBase/cardBase";
 
 /* -------------------------
    Subcategories (dados)

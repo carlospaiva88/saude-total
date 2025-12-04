@@ -67,4 +67,4 @@ export const ProductRecommendationCard = styled(ViagemCardBase)`
   img { width: 96px; height: 96px; object-fit: cover; border-radius: 8px; }
   div { flex:1; }
 `;
-export default null;
+export default ViagemCardBase;

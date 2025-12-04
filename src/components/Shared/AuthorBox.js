@@ -1,7 +1,7 @@
 // src/components/Article/AuthorBox.jsx
 import React from "react";
 import styled from "styled-components";
-import logoImg from "../components/Navbar/viva.png";
+import logoImg from "../../components/Navbar/viva.png";
 
 
 export default function AuthorBox({ author = {} }) {

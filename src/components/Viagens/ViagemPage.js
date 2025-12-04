@@ -4,14 +4,14 @@ import { useParams, Link } from "react-router-dom";
 import styled from "styled-components";
 import { Helmet } from "react-helmet-async";
 
-import Navbar from "../components/Navbar/Navbar";
-import NavbarSpacer from "../components/Navbar/NavbarSpacer";
-import BreadcrumbsViagens from "../components/BreadcrumbsViagens";
-import RelatedCarousel from "../components/RelatedCarousel";
-import AdBlock from "../components/AdBlock";
-import Footer from "../components/Footer/Footer";
-import viagensDataDefault from "../data/viagens";
-import { ViagemCardBase } from "../components/Viagens/ViagemCard.style";
+import Navbar from "../../components/Navbar/Navbar";
+import NavbarSpacer from "../../components/Navbar/NavbarSpacer";
+import Breadcrumbs from "../../components/Shared/BreadCrumbs";
+import RelatedCarousel from "../../components/Shared/RelatedCarousel";
+import AdBlock from "../../components/Shared/AdBlock";
+import Footer from "../../components/Footer/Footer";
+import viagensDataDefault from "../../data/viagens";
+import { ViagemCardBase } from "../../components/Viagens/ViagemCard.style";
 
 /* ---------------- helpers ---------------- */
 
@@ -146,7 +146,7 @@ export default function ViagemPage() {
       <NavbarSpacer />
 
       <Article>
-        <BreadcrumbsViagens
+        <Breadcrumbs
           paths={[
             { name: "Viagens", url: "/viagens" },
             { name: viagem.categoria || "Categoria", url: `/viagens/${viagem.categoria || ""}` },

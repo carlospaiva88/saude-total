@@ -4,11 +4,11 @@ import styled from "styled-components";
 import { Helmet } from "react-helmet-async";
 import { useParams, useNavigate } from "react-router-dom";
 
-import Navbar from "../components/Navbar/Navbar";
-import NavbarSpacer from "../components/Navbar/NavbarSpacer";
-import Footer from "../components/Footer/Footer";
-import viagensData from "../data/viagens";
-import { ViagemCardBase, ViagemCardImage, ViagemCardBody, ViagemCardTitle, ViagemCardDescription } from "../components/Viagens/ViagemCard.style";
+import Navbar from "../../components/Navbar/Navbar";
+import NavbarSpacer from "../../components/Navbar/NavbarSpacer";
+import Footer from "../../components/Footer/Footer";
+import viagensData from "../../data/viagens";
+import { ViagemCardBase, ViagemCardImage, ViagemCardBody, ViagemCardTitle, ViagemCardDescription } from "../../components/Viagens/ViagemCard.style";
 
 export default function ViagensCategoria() {
   const { categoria } = useParams();
