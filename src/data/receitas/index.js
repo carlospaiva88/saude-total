@@ -34,6 +34,13 @@ import brownieBatataDoce from "./doces/brownie-batata-doce";
 import curryGraoBico from "./veganas/curry-grao-bico";
 import hamburguerLentilha from "./veganas/hamburguer-lentilha";
 import saladaQuinoaAbacate from "./veganas/salada-quinoa-abacate";
+import sopaAboboraCoco from "./veganas/sopaAboboraCoco";
+import tofuGrelhadoGergelim from "./veganas/tofuGrelhadoGergelim";
+import falafelAssado from "./veganas/falafelAssado";
+
+
+
+
 // -------------------------------------------------------
 
 // -------------------------------------------------------
@@ -129,7 +136,10 @@ const receitasDoces = [
 const receitasVeganas = [
   curryGraoBico,
   hamburguerLentilha,
-  saladaQuinoaAbacate
+  saladaQuinoaAbacate,
+  falafelAssado,
+  sopaAboboraCoco,
+  tofuGrelhadoGergelim
 ].map((r) => normalizeRecipe(r, "veganas"));
 
 // -------------------------------------------------------

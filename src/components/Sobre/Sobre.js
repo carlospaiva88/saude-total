@@ -4,28 +4,23 @@ import styled from "styled-components";
 import { Helmet } from "react-helmet-async";
 import Navbar from "../Navbar/Navbar";
 import NavbarSpacer from "../Navbar/NavbarSpacer";
-
 import Footer from "../Footer/Footer";
 
 /**
- * Página Sobre — versão enriquecida:
- * - SEO + JSON-LD (Organization)
- * - Missão, Visão, Valores
- * - História em timeline compacta
- * - Time (cards)
- * - Números / Impacto
- * - Depoimentos (simples)
- * - Logos de imprensa / parceiros
- * - CTA colaborador / newsletter + formulário de contato (mailto fallback)
- *
- * Observação: formulário de newsletter aqui é visual (não tem backend). Você conecta ao seu provider (Mailchimp, ConvertKit, etc.)
- * quando quiser: basta trocar o submit handler para chamar a API do provider.
+ * Sobre — versão final conforme solicitado
+ * - texto principal reescrito e integrado
+ * - remove Timeline, Depoimentos, PressLogos, Números
+ * - formulário de contato e newsletter melhorados
+ * - todo estilo usa cores do theme.js
+ * - JSON-LD Organization + founders
  */
 
 export default function Sobre() {
-  // form state (contato)
   const [form, setForm] = useState({ nome: "", email: "", mensagem: "" });
   const [sent, setSent] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterSent, setNewsletterSent] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     if (sent) {
@@ -34,59 +29,93 @@ export default function Sobre() {
     }
   }, [sent]);
 
+  useEffect(() => {
+    if (newsletterSent) {
+      const t = setTimeout(() => setNewsletterSent(false), 5000);
+      return () => clearTimeout(t);
+    }
+  }, [newsletterSent]);
+
   function handleChange(e) {
     const { name, value } = e.target;
     setForm((s) => ({ ...s, [name]: value }));
   }
 
-  function handleContactSubmit(e) {
-    e.preventDefault();
-    // fallback: abrir mailto com conteúdo prepreenchido
-    const subject = encodeURIComponent("Contato via site - Sobre");
-    const body = encodeURIComponent(`Nome: ${form.nome}\nEmail: ${form.email}\n\n${form.mensagem}`);
-    const mailto = `mailto:contato@vivanoflow.com?subject=${subject}&body=${body}`;
-    window.location.href = mailto;
-    setSent(true);
-    setForm({ nome: "", email: "", mensagem: "" });
+  function validateContact() {
+    const errs = {};
+    if (!form.nome || form.nome.trim().length < 2) errs.nome = "Insira seu nome.";
+    if (!form.email || !/^\S+@\S+\.\S+$/.test(form.email)) errs.email = "E-mail inválido.";
+    if (!form.mensagem || form.mensagem.trim().length < 6) errs.mensagem = "Escreva uma mensagem breve.";
+    return errs;
   }
 
-  // dados fictícios do time / métricas / depoimentos — troque pelos seus reais
+  function handleContactSubmit(e) {
+    e.preventDefault();
+    const errs = validateContact();
+    setFormErrors(errs);
+    if (Object.keys(errs).length > 0) return;
+
+    // fallback mailto — você pode conectar a um backend depois
+    const subject = encodeURIComponent("Contato via site — Sobre");
+    const body = encodeURIComponent(
+      `Nome: ${form.nome}\nEmail: ${form.email}\n\nMensagem:\n${form.mensagem}`
+    );
+    window.location.href = `mailto:contato@vivanoflow.com?subject=${subject}&body=${body}`;
+    setSent(true);
+    setForm({ nome: "", email: "", mensagem: "" });
+    setFormErrors({});
+  }
+
+  function handleNewsletterSubmit(e) {
+    e.preventDefault();
+    if (!newsletterEmail || !/^\S+@\S+\.\S+$/.test(newsletterEmail)) {
+      alert("Por favor insira um e-mail válido.");
+      return;
+    }
+    // placeholder: integra com provider (Mailchimp etc.)
+    setNewsletterSent(true);
+    setNewsletterEmail("");
+  }
+
   const team = [
-    { name: "Mariana Alves", role: "Fundadora & Editora Chefe", img: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg", bio: "Nutricionista de formação, apaixonada por viagens e conteúdo prático." },
-    { name: "Lucas Pereira", role: "Diretor de Conteúdo", img: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg", bio: "Jornalista e roteirista, responsável pelos guias de viagem." },
-    { name: "Ana Costa", role: "Head de Produto", img: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg", bio: "Design e growth — faz os produtos digitais ganharem vida." },
+    {
+      name: "Carlos Paiva",
+      role: "Co-fundador — Tecnologia & Dados",
+      img: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+      bio:
+        "Desenvolvedor e data scientist. Cozinha, treina e transforma curiosidade em conteúdo prático.",
+      socials: { instagram: "#", linkedin: "#" },
+    },
+    {
+      name: "Marina Paiva",
+      role: "Co-fundadora — Conteúdo & Produto",
+      img: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
+      bio:
+        "Designer e fotógrafa, apaixonada por receitas e práticas que trazem mais presença ao dia a dia.",
+      socials: { instagram: "#", linkedin: "#" },
+    },
   ];
 
-  const metrics = [
-    { label: "Leitores / mês", value: "120k+" },
-    { label: "Receitas publicadas", value: "420+" },
-    { label: "Destinos cobertos", value: "180+" },
-    { label: "Parceiros ativos", value: "36" },
-  ];
-
-  const testimonials = [
-    { name: "João M.", text: "Mudei minha rotina com as receitas e os roteiros — o site virou referência para meus finais de semana." },
-    { name: "Clara S.", text: "Conteúdo honesto, receitas fáceis e um tom humano. Recomendo sempre!" },
-  ];
-
+  // JSON-LD Organization + founders
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Viva no Flow",
-    "url": "https://vivanoflow.com",
-    "logo": "https://vivanoflow.com/logo.png",
-    "sameAs": [
-      "https://www.instagram.com/vivanoflow",
-      "https://www.facebook.com/vivanoflow"
-    ],
-    "contactPoint": [
+    name: "Viva no Flow",
+    url: "https://vivanoflow.com",
+    logo: "https://vivanoflow.com/logo.png",
+    sameAs: ["https://www.instagram.com/vivanoflow", "https://www.facebook.com/vivanoflow"],
+    contactPoint: [
       {
         "@type": "ContactPoint",
-        "email": "contato@vivanoflow.com",
-        "contactType": "customer support",
-        "areaServed": "PT, BR"
-      }
-    ]
+        email: "contato@vivanoflow.com",
+        contactType: "customer support",
+        areaServed: ["PT", "BR"],
+      },
+    ],
+    founder: [
+      { "@type": "Person", name: "Carlos Paiva" },
+      { "@type": "Person", name: "Marina Paiva" },
+    ],
   };
 
   return (
@@ -95,117 +124,95 @@ export default function Sobre() {
         <title>Sobre Nós | Viva no Flow</title>
         <meta
           name="description"
-          content="Conheça a missão do Viva no Flow: inspirar uma vida equilibrada com saúde, receitas, viagens e bem-estar."
+          content="Viva no Flow — viver com mais equilíbrio. Receitas práticas, viagens conscientes e ferramentas para sua rotina."
         />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
       <Navbar />
-      <NavbarSpacer/>
+      <NavbarSpacer />
       <Wrapper>
         <Hero>
-          <HeroText>
-            <h1>Quem somos — Viva no Flow</h1>
-            <p>
-              Inspiramos milhares de pessoas a viverem com mais energia, saúde e curiosidade. Conteúdo prático de nutrição, viagens conscientes e bem-estar.
-            </p>
+          <HeroContent>
+            <h1>Sobre Nós — Viva no Flow</h1>
+
+            <Lead>
+              No ritmo acelerado do mundo moderno, aprendemos juntos que viver bem não é sobre
+              perfeição — é sobre equilíbrio. O Viva no Flow nasceu desse propósito: compartilhar um
+              estilo de vida mais leve, consciente e alinhado ao que realmente importa.
+            </Lead>
+
+            <Paragraph>
+              Somos um casal movido pela busca constante por bem-estar e evolução. Carlos Paiva é
+              desenvolvedor, data scientist, cozinheiro de mão cheia, amante de esportes, jiu-jiteiro,
+              calistênico e gamer nas horas vagas. Marina Paiva é arquiteta de soluções, designer,
+              cozinheira apaixonada, fotógrafa e praticante dedicada de yoga. Diferentes em ritmos,
+              complementares em essência — encontramos no equilíbrio o ponto comum que guia nossa vida.
+            </Paragraph>
+
             <HeroCTAs>
-              <a href="/receitas" className="btn">Ver Receitas</a>
-              <a href="/viagens" className="btn outline">Explorar Destinos</a>
+              <Anchor href="/receitas">Ver receitas</Anchor>
+              <OutlineAnchor href="/viagens">Explorar destinos</OutlineAnchor>
             </HeroCTAs>
-          </HeroText>
-          <HeroImage
-            src="https://images.pexels.com/photos/4056723/pexels-photo-4056723.jpeg"
-            alt="Equipe Viva no Flow"
-            loading="lazy"
-          />
+          </HeroContent>
+
+          <HeroImageWrap>
+            <HeroImage
+              src="https://images.pexels.com/photos/4056723/pexels-photo-4056723.jpeg"
+              alt="Carlos e Marina — Viva no Flow"
+              loading="lazy"
+            />
+          </HeroImageWrap>
         </Hero>
 
-        <Section aria-labelledby="missao-title">
-          <Intro>
-            <h2 id="missao-title">Nossa Missão</h2>
+        <Section>
+          <SectionHeader>
+            <h2>Nossa abordagem</h2>
             <p>
-              Ajudar pessoas a encontrar o equilíbrio entre corpo, mente e experiências — com receitas simples, guias de viagem conscientes e conteúdo baseado em prática e evidência.
+              Para nós, viver no flow é fluir com a vida: cuidar do corpo, da mente e das emoções com
+              práticas simples e consistentes. Valorizamos a autenticidade e informação responsável.
             </p>
-          </Intro>
+          </SectionHeader>
 
-          <Grid>
-            <Card>
-              <h3>Visão</h3>
-              <p>Ser a referência em conteúdo prático para uma vida mais saudável e cheia de descobertas.</p>
-            </Card>
-            <Card>
-              <h3>Valores</h3>
-              <ul>
-                <li>Transparência</li>
-                <li>Praticidade</li>
-                <li>Respeito ao tempo do leitor</li>
-                <li>Cuidado com o planeta</li>
-              </ul>
-            </Card>
-            <Card>
-              <h3>Como trabalhamos</h3>
-              <p>Produção ética: testes reais, fontes confiáveis e conteúdo testado por especialistas quando necessário.</p>
-            </Card>
-          </Grid>
-        </Section>
+          <CardsGrid>
+            <FeatureCard>
+              <h3>Saúde holística</h3>
+              <p>Conteúdo que integra aspectos físicos, mentais e emocionais — com base prática.</p>
+            </FeatureCard>
 
-        <Divider />
+            <FeatureCard>
+              <h3>Receitas reais</h3>
+              <p>Receitas simples, acessíveis e testadas — gostosas e alinhadas ao bem-estar.</p>
+            </FeatureCard>
 
-        <Section aria-labelledby="history-title">
-          <h2 id="history-title">Nossa história em poucas linhas</h2>
-          <Timeline>
-            <TimelineItem>
-              <time>2017</time>
-              <div>
-                <strong>Início</strong>
-                <p>Começamos como um blog de receitas saudáveis e rapidamente ganhamos leitores fiéis.</p>
-              </div>
-            </TimelineItem>
-
-            <TimelineItem>
-              <time>2019</time>
-              <div>
-                <strong>Expansão</strong>
-                <p>Incluímos guias de viagem e conteúdo sobre hábitos — o público cresceu e formamos nossa pequena equipe.</p>
-              </div>
-            </TimelineItem>
-
-            <TimelineItem>
-              <time>2022</time>
-              <div>
-                <strong>Plataforma</strong>
-                <p>Lançamos cursos, e-books e parcerias com marcas alinhadas ao nosso propósito.</p>
-              </div>
-            </TimelineItem>
-
-            <TimelineItem>
-              <time>2025</time>
-              <div>
-                <strong>Presente</strong>
-                <p>Somos uma comunidade ativa com conteúdo diário e projetos editoriais recorrentes.</p>
-              </div>
-            </TimelineItem>
-          </Timeline>
+            <FeatureCard>
+              <h3>Viagens com propósito</h3>
+              <p>Dicas sinceras de destinos, hospedagens e experiências que valem a pena.</p>
+            </FeatureCard>
+          </CardsGrid>
         </Section>
 
         <Divider />
 
         <Section aria-labelledby="team-title">
           <h2 id="team-title">O time</h2>
-          <p style={{ maxWidth: 860, margin: "0.25rem auto 1rem" }}>Pessoas reais — profissionais de conteúdo, nutrição e experiência de viagem.</p>
+          <p style={{ maxWidth: 780, margin: "0.5rem auto 1rem", textAlign: "center" }}>
+            Pessoas reais por trás do conteúdo — expertise prática e cuidado editorial.
+          </p>
 
           <TeamGrid>
             {team.map((m) => (
               <TeamCard key={m.name}>
-                <img src={m.img} alt={m.name} loading="lazy" />
-                <div className="info">
+                <figure>
+                  <img src={m.img} alt={m.name} loading="lazy" />
+                </figure>
+                <div>
                   <h4>{m.name}</h4>
                   <small>{m.role}</small>
                   <p>{m.bio}</p>
                   <Socials>
-                    <a href="#" aria-label={`Instagram ${m.name}`}>IG</a>
-                    <a href="#" aria-label={`LinkedIn ${m.name}`}>LI</a>
+                    {m.socials.instagram && <SocialLink href={m.socials.instagram}>Instagram</SocialLink>}
+                    {m.socials.linkedin && <SocialLink href={m.socials.linkedin}>LinkedIn</SocialLink>}
                   </Socials>
                 </div>
               </TeamCard>
@@ -215,72 +222,51 @@ export default function Sobre() {
 
         <Divider />
 
-        <Section aria-labelledby="impacto-title">
-          <h2 id="impacto-title">Nossos números</h2>
-          <Stats>
-            {metrics.map((m) => (
-              <Stat key={m.label}>
-                <strong>{m.value}</strong>
-                <span>{m.label}</span>
-              </Stat>
-            ))}
-          </Stats>
-        </Section>
-
-        <Divider />
-
-        <Section aria-labelledby="testes-title">
-          <h2 id="testes-title">Depoimentos</h2>
-          <Testimonials>
-            {testimonials.map((t, i) => (
-              <Testimonial key={i}>
-                <p>“{t.text}”</p>
-                <footer>— {t.name}</footer>
-              </Testimonial>
-            ))}
-          </Testimonials>
-        </Section>
-
-        <Divider />
-
-        <Section aria-labelledby="press-title">
-          <h2 id="press-title">Onde já fomos mencionados</h2>
-          <PressLogos>
-            <img src="https://via.placeholder.com/140x48?text=Folha" alt="Folha" />
-            <img src="https://via.placeholder.com/140x48?text=GQ" alt="GQ" />
-            <img src="https://via.placeholder.com/140x48?text=Vogue" alt="Vogue" />
-            <img src="https://via.placeholder.com/140x48?text=Veja" alt="Veja" />
-          </PressLogos>
-        </Section>
-
-        <Divider />
-
         <Section aria-labelledby="colab-title">
           <h2 id="colab-title">Colabore com a gente</h2>
           <TwoCol>
-            <div>
+            <Box>
               <h3>Parcerias & Conteúdo patrocinado</h3>
-              <p>Se sua marca tem sinergia com saúde, sustentabilidade e experiências, nos envie uma proposta.</p>
-              <p><a href="mailto:parcerias@vivanoflow.com">parcerias@vivanoflow.com</a></p>
-            </div>
+              <p>
+                Se sua marca tem sinergia com saúde, sustentabilidade ou experiências, envie uma
+                proposta. Trabalhamos com transparência e integração editorial.
+              </p>
+              <p>
+                <a href="mailto:parcerias@vivanoflow.com">parcerias@vivanoflow.com</a>
+              </p>
+            </Box>
 
-            <div>
-              <h3>Quer contribuir com um artigo?</h3>
-              <p>Enviamos guidelines e oferecemos feedback — escreva para <a href="mailto:contato@vivanoflow.com">contato@vivanoflow.com</a>.</p>
-            </div>
+            <Box>
+              <h3>Contribuições de especialistas</h3>
+              <p>
+                Nutricionistas, médicos, psicólogos e treinadores são bem-vindos para enviar artigos
+                técnicos e guiados por referências. Envie seu pitch e referências.
+              </p>
+              <p>
+                <a href="mailto:contato@vivanoflow.com">contato@vivanoflow.com</a>
+              </p>
+            </Box>
           </TwoCol>
         </Section>
 
         <Divider />
 
         <Section aria-labelledby="newsletter-title">
-          <h2 id="newsletter-title">Fique por dentro — Newsletter</h2>
-          <p>Receba nossa curadoria semanal: receitas fáceis, roteiros e ferramentas para uma rotina com mais flow.</p>
+          <h2 id="newsletter-title">Newsletter</h2>
+          <p>Curadoria semanal com receitas, roteiros e ferramentas práticas — sem spam.</p>
 
-          <NewsletterForm onSubmit={(e) => { e.preventDefault(); alert("Obrigado! Em produção conectamos no provider."); }}>
-            <input type="email" placeholder="Seu melhor e-mail" aria-label="email" required />
+          <NewsletterForm onSubmit={handleNewsletterSubmit} aria-label="Formulário de newsletter">
+            <input
+              id="newsletter-email"
+              type="email"
+              placeholder="Seu melhor e-mail"
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
+              aria-label="E-mail para newsletter"
+              required
+            />
             <button type="submit">Quero receber</button>
-            <small>Prometemos envio responsável — sem spam.</small>
+            {newsletterSent && <SuccessNote>Obrigado — confira seu e-mail em instantes.</SuccessNote>}
           </NewsletterForm>
         </Section>
 
@@ -288,28 +274,59 @@ export default function Sobre() {
 
         <Section aria-labelledby="contato-title">
           <h2 id="contato-title">Fale com a gente</h2>
-          <p>Use o formulário abaixo para mensagens rápidas — ou envie um e-mail diretamente para <a href="mailto:contato@vivanoflow.com">contato@vivanoflow.com</a>.</p>
+          <p>
+            Use o formulário abaixo para mensagens rápidas — ou escreva para{" "}
+            <a href="mailto:contato@vivanoflow.com">contato@vivanoflow.com</a>.
+          </p>
 
-          <ContactForm onSubmit={handleContactSubmit}>
-            <label>
-              Nome
-              <input name="nome" value={form.nome} onChange={handleChange} required />
-            </label>
+          <ContactForm onSubmit={handleContactSubmit} aria-label="Formulário de contato">
+            <div className="row">
+              <label>
+                Nome
+                <input
+                  name="nome"
+                  value={form.nome}
+                  onChange={handleChange}
+                  placeholder="Seu nome"
+                  aria-invalid={!!formErrors.nome}
+                  required
+                />
+                {formErrors.nome && <FieldError>{formErrors.nome}</FieldError>}
+              </label>
 
-            <label>
-              E-mail
-              <input name="email" type="email" value={form.email} onChange={handleChange} required />
-            </label>
-
-            <label style={{ gridColumn: "1 / -1" }}>
-              Mensagem
-              <textarea name="mensagem" rows="5" value={form.mensagem} onChange={handleChange} required />
-            </label>
-
-            <div style={{ gridColumn: "1 / -1", display: "flex", gap: 12, alignItems: "center" }}>
-              <button type="submit">Enviar mensagem</button>
-              {sent && <span style={{ color: "green" }}>Mensagem direcionada ao seu app de e-mail.</span>}
+              <label>
+                E-mail
+                <input
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="seu@exemplo.com"
+                  aria-invalid={!!formErrors.email}
+                  required
+                />
+                {formErrors.email && <FieldError>{formErrors.email}</FieldError>}
+              </label>
             </div>
+
+            <label className="full">
+              Mensagem
+              <textarea
+                name="mensagem"
+                rows="6"
+                value={form.mensagem}
+                onChange={handleChange}
+                placeholder="Como podemos ajudar?"
+                aria-invalid={!!formErrors.mensagem}
+                required
+              />
+              {formErrors.mensagem && <FieldError>{formErrors.mensagem}</FieldError>}
+            </label>
+
+            <FormActions>
+              <button type="submit">Enviar mensagem</button>
+              {sent && <SuccessNote>Obrigado — abrimos seu app de e-mail.</SuccessNote>}
+            </FormActions>
           </ContactForm>
         </Section>
       </Wrapper>
@@ -319,10 +336,10 @@ export default function Sobre() {
   );
 }
 
-/* ---------------- Styles ---------------- */
+/* ---------------- Styles — todas as cores usam theme.colors.* ---------------- */
 
 const Wrapper = styled.main`
-  max-width: 1100px;
+  max-width: 1120px;
   margin: 2.4rem auto;
   padding: 0 1rem 4rem;
 `;
@@ -333,198 +350,297 @@ const Hero = styled.section`
   gap: 1.25rem;
   align-items: center;
   margin-bottom: 2rem;
-  @media (max-width: 980px) { grid-template-columns: 1fr; }
+
+  @media (max-width: 980px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
-const HeroText = styled.div`
-  h1 { font-size: clamp(1.6rem, 3vw, 2.8rem); margin: 0 0 .6rem; color: ${({ theme }) => theme.colors?.primary || "#163d35"}; }
-  p { margin: 0 0 1rem; color: ${({ theme }) => theme.colors?.text || "#444"}; max-width: 50ch; }
-  .btn { display:inline-block; padding:.6rem 1rem; margin-right:.6rem; border-radius:999px; text-decoration:none; font-weight:700; background:${({ theme })=>theme.colors?.primary||"#2a6f61"}; color:white; }
-  .btn.outline { background: transparent; color: ${({ theme }) => theme.colors?.primary || "#2a6f61"}; border: 2px solid ${({ theme }) => theme.colors?.primary || "#2a6f61"}; }
+const HeroContent = styled.div`
+  h1 {
+    font-size: clamp(1.6rem, 3vw, 2.6rem);
+    margin: 0 0 0.6rem;
+    color: ${({ theme }) => theme.colors.primaryDark};
+    line-height: 1.05;
+  }
+`;
+
+const Lead = styled.p`
+  color: ${({ theme }) => theme.colors.dark};
+  margin: 0 0 0.9rem;
+  font-weight: 600;
+`;
+
+const Paragraph = styled.p`
+  color: ${({ theme }) => theme.colors.text};
+  margin: 0 0 1rem;
+  max-width: 64ch;
+  line-height: 1.6;
+`;
+
+const HeroCTAs = styled.div`
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+`;
+
+const Anchor = styled.a`
+  display: inline-block;
+  padding: 0.6rem 1rem;
+  border-radius: ${({ theme }) => theme.radius.pill};
+  font-weight: 700;
+  background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.surface};
+  text-decoration: none;
+  box-shadow: ${({ theme }) => theme.shadow.xs};
+  &:hover {
+    filter: brightness(0.98);
+    transform: translateY(-2px);
+  }
+`;
+
+const OutlineAnchor = styled(Anchor)`
+  background: transparent;
+  color: ${({ theme }) => theme.colors.primaryDark};
+  border: 1.5px solid ${({ theme }) => theme.colors.primary};
+`;
+
+const HeroImageWrap = styled.div`
+  width: 100%;
+  @media (max-width: 980px) {
+    order: -1;
+    margin-bottom: 1rem;
+  }
 `;
 
 const HeroImage = styled.img`
-  width:100%;
-  height:260px;
-  object-fit:cover;
-  border-radius:12px;
-  box-shadow: ${({ theme }) => theme.shadow?.sm || "0 8px 30px rgba(0,0,0,0.06)"};
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.radius.md};
+  box-shadow: ${({ theme }) => theme.shadow.sm};
+  border: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
+/* Section / cards */
 const Section = styled.section`
   padding: 1.5rem 0;
 `;
 
-const Intro = styled.div`
-  text-align:left;
-  max-width: 900px;
-  margin: 0 auto 1rem;
-  h2 { margin: 0 0 .4rem; color: ${({ theme }) => theme.colors?.primary || "#163d35"}; }
-  p { margin: 0; color: ${({ theme }) => theme.colors?.text || "#333"}; }
+const SectionHeader = styled.div`
+  text-align: left;
+  margin-bottom: 1rem;
+  h2 {
+    color: ${({ theme }) => theme.colors.primaryDark};
+    margin-bottom: 0.4rem;
+  }
+  p {
+    color: ${({ theme }) => theme.colors.text};
+    margin: 0;
+  }
 `;
 
-const Grid = styled.div`
-  display:grid;
+const CardsGrid = styled.div`
+  display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
-  margin-top: 1rem;
-  @media(max-width:980px){ grid-template-columns: 1fr; }
+  margin-top: 0.8rem;
+  @media (max-width: 980px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
-const Card = styled.div`
-  background: ${({ theme }) => theme.colors?.surface || "#fff"};
+const FeatureCard = styled.div`
+  background: ${({ theme }) => theme.colors.surface};
   padding: 1.25rem;
-  border-radius: 12px;
-  box-shadow: ${({ theme }) => theme.shadow?.xs || "0 6px 18px rgba(16,88,71,0.04)"};
-  text-align: left;
-  h3 { margin: 0 0 .5rem; }
+  border-radius: ${({ theme }) => theme.radius.sm};
+  box-shadow: ${({ theme }) => theme.shadow.xs};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  h3 {
+    margin: 0 0 0.5rem;
+    color: ${({ theme }) => theme.colors.primaryDark};
+  }
+  p {
+    margin: 0;
+    color: ${({ theme }) => theme.colors.text};
+  }
 `;
 
 const Divider = styled.hr`
   border: none;
   height: 1px;
-  background: ${({ theme }) => theme.colors?.border || "#eee"};
+  background: ${({ theme }) => theme.colors.border};
   margin: 1.6rem 0;
 `;
 
-const Timeline = styled.div`
-  display:flex;
-  flex-direction:column;
-  gap: 1rem;
-  max-width: 900px;
-  margin: 1rem auto;
-`;
-
-const TimelineItem = styled.div`
-  display:flex;
-  gap: 1rem;
-  align-items:flex-start;
-  time { font-weight:700; color: ${({ theme }) => theme.colors?.primary || "#2a6f61"}; min-width:72px; }
-  div { background: ${({ theme }) => theme.colors?.surface || "#fff"}; padding: 1rem; border-radius:10px; box-shadow: ${({ theme })=>theme.shadow?.xs || "0 6px 18px rgba(16,88,71,0.03)"}; }
-  @media(max-width:720px){ flex-direction:column; }
-`;
-
+/* Team */
 const TeamGrid = styled.div`
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
-  @media(max-width:980px){ grid-template-columns: 1fr; }
+  @media (max-width: 980px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const TeamCard = styled.article`
-  background: ${({ theme }) => theme.colors?.surface || "#fff"};
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: ${({ theme }) => theme.shadow?.xs || "0 6px 18px rgba(16,88,71,0.04)"};
-  display:flex;
-  gap: .8rem;
-  align-items:flex-start;
-  padding: .8rem;
-  img { width:84px; height:84px; object-fit:cover; border-radius:10px; flex-shrink:0; }
-  .info { h4 { margin:0; } small { color: ${({ theme }) => theme.colors?.secondaryDark || "#6b8a7b"}; } p { margin: .45rem 0 0; color: ${({ theme }) => theme.colors?.text || "#444"}; } }
+  display: flex;
+  gap: 1rem;
+  background: ${({ theme }) => theme.colors.surface};
+  padding: 1rem;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  box-shadow: ${({ theme }) => theme.shadow.xs};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+
+  figure {
+    margin: 0;
+    width: 96px;
+    height: 96px;
+  }
+  img {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: ${({ theme }) => theme.radius.sm};
+    border: 1px solid ${({ theme }) => theme.colors.border};
+  }
+
+  h4 {
+    margin: 0 0 0.25rem;
+    color: ${({ theme }) => theme.colors.primaryDark};
+  }
+  small {
+    color: ${({ theme }) => theme.colors.secondaryDark};
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+  p {
+    margin: 0;
+    color: ${({ theme }) => theme.colors.text};
+  }
 `;
 
 const Socials = styled.div`
-  margin-top: .6rem;
-  display:flex;
-  gap:.5rem;
-  a { color: ${({ theme }) => theme.colors?.primary || "#2a6f61"}; font-weight:700; text-decoration:none; font-size:.85rem; }
+  margin-top: 0.6rem;
+  display: flex;
+  gap: 0.5rem;
 `;
 
-const Stats = styled.div`
-  display:flex;
-  gap: 1rem;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin-top: 1rem;
+const SocialLink = styled.a`
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight: 700;
+  text-decoration: none;
 `;
 
-const Stat = styled.div`
-  background: ${({ theme }) => theme.colors?.surface || "#fff"};
-  padding: 1rem 1.2rem;
-  border-radius: 10px;
-  min-width: 140px;
-  text-align:center;
-  box-shadow: ${({ theme }) => theme.shadow?.xs || "0 6px 18px rgba(16,88,71,0.03)"};
-  strong { display:block; font-size:1.2rem; color: ${({ theme }) => theme.colors?.primary || "#2a6f61"}; }
-  span { color: ${({ theme }) => theme.colors?.secondaryDark || "#666"}; font-size: .95rem; }
-`;
-
-const Testimonials = styled.div`
-  display:grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  @media(max-width:980px){ grid-template-columns: 1fr; }
-`;
-
-const Testimonial = styled.blockquote`
-  background: ${({ theme }) => theme.colors?.surface || "#fff"};
-  padding: 1rem;
-  border-radius: 10px;
-  box-shadow: ${({ theme }) => theme.shadow?.xs || "0 6px 18px rgba(16,88,71,0.03)"};
-  p { margin:0 0 .5rem; font-style: italic; }
-  footer { font-weight:700; color: ${({ theme }) => theme.colors?.secondaryDark || "#666"}; }
-`;
-
-const PressLogos = styled.div`
-  display:flex;
-  gap: 1rem;
-  align-items:center;
-  justify-content:center;
-  flex-wrap:wrap;
-  img { width: 140px; height: 48px; object-fit:contain; opacity:.9; filter:grayscale(.1); }
-`;
-
+/* Two column boxes */
 const TwoCol = styled.div`
-  display:grid;
+  display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  @media(max-width:980px){ grid-template-columns: 1fr; }
+  @media (max-width: 980px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
+const Box = styled.div`
+  background: ${({ theme }) => theme.colors.surface};
+  padding: 1rem;
+  border-radius: ${({ theme }) => theme.radius.sm};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  box-shadow: ${({ theme }) => theme.shadow.xs};
+
+  h3 {
+    margin-top: 0;
+    color: ${({ theme }) => theme.colors.primaryDark};
+  }
+  p {
+    color: ${({ theme }) => theme.colors.text};
+  }
+`;
+
+/* Newsletter */
 const NewsletterForm = styled.form`
-  margin-top: 1rem;
-  display:flex;
-  gap: .6rem;
-  align-items:center;
-  input { padding:.6rem .8rem; border-radius: 8px; border:1px solid ${({ theme }) => theme.colors?.border || "#eee"}; min-width: 260px; }
-  button { padding:.6rem 1rem; border-radius:8px; border:none; background: ${({ theme }) => theme.colors?.primary || "#2a6f61"}; color:white; font-weight:700; cursor:pointer; }
-  small { display:block; color: ${({ theme }) => theme.colors?.secondaryDark || "#666"}; margin-top:.6rem; grid-column: 1 / -1; }
-  @media(max-width:720px){ flex-direction:column; align-items:stretch; input{width:100%} }
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  input {
+    padding: 0.7rem 0.9rem;
+    border-radius: ${({ theme }) => theme.radius.sm};
+    border: 1px solid ${({ theme }) => theme.colors.border};
+    outline: none;
+    min-width: 260px;
+    background: ${({ theme }) => theme.colors.surface};
+    color: ${({ theme }) => theme.colors.text};
+  }
+
+  button {
+    padding: 0.7rem 1rem;
+    border-radius: ${({ theme }) => theme.radius.pill};
+    border: none;
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.surface};
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: ${({ theme }) => theme.shadow.xs};
+  }
 `;
 
+/* Contact form */
 const ContactForm = styled.form`
   margin-top: 1rem;
-  display:grid;
-  grid-template-columns: 1fr 1fr;
+  display: grid;
   gap: 0.8rem;
-  input, textarea { width: 100%; padding:.6rem .8rem; border-radius:8px; border:1px solid ${({ theme }) => theme.colors?.border || "#eee"}; }
-  button { padding:.6rem 1rem; border-radius:8px; border:none; background: ${({ theme }) => theme.colors?.primary || "#2a6f61"}; color:white; font-weight:700; cursor:pointer; }
-  label { display:block; font-size: .95rem; color: ${({ theme }) => theme.colors?.text || "#333"}; }
-  @media(max-width:720px){ grid-template-columns: 1fr; }
+
+  .row {
+    display: grid;
+    gap: 0.8rem;
+    grid-template-columns: 1fr 1fr;
+    @media (max-width: 720px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  label {
+    display: block;
+    font-size: 0.95rem;
+    color: ${({ theme }) => theme.colors.dark};
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border-radius: ${({ theme }) => theme.radius.sm};
+    border: 1px solid ${({ theme }) => theme.colors.border};
+    background: ${({ theme }) => theme.colors.surface};
+    color: ${({ theme }) => theme.colors.text};
+    outline: none;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
 `;
-const HeroCTAs = styled.div`
-  margin-top: 1rem;
+
+const FieldError = styled.span`
+  display: block;
+  color: ${({ theme }) => theme.colors.secondaryDark};
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+`;
+
+const FormActions = styled.div`
   display: flex;
-  gap: 0.8rem;
-  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+`;
 
-  .btn {
-    display: inline-block;
-    padding: 0.7rem 1.2rem;
-    border-radius: 999px;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .btn:hover {
-    transform: translateY(-2px);
-  }
-
-  .btn.outline:hover {
-    background: ${({ theme }) => theme.colors.primary};
-    color: white !important;
-  }
+const SuccessNote = styled.span`
+  display: inline-block;
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight: 700;
 `;

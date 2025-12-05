@@ -1,46 +1,72 @@
-// src/data/receitas/veganas/hamburguer-lentilha.js
-const hamburguerLentilha = {
-  slug: "hamburguer-lentilha",
-  titulo: "Hambúrguer Vegano de Lentilha",
-  imagem: "https://images.pexels.com/photos/1640772/pexels-photo-1640772.jpeg",
-  tempo: "30 min",
-  calorias: 210,
+const saladaQuinoaAbacate = {
+  slug: "salada-quinoa-abacate",
+  titulo: "Salada de Quinoa com Abacate e Vegetais Frescos",
+  imagem: "https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg",
+  tempo: "15 min",
+  porcoes: 2,
   categoria: "Veganas",
-  descricaoCurta: "Textura incrível e ótimo para sanduíches.",
-  // resumo curto para cards / listagens
-  shortDescription: "Hambúrguer vegano de lentilha e aveia — saboroso, com boa textura e ideal para sanduíches caseiros.",
-  // excerpt para carousels / listagens (máx ~140 chars)
-  excerpt: "Hambúrguer vegano de lentilha: combinação de lentilha e aveia para textura firme e sabor caseiro — ótimo em sanduíches.",
+  dificuldade: "fácil",
+
+  descricaoCurta: "Uma salada leve, rica em proteínas vegetais e gorduras boas.",
+  shortDescription:
+    "Salada vegana de quinoa com abacate, tomate e pepino — refrescante, nutritiva e perfeita para um almoço leve.",
+  excerpt:
+    "Salada vegana de quinoa com abacate: leve, colorida e rica em nutrientes — ideal para marmitas e refeições rápidas.",
+
   ingredientes: [
-    "1 xícara de lentilha cozida",
-    "1/2 xícara de aveia em flocos",
-    "1/2 cebola picada",
+    "1 xícara de quinoa cozida",
+    "1/2 abacate em cubos",
+    "1 tomate picado",
+    "1/2 pepino picado",
+    "Suco de 1/2 limão",
     "1 colher (sopa) de azeite",
-    "Sal e páprica a gosto"
+    "Sal e pimenta a gosto",
+    "Folhas de hortelã ou salsinha (opcional)"
   ],
+
   instrucoes: [
-    "Processe a lentilha até formar uma pasta grossa.",
-    "Misture a aveia e temperos até dar liga.",
-    "Modele hambúrgueres e grelhe em frigideira com azeite por 3-4 min cada lado.",
-    "Monte com pão integral e salada."
+    "Misture a quinoa cozida com o tomate e o pepino.",
+    "Adicione o abacate delicadamente para não desmanchar.",
+    "Tempere com limão, azeite, sal e pimenta.",
+    "Finalize com hortelã ou salsinha e sirva fresca."
   ],
-  porcoes: 4,
-  dificuldade: "médio",
+
   product: {
-    name: "Processador de alimentos 600W",
-    image: "https://m.media-amazon.com/images/I/61example6.jpg",
-    price: "179.90",
+    name: "Pote hermético de vidro 750ml",
+    image: "https://m.media-amazon.com/images/I/71example.jpg",
+    price: "39.90",
     link: "https://amzn.to/exemplo",
-    rating: "4.5",
-    reviews: 640
+    rating: "4.6",
+    reviews: 621
   },
+
   seo: {
-    metaTitle: "Hambúrguer Vegano de Lentilha — Receita Caseira",
-    metaDescription: "Hambúrguer vegano de lentilha com aveia: fácil de preparar, saboroso e ótimo para sanduíches."
+    metaTitle: "Salada Vegana de Quinoa com Abacate — Leve, fresca e nutritiva",
+    metaDescription:
+      "Receita vegana de quinoa com abacate, tomate e pepino — leve, proteica e perfeita para marmitas saudáveis."
   },
-  cta: "Faça em casa e compartilhe o resultado com a gente!",
-  variacoes: ["Tempere com cominho e coentro para perfil indiano.", "Forme mini-hambúrgueres para aperitivos."],
-  nutritional: { calories: 210, protein: 11, carbs: 28, fat: 6 },
+
+  cta: "Perfeita para levar na marmita — experimente hoje!",
+
+  variacoes: [
+    "Substitua o pepino por manga para uma versão tropical.",
+    "Adicione grão-de-bico cozido para mais proteína.",
+    "Inclua nozes ou amêndoas para crocância extra."
+  ],
+
+  nutritional: {
+    calories: 310,
+    protein: 10,
+    carbs: 34,
+    fat: 15,
+    fiber: 8
+  },
+
+  conteudo: `
+    <h2>Salada de Quinoa com Abacate: leve, completa e funcional</h2>
+    <p>Uma combinação perfeita de carboidratos complexos, gorduras boas e micronutrientes para manter sua energia estável.</p>
+    <p>Ideal para dias quentes, marmitas e quem busca alimentação leve sem abrir mão da saciedade.</p>
+  `
 };
 
-export default hamburguerLentilha;
+export default saladaQuinoaAbacate;

@@ -4,13 +4,16 @@ const omeleteClarasEspinafre = {
   titulo: "Omelete Proteica de Claras com Espinafre",
   imagem: "https://images.pexels.com/photos/793765/pexels-photo-793765.jpeg",
   tempo: "10 min",
-  calorias: 190,
+  porcoes: 1,
   categoria: "Fitness",
-  descricaoCurta: "Baixo em calorias e rico em proteínas — ideal para cutting.",
-  // resumo curto para cards / listagens
-  shortDescription: "Omelete leve de claras com espinafre — alto teor proteico e baixo em calorias, perfeito para refeições funcionais.",
-  // excerpt para carousels / listagens (máx ~140 chars)
-  excerpt: "Omelete proteica de claras com espinafre: refeição rápida, rica em proteínas e ideal para quem busca definição.",
+  dificuldade: "fácil",
+
+  descricaoCurta: "Baixo em calorias, rico em proteínas — ideal para cutting.",
+  shortDescription:
+    "Omelete leve de claras com espinafre: alto teor proteico, baixo impacto calórico e rápido de preparar.",
+  excerpt:
+    "Omelete de claras com espinafre: refeição rápida e proteica para manter a saciedade e definição muscular.",
+
   ingredientes: [
     "4 claras de ovo",
     "1 ovo inteiro",
@@ -18,14 +21,13 @@ const omeleteClarasEspinafre = {
     "1 colher (chá) de azeite",
     "Sal e pimenta a gosto"
   ],
+
   instrucoes: [
-    "Bata as claras com o ovo até espumar.",
+    "Bata levemente as claras com o ovo inteiro e tempere.",
     "Aqueça o azeite e refogue o espinafre por 1 minuto.",
-    "Despeje a mistura de ovos e cozinhe em fogo baixo.",
-    "Dobre e sirva."
+    "Despeje a mistura de ovos, cozinhe em fogo baixo, dobre e sirva."
   ],
-  porcoes: 1,
-  dificuldade: "fácil",
+
   product: {
     name: "Frigideira antiaderente 20cm",
     image: "https://m.media-amazon.com/images/I/71G2zKQwW-L._AC_SY355_.jpg",
@@ -34,13 +36,34 @@ const omeleteClarasEspinafre = {
     rating: "4.7",
     reviews: 812
   },
+
   seo: {
     metaTitle: "Omelete de Claras com Espinafre — Rápido e Proteico",
-    metaDescription: "Aprenda a fazer Omelete de Claras com Espinafre: receita rápida, proteica e perfeita para quem busca refeição leve."
+    metaDescription:
+      "Aprenda a fazer uma omelete proteica com claras e espinafre — ideal para café da manhã ou refeição pós-treino."
   },
-  cta: "Faça hoje e conte nos comentários se aprovou!",
-  variacoes: ["Adicione tomate cereja para mais sabor.", "Versão com queijo cottage para mais cremosidade."],
-  nutritional: { calories: 190, protein: 24, carbs: 3, fat: 9 },
+
+  variacoes: [
+    "Adicione tomate-cereja para mais sabor.",
+    "Misture queijo cottage para aumentar proteína e cremosidade."
+  ],
+
+  cta: "Teste hoje no café da manhã e me conta nos comentários!",
+
+  // NUTRIÇÃO (por porção — aproximado)
+  nutritional: {
+    calories: 190,
+    protein: 24,
+    carbs: 3,
+    fat: 9,
+    fiber: 1
+  },
+
+  conteudo: `
+    <h2>Porque é ótimo para definição</h2>
+    <p>Rico em proteína e com pouca gordura, esse omelete ajuda a manter massa magra enquanto controla calorias.</p>
+    <p>Combine com uma fonte de carboidrato leve para treinos intensos.</p>
+  `
 };
 
 export default omeleteClarasEspinafre;

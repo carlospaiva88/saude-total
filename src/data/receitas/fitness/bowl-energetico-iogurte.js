@@ -1,45 +1,32 @@
-// src/data/receitas/fitness/bowl-energetico-iogurte.js
-const bowlEnergeticoIogurte = {
-  slug: "bowl-energetico-iogurte",
-  titulo: "Bowl Energético de Iogurte com Banana e Granola",
-  imagem: "https://images.pexels.com/photos/414554/pexels-photo-414554.jpeg",
-  tempo: "3 min",
-  calorias: 280,
-  categoria: "Fitness",
-  descricaoCurta: "Rápido, crocante e nutritivo — perfeito para o pré-treino.",
+// src/data/receitas/fitness/smoothie-verde-detox.js
+const smoothieVerdeDetox = {
+  slug: "smoothie-verde-detox",
+  titulo: "Smoothie Verde Detox",
+  imagem: "https://images.pexels.com/photos/5366704/pexels-photo-5366704.jpeg",
+  tempo: "10 min",
+  calorias: 130,
+  categoria: "Bebidas Saudáveis",
+  descricaoCurta: "Refrescante, antioxidante e ideal para desintoxicar naturalmente.",
   // resumo curto para cards / listagens
-  shortDescription: "Bowl prático com iogurte, banana e granola — carboidratos e proteínas na medida certa para seu pré-treino.",
+  shortDescription: "Smoothie verde com espinafre, banana e água de coco — leve, hidratante e rico em antioxidantes.",
   // excerpt para carousels / listagens (máx ~140 chars)
-  excerpt: "Bowl energético com iogurte, banana, granola e chia — rápido, nutritivo e ideal antes do treino.",
+  excerpt: "Smoothie verde detox com espinafre e água de coco — refrescante, leve e antioxidante.",
   ingredientes: [
-    "1 pote de iogurte natural (170g)",
-    "1 banana fatiada",
-    "2 colheres (sopa) de granola integral",
-    "1 colher (chá) de chia",
-    "Mel a gosto"
+    "1 banana congelada",
+    "1 punhado de espinafre",
+    "200ml de água de coco",
+    "1/2 maçã",
+    "Suco de 1 limão"
   ],
   instrucoes: [
-    "Coloque o iogurte em uma tigela.",
-    "Adicione a banana, granola e chia.",
-    "Finalize com um fio de mel."
+    "Bata todos os ingredientes no liquidificador até ficar cremoso.",
+    "Sirva gelado e aproveite."
   ],
-  porcoes: 1,
-  dificuldade: "fácil",
-  product: {
-    name: "Tigela de cerâmica para bowls",
-    image: "https://m.media-amazon.com/images/I/51example.jpg",
-    price: "19.90",
-    link: "https://amzn.to/exemplo",
-    rating: "4.4",
-    reviews: 210
-  },
-  seo: {
-    metaTitle: "Bowl Energético de Iogurte, Banana e Granola | Receita Rápida",
-    metaDescription: "Bowl nutritivo com iogurte, banana e granola — rápido, saboroso e ideal para quem faz exercícios."
-  },
-  cta: "Perfeito para levar na marmita — salve essa receita!",
-  variacoes: ["Use iogurte vegetal para versão sem lactose.", "Troque a granola por mix de nuts para mais proteína."],
-  nutritional: { calories: 280, protein: 11, carbs: 42, fat: 7 },
+  destaque: true,
+  conteudo: `
+    <h2>Benefícios do Smoothie Verde Detox</h2>
+    <p>Este smoothie ajuda a limpar as toxinas do corpo, é rico em antioxidantes e muito saboroso.</p>
+  `,
 };
 
-export default bowlEnergeticoIogurte;
+export default smoothieVerdeDetox;

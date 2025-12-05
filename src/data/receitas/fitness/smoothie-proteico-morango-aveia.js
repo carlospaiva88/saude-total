@@ -4,28 +4,30 @@ const smoothieProteicoMorangoAveia = {
   titulo: "Smoothie Proteico de Morango e Aveia",
   imagem: "https://images.pexels.com/photos/5946081/pexels-photo-5946081.jpeg",
   tempo: "5 min",
-  calorias: 310,
+  porcoes: 1,
   categoria: "Fitness",
-  descricaoCurta: "Refrescante, nutritivo e perfeito para um café da manhã rápido.",
-  // resumo curto para cards / listagens
-  shortDescription: "Smoothie proteico com morango e aveia — rápido, saciante e ideal para ganho/recuperação muscular.",
-  // excerpt para carousels / listagens (máx ~140 chars)
-  excerpt: "Smoothie proteico de morango e aveia: café da manhã rápido, nutritivo e perfeito como pré ou pós-treino.",
+  dificuldade: "fácil",
+
+  descricaoCurta: "Refrescante, nutritivo e perfeito para o pré ou pós-treino.",
+  shortDescription:
+    "Smoothie proteico com morango, aveia e whey — rápido, saciante e ideal para recuperação muscular.",
+  excerpt:
+    "Smoothie de morango e aveia com proteína — energia imediata e aporte proteico para treino.",
+
   ingredientes: [
     "1 xícara de morangos congelados",
-    "1 scoop de whey protein de baunilha (ou proteína vegetal)",
+    "1 scoop de whey protein (baunilha) ou proteína vegetal",
     "2 colheres (sopa) de aveia",
     "200 ml de leite vegetal ou água",
     "1 colher (chá) de mel (opcional)"
   ],
+
   instrucoes: [
     "Coloque todos os ingredientes no liquidificador.",
-    "Bata até atingir consistência cremosa.",
-    "Ajuste a textura com mais líquido, se necessário.",
-    "Sirva imediatamente."
+    "Bata até ficar cremoso e sirva imediatamente.",
+    "Ajuste a consistência com mais líquido, se necessário."
   ],
-  porcoes: 1,
-  dificuldade: "fácil",
+
   product: {
     name: "Coqueteleira inox 600ml",
     image: "https://m.media-amazon.com/images/I/61eSRZ8h0lL._AC_SY355_.jpg",
@@ -34,16 +36,33 @@ const smoothieProteicoMorangoAveia = {
     rating: "4.5",
     reviews: 432
   },
+
   seo: {
-    metaTitle: "Smoothie Proteico de Morango e Aveia — Receita Rápida | Viva no Flow",
-    metaDescription: "Smoothie proteico com morango e aveia: café da manhã energético em 5 minutos. Receita fácil, ideal para pré-treino."
+    metaTitle: "Smoothie Proteico de Morango e Aveia — Receita Rápida",
+    metaDescription:
+      "Smoothie proteico com morango e aveia: preparo em 5 minutos, ideal para pré ou pós-treino."
   },
-  cta: "Experimente esse smoothie no seu pré-treino — marque nos stories!",
+
   variacoes: [
-    "Versão vegana: use proteína vegetal em pó e leite vegetal.",
-    "Sem mel: substitua por adoçante natural ou deixe sem adoçar."
+    "Use proteína vegetal para versão vegana.",
+    "Adicione uma colher de sementes de chia para mais fibras."
   ],
-  nutritional: { calories: 310, protein: 28, carbs: 32, fat: 7 },
+
+  cta: "Perfeito para seu pré/pós-treino — experimente e marca nos stories!",
+
+  // NUTRIÇÃO (por porção — aproximado; mantém valores já usados)
+  nutritional: {
+    calories: 310,
+    protein: 28,
+    carbs: 32,
+    fat: 7,
+    fiber: 4
+  },
+
+  conteudo: `
+    <h2>Smoothie prático e potente</h2>
+    <p>Combina carboidratos dos morangos e aveia com proteína do whey — excelente para recuperação e saciedade.</p>
+  `
 };
 
 export default smoothieProteicoMorangoAveia;

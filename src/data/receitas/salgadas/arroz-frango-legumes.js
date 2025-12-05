@@ -4,44 +4,71 @@ const arrozFrangoLegumes = {
   titulo: "Arroz Integral com Frango e Legumes",
   imagem: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg",
   tempo: "25 min",
-  calorias: 420,
-  categoria: "Salgadas",
-  descricaoCurta: "Prato completo, nutritivo e perfeito para o dia a dia.",
-  // resumo curto para cards / listagens
-  shortDescription: "Arroz integral com peito de frango e legumes — refeição balanceada, prática e ideal para marmitas.",
-  // excerpt para carousels / listagens (máx ~140 chars)
-  excerpt: "Arroz integral com frango e legumes: prato nutritivo, fácil de preparar e perfeito para refeições do dia a dia.",
-  ingredientes: [
-    "1 xícara de arroz integral cozido",
-    "200g de peito de frango em cubos",
-    "1 xícara de brócolis picado",
-    "1/2 cenoura fatiada",
-    "1 colher (sopa) de azeite",
-    "Sal, alho e pimenta a gosto"
-  ],
-  instrucoes: [
-    "Refogue o frango no azeite até dourar.",
-    "Adicione os legumes e cozinhe por 5 minutos.",
-    "Misture com o arroz cozido e tempere.",
-    "Sirva quente."
-  ],
   porcoes: 2,
+  categoria: "Salgadas",
   dificuldade: "médio",
+
+  descricaoCurta: "Prato completo, nutritivo e perfeito para o dia a dia — ideal para marmitas.",
+  shortDescription:
+    "Arroz integral com peito de frango e legumes: refeição balanceada, prática e rica em nutrientes para rotina ativa.",
+  excerpt:
+    "Arroz integral com frango e legumes: preparo rápido, sabor caseiro e muito equilíbrio nutricional.",
+
+  ingredientes: [
+    "1 xícara (chá) de arroz integral cozido (≈150 g cozido)",
+    "200 g de peito de frango em cubos",
+    "1 xícara de brócolis picado",
+    "1/2 cenoura em rodelas",
+    "1 colher (sopa) de azeite de oliva",
+    "1 dente de alho picado",
+    "Sal e pimenta-do-reino a gosto",
+    "Salsinha picada para finalizar (opcional)"
+  ],
+
+  instrucoes: [
+    "Em uma panela, aqueça o azeite e refogue o alho até dourar levemente.",
+    "Adicione o peito de frango em cubos e doure todos os lados por 6–8 minutos. Tempere com sal e pimenta.",
+    "Junte a cenoura e o brócolis, refogue por 4–5 minutos até ficarem macios, mas ainda firmes.",
+    "Adicione o arroz integral cozido, misture bem para incorporar e ajuste o tempero.",
+    "Finalize com salsinha picada e sirva quente."
+  ],
+
   product: {
-    name: "Panela antiaderente 24cm",
+    name: "Panela antiaderente 24 cm",
     image: "https://m.media-amazon.com/images/I/61example.jpg",
     price: "129.90",
     link: "https://amzn.to/exemplo",
     rating: "4.6",
     reviews: 1024
   },
+
   seo: {
-    metaTitle: "Arroz Integral com Frango e Legumes — Receita Saudável",
-    metaDescription: "Receita prática de arroz integral com frango e legumes — ideal para marmitas e refeições equilibradas."
+    metaTitle: "Arroz Integral com Frango e Legumes — Receita Prática e Saudável",
+    metaDescription:
+      "Aprenda a fazer arroz integral com peito de frango e legumes — marmita nutritiva, rápida e saborosa."
   },
-  cta: "Prepare para a semana e economize tempo — salve essa receita!",
-  variacoes: ["Versão vegetariana: substitua frango por tofu grelhado.", "Adicione ervas frescas para aroma."],
-  nutritional: { calories: 420, protein: 32, carbs: 46, fat: 12 },
+
+  variacoes: [
+    "Versão vegetariana: substitua o frango por cubos de tofu grelhado ou grão-de-bico.",
+    "Acrescente ervas frescas (manjericão, coentro) para aroma e frescor."
+  ],
+
+  cta: "Prepare para a semana e garanta refeições práticas e nutritivas — salve esta receita!",
+
+  // Nutritional values por porção — valores aproximados
+  nutritional: {
+    calories: 420,
+    protein: 32,
+    carbs: 46,
+    fat: 12,
+    fiber: 6
+  },
+
+  conteudo: `
+    <h2>Prato completo para sua rotina</h2>
+    <p>Este arroz integral com frango e legumes é pensado para entregar macronutrientes equilibrados: proteína magra, carboidrato de baixo índice glicêmico e vegetais que adicionam fibras e micronutrientes.</p>
+    <p>Dica: organize porções em potes para marmita e economize tempo durante a semana.</p>
+  `
 };
 
 export default arrozFrangoLegumes;
